@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="5dp">
+
+    <TextView
+        android:id="@+id/route_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="235"
+        android:textSize="@dimen/text20sp"/>
+
+    <TextView
+        android:id="@+id/route_destination"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="新莊-中山森林公園"
+        app:layout_constraintTop_toBottomOf="@+id/route_name" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="5dp"
+        android:background="#A9A9A9"
+        app:layout_constraintTop_toBottomOf="@+id/route_destination"/>
+
+</android.support.constraint.ConstraintLayout>

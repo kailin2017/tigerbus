@@ -1,0 +1,78 @@
+apply plugin: 'com.android.application'
+//apply plugin: 'com.google.gms.google-services'
+
+android {
+    compileSdkVersion rootProject.sdkversionCompile
+    defaultConfig {
+        applicationId "com.tigerbus"
+        minSdkVersion rootProject.sdkversionMin
+        targetSdkVersion rootProject.sdkversionCompile
+        versionCode rootProject.versionCode
+        versionName rootProject.versionName
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        externalNativeBuild {
+            cmake {
+                cppFlags "-std=c++14"
+            }
+        }
+        buildConfigField "String", "MainService", "\"https://www.youtube.com\""
+    }
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
+    compileOptions {
+        sourceCompatibility rootProject.javaVersion
+        targetCompatibility rootProject.javaVersion
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    externalNativeBuild {
+        cmake {
+            path "CMakeLists.txt"
+        }
+    }
+}
+
+dependencies {
+    implementation project(':mvp')
+    // google play & firebase
+    implementation "com.google.android.gms:play-services:${rootProject.firebaseVersion}"
+    implementation "com.google.firebase:firebase-core:${rootProject.firebaseVersion}"
+    implementation "com.google.firebase:firebase-crash:${rootProject.firebaseVersion}"
+    implementation "com.google.firebase:firebase-messaging:${rootProject.firebaseVersion}"
+    // android support
+    implementation "com.android.support:appcompat-v7:${rootProject.ext.androidsupportVersion}"
+    implementation "com.android.support:recyclerview-v7:${rootProject.androidsupportVersion}"
+    implementation "com.android.support:support-v13:${rootProject.androidsupportVersion}"
+    implementation "com.android.support:customtabs:${rootProject.androidsupportVersion}"
+    implementation "com.android.support:design:${rootProject.androidsupportVersion}"
+    implementation "com.android.support.constraint:constraint-layout:${rootProject.androidconstraintVersion}"
+    // Okhttp
+    implementation "com.squareup.okhttp3:okhttp:${rootProject.okhttpVersion}"
+    implementation "com.squareup.okhttp3:logging-interceptor:${rootProject.okhttpVersion}"
+    implementation "com.squareup.okhttp3:okhttp-urlconnection:${rootProject.okhttpVersion}"
+    // retrofit
+    implementation "com.squareup.retrofit2:retrofit:${rootProject.retrofitVersion}"
+    implementation "com.squareup.retrofit2:converter-gson:${rootProject.retrofitVersion}"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:${rootProject.retrofitVersion}"
+    // rx
+    implementation "io.reactivex.rxjava2:rxjava:${rootProject.rxjavaVersion}"
+    implementation "io.reactivex.rxjava2:rxandroid:${rootProject.rxandroidVersion}"
+    implementation "com.jakewharton.rxbinding2:rxbinding:${rootProject.rxbindingVersion}"
+    // autoValue
+    annotationProcessor "com.google.auto.value:auto-value:$rootProject.autoValueVersion"
+    provided "com.google.auto.value:auto-value:$rootProject.autoValueVersion"
+    // test
+    testImplementation "junit:junit:${rootProject.junitVersion}"
+    testImplementation "org.robolectric:robolectric:${rootProject.robolectricVersion}"
+    testImplementation "com.squareup.okhttp3:mockwebserver:${rootProject.okhttpVersion}"
+    testImplementation "org.mockito:mockito-core:${rootProject.mockitoVersion}"
+    androidTestImplementation "com.android.support.test:runner:${rootProject.runnerVersion}"
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:${rootProject.espressoVersion}"
+}

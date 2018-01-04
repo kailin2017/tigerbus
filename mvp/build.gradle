@@ -1,0 +1,15 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion rootProject.sdkversionCompile
+    defaultConfig {
+        minSdkVersion rootProject.sdkversionMin
+        targetSdkVersion rootProject.sdkversionCompile
+        versionCode rootProject.versionCode
+        versionName rootProject.versionName
+    }
+}
+
+dependencies {
+    implementation 'com.android.support:appcompat-v7:'+rootProject.ext.androidsupportVersion
+}

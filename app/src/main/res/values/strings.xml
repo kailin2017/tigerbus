@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">公車王</string>
+    <string name="action_settings">設定</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="navigation_bottom_home">首頁</string>
+    <string name="navigation_bottom_search">搜尋</string>
+    <string name="navigation_bottom_station">公車站</string>
+    <string name="navigation_bottom_remind">提醒</string>
+
+    <string name="dialog_ok">確定</string>
+    <string name="dialog_cancel">取消</string>
+
+    <string name="search_hint">搜尋路線</string>
+
+
+</resources>

@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "3571642615",
+    "firebase_url": "https://kailinfire.firebaseio.com",
+    "project_id": "kailinfire",
+    "storage_bucket": "kailinfire.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:3571642615:android:7cbea483fa10c16f",
+        "android_client_info": {
+          "package_name": "com.tigerbus"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "3571642615-rem3ta5mmlkjk03cmgqsobumk7apu85l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tigerbus",
+            "certificate_hash": "138656b6dc109339456187e184b857a0c637a7cb"
+          }
+        },
+        {
+          "client_id": "3571642615-pn9eb3aqj58aarj6kl9j6bjf3qnkorvp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZGN4ZC5iyYQ7lEiqqzB82Aabt1ZND6BQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "3571642615-pn9eb3aqj58aarj6kl9j6bjf3qnkorvp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
