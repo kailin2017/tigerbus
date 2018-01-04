@@ -3,31 +3,25 @@ package com.tigerbus.ui;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.*;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewTreeObserver;
-import android.widget.Toast;
 
 import com.tigerbus.R;
 import com.tigerbus.base.BaseActivity;
 import com.tigerbus.base.ViewState;
 import com.tigerbus.base.annotation.ActivityView;
 import com.tigerbus.base.annotation.ViewInject;
-import com.tigerbus.base.annotation.event.onClick;
 import com.tigerbus.base.log.TlogType;
-
-import java.lang.ref.WeakReference;
 
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.subjects.PublishSubject;
 
 @ActivityView(layout = R.layout.main_activity)
 public final class MainActivity extends BaseActivity<MainView, MainPresenter>
@@ -44,6 +38,7 @@ public final class MainActivity extends BaseActivity<MainView, MainPresenter>
     private NavigationView navigationView;
     @ViewInject(R.id.recyclerview)
     private RecyclerView recyclerView;
+    private SearchView searchView;
 
     @NonNull
     @Override
@@ -56,6 +51,26 @@ public final class MainActivity extends BaseActivity<MainView, MainPresenter>
         super.onCreate(savedInstanceState);
         initView();
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_toolbar, menu);
+        searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                startActivity(SearchActivity.class, new Bundle());
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+        return super.onCreateOptionsMenu(menu);
+    }
+
 
     @Override
     protected void onDestroy() {

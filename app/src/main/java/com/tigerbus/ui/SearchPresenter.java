@@ -16,22 +16,8 @@ import io.reactivex.schedulers.Schedulers;
 
 public final class SearchPresenter extends BasePresenter<SearchActivityView> {
 
-    private final CityBusService cityBusService = RetrofitModel.getInstance().create(CityBusService.class);
-
     @Override
     public void bindIntent() {
-        getView().bindIntent().filter(b -> b)
-                .flatMap(b -> cityBusService.getBusRoute("Taipei"))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(disposable -> render(SearchViewState.Finish.create()))
-                .doOnComplete(() -> render(SearchViewState.Finish.create()))
-                .subscribe(busRoutes -> {
-                            Bundle bundle = new Bundle();
-                            bundle.putParcelableArrayList(SearchActivityView.BUSROUTES, busRoutes);
-                            render(SearchViewState.Success.create(bundle));
-                        },
-                        throwable -> render(SearchViewState.Exception.create(throwable.toString())));
     }
 
     private void render(ViewState viewState) {

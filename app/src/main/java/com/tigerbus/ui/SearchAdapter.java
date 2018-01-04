@@ -16,15 +16,11 @@ import java.util.ArrayList;
 
 import io.reactivex.subjects.PublishSubject;
 
-/**
- * Created by Kailin on 2017/12/31.
- */
 
 public final class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder> {
 
     private final static String TAG = SearchAdapter.class.getSimpleName();
     private PublishSubject<BusRoute> publishSubject = PublishSubject.create();
-    private PublishSubject<Boolean> progressSubject = PublishSubject.create();
     private ArrayList<BusRoute> busRoutes;
     private View.OnClickListener onClickListener = v -> {
         BusRoute busRoute = (BusRoute) v.getTag();
@@ -32,9 +28,8 @@ public final class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.View
         publishSubject.onNext(busRoute);
     };
 
-    public SearchAdapter(ArrayList<BusRoute> busRoutes, PublishSubject<Boolean> progressSubject) {
+    public SearchAdapter(ArrayList<BusRoute> busRoutes) {
         this.busRoutes = busRoutes;
-        this.progressSubject = progressSubject;
     }
 
     @Override
@@ -49,8 +44,6 @@ public final class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.View
         holder.itemView.setOnClickListener(onClickListener);
         holder.routeName.setText(busRoute.getRouteName().getZh_tw());
         holder.routeDestination.setText(busRoute.getDepartureStopNameZh() + "-" + busRoute.getDestinationStopNameZh());
-        if (position == getItemCount() - 1)
-            progressSubject.onNext(false);
     }
 
     @Override

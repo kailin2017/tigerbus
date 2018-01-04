@@ -8,11 +8,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.ViewTreeObserver;
 
 import com.tigerbus.R;
+import com.tigerbus.TigerApplication;
 import com.tigerbus.base.BaseActivity;
 import com.tigerbus.base.ViewState;
 import com.tigerbus.base.annotation.ActivityView;
 import com.tigerbus.base.annotation.ViewInject;
 import com.tigerbus.base.log.TlogType;
+import com.tigerbus.data.BusRoute;
+
+import java.util.ArrayList;
 
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
@@ -27,6 +31,7 @@ public final class SearchActivity extends BaseActivity<SearchActivityView, Searc
     private PublishSubject<Boolean> progressSublish = PublishSubject.create();
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private Disposable disposable;
+    private ArrayList<BusRoute> busRoutes = new ArrayList<>();
 
     @ViewInject(R.id.toolbar)
     private Toolbar toolbar;
@@ -43,12 +48,30 @@ public final class SearchActivity extends BaseActivity<SearchActivityView, Searc
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setSupportActionBar(toolbar);
-        progressSublish.subscribe(b -> {
-            if (b)
-                showProgress();
-            else
-                dimessProgress();
+        initData();
+        initView();
+    }
+
+    protected void initData(){
+        for(ArrayList<BusRoute> arrayList : TigerApplication.weakHashMap.values()){
+            busRoutes.addAll(arrayList);
+        }
+    }
+
+    protected void initView(){
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
+        recyclerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                recyclerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                SearchAdapter adapter = new SearchAdapter(busRoutes);
+                compositeDisposable.add(adapter.getPublishSubject().subscribe(busRoute -> {
+                }));
+                recyclerView.setAdapter(adapter);
+            }
         });
+
     }
 
     @Override
@@ -90,20 +113,7 @@ public final class SearchActivity extends BaseActivity<SearchActivityView, Searc
         application.printLog(TlogType.error, TAG, error);
     }
 
-    private void renderSuccess(Bundle bundle) {
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
-        recyclerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                recyclerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                SearchAdapter adapter = new SearchAdapter(bundle.getParcelableArrayList(BUSROUTES), progressSublish);
-                compositeDisposable.add(adapter.getPublishSubject().subscribe(busRoute -> {
-                }));
-                recyclerView.setAdapter(adapter);
-            }
-        });
-    }
+    private void renderSuccess(Bundle bundle) {    }
 
     private void renderFinish() {
         disposableDisposed();

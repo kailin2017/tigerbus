@@ -5,10 +5,6 @@
         android:icon="@drawable/ic_nav_home"
         android:title="@string/navigation_bottom_home" />
     <item
-        android:id="@+id/search"
-        android:icon="@drawable/ic_nav_search"
-        android:title="@string/navigation_bottom_search" />
-    <item
         android:id="@+id/station"
         android:icon="@drawable/ic_nav_station"
         android:title="@string/navigation_bottom_station" />

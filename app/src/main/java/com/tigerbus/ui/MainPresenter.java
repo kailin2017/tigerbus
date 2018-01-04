@@ -4,11 +4,12 @@ import com.google.gson.Gson;
 import com.tigerbus.TigerApplication;
 import com.tigerbus.base.BasePresenter;
 import com.tigerbus.base.ViewState;
-import com.tigerbus.base.log.TlogType;
 import com.tigerbus.connection.RetrofitModel;
+import com.tigerbus.data.BusRoute;
 import com.tigerbus.data.CityBusService;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -37,27 +38,25 @@ public final class MainPresenter extends BasePresenter<MainView> {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result -> {
-                    String localVersion = TigerApplication.readPreferences(cityBusService.getBusVersion + city);
-                    TigerApplication.writePreferences(cityBusService.getBusVersion + city, result.getVersionID() + "");
-                    if (localVersion == "") {
-                        loadData(city);
+                    String keyBusVersion = cityBusService.getBusVersion + city;
+                    String keyRoute = cityBusService.getBusRoute + city;
+                    int localVersion = TigerApplication.getInt(keyBusVersion);
+                    TigerApplication.putInt(keyBusVersion, result.getVersionID());
+                    if (localVersion < result.getVersionID()) {
+                        loadData(city, keyRoute);
                     } else {
-                        if (Integer.parseInt(localVersion) == result.getVersionID()) {
-                            String routeString = TigerApplication.readPreferences(cityBusService.getBusRoute + city);
-                            TigerApplication.weakHashMap.put(city, gson.fromJson(routeString, ArrayList.class));
-                        } else {
-                            loadData(city);
-                        }
+                        ArrayList<BusRoute> busRoutes = TigerApplication.getObjectArrayList(keyRoute, BusRoute[].class, false);
+                        TigerApplication.weakHashMap.put(city, busRoutes);
                     }
                 }, throwableConsumer);
     }
 
-    private void loadData(String city) {
+    private void loadData(String city, String key) {
         cityBusService.getBusRoute(city)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result -> {
-                    TigerApplication.writePreferences(cityBusService.getBusRoute + city, gson.toJson(result).toString());
+                    TigerApplication.putString(key, gson.toJson(result).toString());
                     TigerApplication.weakHashMap.put(city, result);
                 }, throwableConsumer);
     }
