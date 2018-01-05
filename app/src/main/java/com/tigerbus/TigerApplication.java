@@ -37,19 +37,6 @@ public final class TigerApplication extends Application {
         }
     }
 
-    public static void getKey() {
-        try {
-            Set<String> result = AESGCMHelper.encrypt("hyperTiger");
-            AESGCMHelper.decrypt(result);
-        } catch (Exception e) {
-            Tlog.printLog(TlogType.error, TAG, e.toString());
-        }
-    }
-
-    public static SharedPreferences getPreferences(){
-        return tigerPreferences.getPreferences();
-    }
-
     public static void putInt(String key,int value){
         tigerPreferences.putInt(key,value);
     }

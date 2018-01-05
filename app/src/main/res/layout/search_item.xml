@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/item"
     android:layout_width="match_parent"
@@ -12,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="235"
-        android:textSize="@dimen/text20sp"/>
+        android:textSize="@dimen/text20sp" />
 
     <TextView
         android:id="@+id/route_destination"
@@ -27,6 +26,15 @@
         android:layout_height="1dp"
         android:layout_marginTop="5dp"
         android:background="#A9A9A9"
-        app:layout_constraintTop_toBottomOf="@+id/route_destination"/>
+        app:layout_constraintTop_toBottomOf="@+id/route_destination" />
+
+    <TextView
+        android:id="@+id/route_city"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="天龍市"
+        android:textSize="@dimen/text20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

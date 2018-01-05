@@ -9,6 +9,8 @@ import android.support.annotation.Nullable;
 
 import com.tigerbus.TigerApplication;
 
+import io.reactivex.disposables.CompositeDisposable;
+
 public abstract class BaseActivity<V extends BaseView, P extends BasePresenter<V>> extends MvpActivity<V, P>
         implements ProgressDialogInterface, MessageDialogInterface {
 
@@ -16,12 +18,19 @@ public abstract class BaseActivity<V extends BaseView, P extends BasePresenter<V
     public ProgressDialog progressDialog;
     public AlertDialog messageDialog;
     public Context context;
+    public CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         application = (TigerApplication) getApplication();
         context = this;
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        compositeDisposable.dispose();
     }
 
     protected void startActivity(Class clazz, Bundle bundle) {

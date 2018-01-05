@@ -56,7 +56,7 @@ public final class MainPresenter extends BasePresenter<MainView> {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result -> {
-                    TigerApplication.putString(key, gson.toJson(result).toString());
+                    TigerApplication.putObject(key, result, false);
                     TigerApplication.weakHashMap.put(city, result);
                 }, throwableConsumer);
     }

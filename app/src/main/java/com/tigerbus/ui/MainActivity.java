@@ -20,7 +20,6 @@ import com.tigerbus.base.annotation.ViewInject;
 import com.tigerbus.base.log.TlogType;
 
 import io.reactivex.Observable;
-import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
 @ActivityView(layout = R.layout.main_activity)
@@ -28,8 +27,6 @@ public final class MainActivity extends BaseActivity<MainView, MainPresenter>
         implements MainView, NavigationView.OnNavigationItemSelectedListener {
 
     private final static String TAG = MainActivity.class.getSimpleName();
-    private Disposable disposable;
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
     @ViewInject(R.id.toolbar)
     private Toolbar toolbar;
     @ViewInject(R.id.drawer_layout)
@@ -38,7 +35,6 @@ public final class MainActivity extends BaseActivity<MainView, MainPresenter>
     private NavigationView navigationView;
     @ViewInject(R.id.recyclerview)
     private RecyclerView recyclerView;
-    private SearchView searchView;
 
     @NonNull
     @Override
@@ -50,38 +46,6 @@ public final class MainActivity extends BaseActivity<MainView, MainPresenter>
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initView();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_toolbar, menu);
-        searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                startActivity(SearchActivity.class, new Bundle());
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
-        return super.onCreateOptionsMenu(menu);
-    }
-
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        compositeDisposable.dispose();
-        disposableDisposed();
-    }
-
-    protected void disposableDisposed() {
-        if (disposable.isDisposed())
-            disposable.dispose();
     }
 
     private void initView() {
@@ -142,8 +106,8 @@ public final class MainActivity extends BaseActivity<MainView, MainPresenter>
     }
 
     private void renderLoading(Disposable disposable) {
+        compositeDisposable.add(disposable);
         showProgress();
-        this.disposable = disposable;
     }
 
     private void renderException(String error) {
@@ -156,6 +120,5 @@ public final class MainActivity extends BaseActivity<MainView, MainPresenter>
 
     private void renderFinish() {
         dimessProgress();
-        disposableDisposed();
     }
 }

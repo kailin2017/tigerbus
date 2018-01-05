@@ -16,7 +16,6 @@ import java.util.ArrayList;
 
 import io.reactivex.subjects.PublishSubject;
 
-
 public final class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder> {
 
     private final static String TAG = SearchAdapter.class.getSimpleName();
@@ -58,13 +57,14 @@ public final class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.View
     final class ViewHolder extends RecyclerView.ViewHolder {
 
         public ConstraintLayout itemView;
-        public TextView routeName, routeDestination;
+        public TextView routeName, routeDestination,routeCity;
 
         public ViewHolder(View view) {
             super(view);
             itemView = view.findViewById(R.id.item);
             routeName = view.findViewById(R.id.route_name);
             routeDestination = view.findViewById(R.id.route_destination);
+            routeCity = view.findViewById(R.id.route_city);
         }
     }
 }

@@ -4,7 +4,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.ViewTreeObserver;
 
 import com.tigerbus.R;
@@ -19,24 +21,20 @@ import com.tigerbus.data.BusRoute;
 import java.util.ArrayList;
 
 import io.reactivex.Observable;
-import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.subjects.PublishSubject;
 
 
 @ActivityView(layout = R.layout.search_activity)
 public final class SearchActivity extends BaseActivity<SearchActivityView, SearchPresenter> implements SearchActivityView {
 
     private final static String TAG = SearchActivity.class.getSimpleName();
-    private PublishSubject<Boolean> progressSublish = PublishSubject.create();
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
-    private Disposable disposable;
     private ArrayList<BusRoute> busRoutes = new ArrayList<>();
 
     @ViewInject(R.id.toolbar)
     private Toolbar toolbar;
     @ViewInject(R.id.recyclerview)
     private RecyclerView recyclerView;
+    private SearchView searchView;
 
     @NonNull
     @Override
@@ -75,16 +73,24 @@ public final class SearchActivity extends BaseActivity<SearchActivityView, Searc
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        compositeDisposable.dispose();
-        disposableDisposed();
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_toolbar, menu);
+        searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                startActivity(SearchActivity.class, new Bundle());
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+        return super.onCreateOptionsMenu(menu);
     }
 
-    protected void disposableDisposed() {
-//        if (disposable.isDisposed())
-//            disposable.dispose();
-    }
 
     @Override
     public Observable<Boolean> bindIntent() {
@@ -105,8 +111,7 @@ public final class SearchActivity extends BaseActivity<SearchActivityView, Searc
     }
 
     private void renderLoading(Disposable disposable) {
-        this.disposable = disposable;
-        progressSublish.onNext(true);
+        compositeDisposable.add(disposable);
     }
 
     private void renderException(String error) {
@@ -116,6 +121,5 @@ public final class SearchActivity extends BaseActivity<SearchActivityView, Searc
     private void renderSuccess(Bundle bundle) {    }
 
     private void renderFinish() {
-        disposableDisposed();
     }
 }
