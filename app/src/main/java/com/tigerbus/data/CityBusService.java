@@ -1,5 +1,10 @@
 package com.tigerbus.data;
 
+import com.tigerbus.data.bus.BusEstimateTime;
+import com.tigerbus.data.bus.BusRoute;
+import com.tigerbus.data.bus.BusStopOfRoute;
+import com.tigerbus.data.bus.BusVersion;
+
 import java.util.ArrayList;
 
 import io.reactivex.Observable;
@@ -9,10 +14,10 @@ import retrofit2.http.Path;
 
 public interface CityBusService {
 
-    String getBusVersion = "getBusVersion";
-    String getBusRoute = "getBusRoute";
-    String getBusDisplayStopOfRoute = "getBusDisplayStopOfRoute";
-    String getBusN1EstimateTime = "getBusN1EstimateTime";
+    String BUS_VERSION = "BUS_VERSION";
+    String BUS_ROUTE = "BUS_ROUTE";
+    String BUS_STOP_OF_ROUTE = "BUS_STOP_OF_ROUTE";
+    String BUS_ESTIMATE_TIME = "BUS_ESTIMATE_TIME";
 
     @GET("http://ptx.transportdata.tw/MOTC/v2/Bus/DataVersion/City/{City}?$format=JSON")
     Observable<BusVersion> getBusVersion(@NonNull @Path("City") String city);
@@ -21,11 +26,11 @@ public interface CityBusService {
     Observable<ArrayList<BusRoute>> getBusRoute(@NonNull @Path("City") String city);
 
     @GET("http://ptx.transportdata.tw/MOTC/v2/Bus/DisplayStopOfRoute/City/{City}/{route}?$format=JSON")
-    Observable<ArrayList<BusDisplayStopOfRoute>> getBusDisplayStopOfRoute(
+    Observable<ArrayList<BusStopOfRoute>> getBusDisplayStopOfRoute(
             @NonNull @Path("City") String city, @NonNull @Path("route") String route);
 
     @GET("http://ptx.transportdata.tw/MOTC/v2/Bus/EstimatedTimeOfArrival/City/{City}/{route}?$format=JSON")
-    Observable<ArrayList<BusN1EstimateTime>> getBusN1EstimateTime(
+    Observable<ArrayList<BusEstimateTime>> getBusN1EstimateTime(
             @NonNull @Path("City") String city, @NonNull @Path("route") String route);
 
 

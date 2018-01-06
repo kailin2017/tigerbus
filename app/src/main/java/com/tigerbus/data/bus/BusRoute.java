@@ -1,15 +1,18 @@
-package com.tigerbus.data;
+package com.tigerbus.data.bus;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
+
+import com.tigerbus.data.detail.NameType;
 
 import java.util.ArrayList;
 
 /***
-  Inline Model [
- BusRoute
+ Inline Model [
+ BUS_ROUTE
  ]
- BusRoute {
+ BUS_ROUTE {
  RouteUID (string): 路線唯一識別代碼，規則為 {業管機關代碼} + {RouteID}，其中 {業管機關代碼} 可於Authority API中的AuthorityCode欄位查詢 ,
  RouteID (string): 地區既用中之路線代碼(為原資料內碼) ,
  HasSubRoutes (boolean): 實際上是否有多條附屬路線。(此欄位值與SubRoutes結構並無強烈的絕對關聯。詳細說明請參閱swagger上方的【資料服務使用注意事項】) ,
@@ -49,7 +52,7 @@ import java.util.ArrayList;
  }
  */
 
-public final class BusRoute implements Parcelable{
+public final class BusRoute implements Parcelable, Comparable<BusRoute>,BusData {
     private String RouteUID;
     private String RouteID;
     private boolean HasSubRoutes;
@@ -70,6 +73,8 @@ public final class BusRoute implements Parcelable{
     private String RouteMapImageUrl;
     private String UpdateTime;
     private int VersionID;
+    private NameType CityName;
+    private int SearchSocre;
 
     protected BusRoute(Parcel in) {
         RouteUID = in.readString();
@@ -92,6 +97,8 @@ public final class BusRoute implements Parcelable{
         RouteMapImageUrl = in.readString();
         UpdateTime = in.readString();
         VersionID = in.readInt();
+        CityName = in.readParcelable(NameType.class.getClassLoader());
+        SearchSocre = in.readInt();
     }
 
     @Override
@@ -116,6 +123,8 @@ public final class BusRoute implements Parcelable{
         dest.writeString(RouteMapImageUrl);
         dest.writeString(UpdateTime);
         dest.writeInt(VersionID);
+        dest.writeParcelable(CityName, flags);
+        dest.writeInt(SearchSocre);
     }
 
     @Override
@@ -293,5 +302,27 @@ public final class BusRoute implements Parcelable{
 
     public void setVersionID(int versionID) {
         VersionID = versionID;
+    }
+
+    public NameType getCityName() {
+        return CityName;
+    }
+
+    public void setCityName(NameType cityName) {
+        CityName = cityName;
+    }
+
+    public int getSearchSocre() {
+        return SearchSocre;
+    }
+
+    public void setSearchSocre(int searchSocre) {
+        SearchSocre = searchSocre;
+    }
+
+    @Override
+    public int compareTo(@NonNull BusRoute busRoute) {
+        int compareAge = busRoute.getSearchSocre();
+        return this.getSearchSocre() - compareAge;
     }
 }

@@ -10,7 +10,7 @@ import android.view.View;
 import com.tigerbus.TigerApplication;
 
 public abstract class BaseFragment<V extends BaseView, P extends BasePresenter<V>> extends MvpFragment<V, P>
-        implements ProgressDialogInterface, MessageDialogInterface {
+        implements  DialogInterface.Progress, DialogInterface.Message {
 
     public TigerApplication application;
     public ProgressDialog progressDialog;

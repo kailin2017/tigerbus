@@ -1,4 +1,4 @@
-package com.tigerbus.data;
+package com.tigerbus.data.bus;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -7,7 +7,7 @@ import android.os.Parcelable;
  * Created by Kailin on 2017/12/31.
  */
 
-public final class BusVersion implements Parcelable{
+public final class BusVersion implements Parcelable,BusData{
     private int VersionID;
     private String UpdateTime;
     private String UpdateCheckTime;

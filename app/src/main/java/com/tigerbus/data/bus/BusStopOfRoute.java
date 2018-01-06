@@ -1,15 +1,18 @@
-package com.tigerbus.data;
+package com.tigerbus.data.bus;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import com.tigerbus.data.detail.NameType;
+import com.tigerbus.data.detail.Stop;
 
 import java.util.ArrayList;
 
 /**
  *Inline Model [
- BusDisplayStopOfRoute
+ BUS_STOP_OF_ROUTE
  ]
- BusDisplayStopOfRoute {
+ BUS_STOP_OF_ROUTE {
  RouteUID (string): 路線唯一識別代碼，規則為 {業管機關代碼} + {RouteID}，其中 {業管機關代碼} 可於Authority API中的AuthorityCode欄位查詢 ,
  RouteID (string): 地區既用中之路線代碼(為原資料內碼) ,
  RouteName (NameType): 路線名稱 ,
@@ -36,7 +39,7 @@ import java.util.ArrayList;
  }
  */
 
-public final class BusDisplayStopOfRoute implements Parcelable {
+public final class BusStopOfRoute implements Parcelable,BusData {
     private String RouteUID;
     private String RouteID;
     private NameType RouteName;
@@ -45,7 +48,7 @@ public final class BusDisplayStopOfRoute implements Parcelable {
     private String UpdateTime;
     private int VersionID;
 
-    protected BusDisplayStopOfRoute(Parcel in) {
+    protected BusStopOfRoute(Parcel in) {
         RouteUID = in.readString();
         RouteID = in.readString();
         RouteName = in.readParcelable(NameType.class.getClassLoader());
@@ -71,15 +74,15 @@ public final class BusDisplayStopOfRoute implements Parcelable {
         return 0;
     }
 
-    public static final Creator<BusDisplayStopOfRoute> CREATOR = new Creator<BusDisplayStopOfRoute>() {
+    public static final Creator<BusStopOfRoute> CREATOR = new Creator<BusStopOfRoute>() {
         @Override
-        public BusDisplayStopOfRoute createFromParcel(Parcel in) {
-            return new BusDisplayStopOfRoute(in);
+        public BusStopOfRoute createFromParcel(Parcel in) {
+            return new BusStopOfRoute(in);
         }
 
         @Override
-        public BusDisplayStopOfRoute[] newArray(int size) {
-            return new BusDisplayStopOfRoute[size];
+        public BusStopOfRoute[] newArray(int size) {
+            return new BusStopOfRoute[size];
         }
     };
 

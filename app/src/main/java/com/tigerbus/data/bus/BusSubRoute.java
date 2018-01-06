@@ -1,7 +1,9 @@
-package com.tigerbus.data;
+package com.tigerbus.data.bus;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import com.tigerbus.data.detail.NameType;
 
 /**
  BusSubRoute {
@@ -18,7 +20,7 @@ import android.os.Parcelable;
  }
  */
 
-public final class BusSubRoute implements Parcelable{
+public final class BusSubRoute implements Parcelable,BusData{
     private String SubRouteUID;
     private String SubRouteID;
     private String[] OperatorIDs;

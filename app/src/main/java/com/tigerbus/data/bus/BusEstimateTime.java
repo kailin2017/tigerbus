@@ -1,14 +1,16 @@
-package com.tigerbus.data;
+package com.tigerbus.data.bus;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.tigerbus.data.detail.NameType;
+
 /**
  * 市區公車之預估到站資料(N1)
  Inline Model [
- BusN1EstimateTime
+ BUS_ESTIMATE_TIME
  ]
- BusN1EstimateTime {
+ BUS_ESTIMATE_TIME {
  PlateNumb (string, optional): 車牌號碼 [値為値為-1時，表示目前該站位無車輛行駛] ,
  StopUID (string, optional): 站牌唯一識別代碼，規則為 {業管機關代碼} + {StopID}，其中 {業管機關代碼} 可於Authority API中的AuthorityCode欄位查詢 ,
  StopID (string, optional): 地區既用中之站牌代碼(為原資料內碼) ,
@@ -42,7 +44,7 @@ import android.os.Parcelable;
  }
  */
 
-public final class BusN1EstimateTime implements Parcelable{
+public final class BusEstimateTime implements Parcelable,BusData{
     private String PlateNumb;
     private String StopUID;
     private String StopID;
@@ -70,7 +72,7 @@ public final class BusN1EstimateTime implements Parcelable{
     private String SrcUpdateTime;
     private String UpdateTime;
 
-    protected BusN1EstimateTime(Parcel in) {
+    protected BusEstimateTime(Parcel in) {
         PlateNumb = in.readString();
         StopUID = in.readString();
         StopID = in.readString();
@@ -134,15 +136,15 @@ public final class BusN1EstimateTime implements Parcelable{
         return 0;
     }
 
-    public static final Creator<BusN1EstimateTime> CREATOR = new Creator<BusN1EstimateTime>() {
+    public static final Creator<BusEstimateTime> CREATOR = new Creator<BusEstimateTime>() {
         @Override
-        public BusN1EstimateTime createFromParcel(Parcel in) {
-            return new BusN1EstimateTime(in);
+        public BusEstimateTime createFromParcel(Parcel in) {
+            return new BusEstimateTime(in);
         }
 
         @Override
-        public BusN1EstimateTime[] newArray(int size) {
-            return new BusN1EstimateTime[size];
+        public BusEstimateTime[] newArray(int size) {
+            return new BusEstimateTime[size];
         }
     };
 

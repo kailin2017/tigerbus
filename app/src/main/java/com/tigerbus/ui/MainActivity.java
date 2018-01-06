@@ -7,24 +7,20 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.*;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 
 import com.tigerbus.R;
 import com.tigerbus.base.BaseActivity;
-import com.tigerbus.base.ViewState;
+import com.tigerbus.base.ViewStateRender;
 import com.tigerbus.base.annotation.ActivityView;
 import com.tigerbus.base.annotation.ViewInject;
-import com.tigerbus.base.log.TlogType;
 
 import io.reactivex.Observable;
-import io.reactivex.disposables.Disposable;
 
 @ActivityView(layout = R.layout.main_activity)
 public final class MainActivity extends BaseActivity<MainView, MainPresenter>
-        implements MainView, NavigationView.OnNavigationItemSelectedListener {
+        implements MainView<ViewStateRender>, ViewStateRender<Bundle>, NavigationView.OnNavigationItemSelectedListener {
 
     private final static String TAG = MainActivity.class.getSimpleName();
     @ViewInject(R.id.toolbar)
@@ -75,6 +71,7 @@ public final class MainActivity extends BaseActivity<MainView, MainPresenter>
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         drawer.closeDrawer(GravityCompat.START);
+        startActivity(SearchRouteActivity.class, new Bundle());
         switch (item.getItemId()) {
             case R.id.nav_camera:
                 break;
@@ -93,32 +90,16 @@ public final class MainActivity extends BaseActivity<MainView, MainPresenter>
     }
 
     @Override
-    public void render(ViewState viewState) {
-        if (viewState instanceof MainViewState.Loading) {
-            renderLoading(((MainViewState.Loading) viewState).disposable());
-        } else if (viewState instanceof MainViewState.Exception) {
-            renderException(((MainViewState.Exception) viewState).error());
-        } else if (viewState instanceof MainViewState.Success) {
-            renderSuccess(((MainViewState.Success) viewState).bundle());
-        } else if (viewState instanceof MainViewState.Finish) {
-            renderFinish();
-        }
-    }
-
-    private void renderLoading(Disposable disposable) {
-        compositeDisposable.add(disposable);
-        showProgress();
-    }
-
-    private void renderException(String error) {
-        application.printLog(TlogType.debug, TAG, error);
-    }
-
-    private void renderSuccess(Bundle bundle) {
+    public void renderLoading() {
 
     }
 
-    private void renderFinish() {
-        dimessProgress();
+    @Override
+    public void renderSuccess(Bundle result) {
+
+    }
+
+    @Override
+    public void renderFinish() {
     }
 }

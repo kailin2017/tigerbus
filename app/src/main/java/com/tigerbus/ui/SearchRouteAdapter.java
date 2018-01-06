@@ -10,25 +10,28 @@ import android.widget.TextView;
 import com.tigerbus.R;
 import com.tigerbus.TigerApplication;
 import com.tigerbus.base.log.TlogType;
-import com.tigerbus.data.BusRoute;
+import com.tigerbus.data.bus.BusRoute;
 
 import java.util.ArrayList;
 
 import io.reactivex.subjects.PublishSubject;
 
-public final class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder> {
+public final class SearchRouteAdapter extends RecyclerView.Adapter<SearchRouteAdapter.ViewHolder> {
 
-    private final static String TAG = SearchAdapter.class.getSimpleName();
+    private final static String TAG = SearchRouteAdapter.class.getSimpleName();
     private PublishSubject<BusRoute> publishSubject = PublishSubject.create();
-    private ArrayList<BusRoute> busRoutes;
+    private ArrayList<BusRoute> busRoutes = new ArrayList<>();
     private View.OnClickListener onClickListener = v -> {
         BusRoute busRoute = (BusRoute) v.getTag();
         TigerApplication.printLog(TlogType.debug, TAG, "Click Route : " + busRoute.getRouteName().getZh_tw());
         publishSubject.onNext(busRoute);
     };
 
-    public SearchAdapter(ArrayList<BusRoute> busRoutes) {
-        this.busRoutes = busRoutes;
+    public SearchRouteAdapter(PublishSubject<ArrayList<BusRoute>> adapterSubject) {
+        adapterSubject.subscribe(busRoutes -> {
+            SearchRouteAdapter.this.busRoutes = busRoutes;
+            SearchRouteAdapter.this.notifyDataSetChanged();
+        });
     }
 
     @Override
@@ -43,6 +46,7 @@ public final class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.View
         holder.itemView.setOnClickListener(onClickListener);
         holder.routeName.setText(busRoute.getRouteName().getZh_tw());
         holder.routeDestination.setText(busRoute.getDepartureStopNameZh() + "-" + busRoute.getDestinationStopNameZh());
+        holder.routeCity.setText(busRoute.getCityName().getZh_tw());
     }
 
     @Override
@@ -54,10 +58,10 @@ public final class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.View
         return publishSubject;
     }
 
-    final class ViewHolder extends RecyclerView.ViewHolder {
+    final static class ViewHolder extends RecyclerView.ViewHolder {
 
         public ConstraintLayout itemView;
-        public TextView routeName, routeDestination,routeCity;
+        public TextView routeName, routeDestination, routeCity;
 
         public ViewHolder(View view) {
             super(view);

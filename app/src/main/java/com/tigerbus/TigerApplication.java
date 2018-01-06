@@ -2,26 +2,24 @@ package com.tigerbus;
 
 import android.app.Application;
 import android.content.Context;
-import android.content.SharedPreferences;
 
+import com.google.gson.Gson;
 import com.tigerbus.base.log.Tlog;
 import com.tigerbus.base.log.TlogType;
-import com.tigerbus.data.BusRoute;
-import com.tigerbus.util.AESGCMHelper;
+import com.tigerbus.data.bus.BusRoute;
 import com.tigerbus.util.TigerPreferences;
 
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Set;
-import java.util.WeakHashMap;
 
 public final class TigerApplication extends Application {
 
     private final static String TAG = TigerApplication.class.getName();
-    public static WeakHashMap<String, ArrayList<BusRoute>> weakHashMap = new WeakHashMap<>();
     private static Context context;
     private static TigerPreferences tigerPreferences;
+    private static WeakReference<ArrayList<BusRoute>> busRouteData;
+    private static Gson gson = new Gson();
 
     public static void printLog(TlogType tlogType, String tag, String message) {
         Tlog.printLog(tlogType, tag, message);
@@ -37,7 +35,15 @@ public final class TigerApplication extends Application {
         }
     }
 
-    public static void putInt(String key,int value){
+    public static ArrayList<BusRoute> getBusRouteData() {
+        return busRouteData.get();
+    }
+
+    public static void setBusRouteData(ArrayList<BusRoute> busRouteData) {
+        TigerApplication.busRouteData = new WeakReference<>(busRouteData);
+    }
+
+    public static void putInt(String key, int value){
         tigerPreferences.putInt(key,value);
     }
 
@@ -63,6 +69,10 @@ public final class TigerApplication extends Application {
 
     public static <T> ArrayList<T> getObjectArrayList(String key, Class<T[]> clazz, boolean isEncrypt) {
         return tigerPreferences.getObjectArrayList(key,clazz,isEncrypt);
+    }
+
+    public static <T> String object2String(T t){
+        return gson.toJson(t);
     }
 
     public static void putEncrypt(String key, String value) {

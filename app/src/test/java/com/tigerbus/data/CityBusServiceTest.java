@@ -3,6 +3,7 @@ package com.tigerbus.data;
 import com.tigerbus.BuildConfig;
 import com.tigerbus.UnitTestTools;
 import com.tigerbus.conn.RetrofitModel;
+import com.tigerbus.data.bus.BusRoute;
 
 import org.junit.Before;
 import org.junit.Test;

@@ -1,34 +1,32 @@
 package com.tigerbus.ui;
 
-import com.google.gson.Gson;
 import com.tigerbus.TigerApplication;
 import com.tigerbus.base.BasePresenter;
-import com.tigerbus.base.ViewState;
 import com.tigerbus.connection.RetrofitModel;
-import com.tigerbus.data.BusRoute;
+import com.tigerbus.data.bus.BusRoute;
 import com.tigerbus.data.CityBusService;
+import com.tigerbus.data.detail.NameType;
+import com.tigerbus.key.City;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.WeakHashMap;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 public final class MainPresenter extends BasePresenter<MainView> {
 
-    private final static String TAG = MainPresenter.class.getSimpleName();
-    private Gson gson = new Gson();
+    private final static WeakHashMap<String, ArrayList<BusRoute>> weakHashMap = new WeakHashMap<>();
     private CityBusService cityBusService = RetrofitModel.getInstance().create(CityBusService.class);
-    private Consumer<Throwable> throwableConsumer = throwable -> render(MainViewState.Exception.create(throwable.toString()));
-    private String[] strings = new String[]{"Taipei", "NewTaipei", "Taichung"};
+    private String[] strings = new String[]{"Taipei", "NewTaipei", "Taoyuan", "Taichung", "Tainan", "Kaohsiung"};
 
     @Override
     public void bindIntent() {
-        getView().getInitDataSubject().filter(b -> b)
+        Observable<Boolean> observable = getView().getInitDataSubject();
+        observable.filter(b -> b)
                 .flatMap(b -> Observable.fromArray(strings))
-                .doOnSubscribe(disposable -> render(MainViewState.Loading.create(disposable)))
+                .doOnSubscribe(renderDisposableConsumer)
                 .doOnComplete(() -> render(MainViewState.Finish.create()))
                 .subscribe(city -> checkData(city), throwableConsumer);
     }
@@ -37,31 +35,38 @@ public final class MainPresenter extends BasePresenter<MainView> {
         cityBusService.getBusVersion(city)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(defaultDisposableConsumer)
                 .subscribe(result -> {
-                    String keyBusVersion = cityBusService.getBusVersion + city;
-                    String keyRoute = cityBusService.getBusRoute + city;
+                    String keyBusVersion = cityBusService.BUS_VERSION + city;
+                    String keyRoute = cityBusService.BUS_ROUTE + city;
                     int localVersion = TigerApplication.getInt(keyBusVersion);
                     TigerApplication.putInt(keyBusVersion, result.getVersionID());
                     if (localVersion < result.getVersionID()) {
                         loadData(city, keyRoute);
                     } else {
                         ArrayList<BusRoute> busRoutes = TigerApplication.getObjectArrayList(keyRoute, BusRoute[].class, false);
-                        TigerApplication.weakHashMap.put(city, busRoutes);
+                        weakHashMap.put(city, busRoutes);
                     }
-                }, throwableConsumer);
+                }, throwableConsumer, () -> {
+                    ArrayList<BusRoute> busRoutes = new ArrayList<>();
+                    for (ArrayList<BusRoute> bus : weakHashMap.values())
+                        busRoutes.addAll(bus);
+                    TigerApplication.setBusRouteData(busRoutes);
+                });
     }
 
     private void loadData(String city, String key) {
         cityBusService.getBusRoute(city)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(defaultDisposableConsumer)
                 .subscribe(result -> {
+                    for (BusRoute busRoute : result)
+                        busRoute.setCityName(new NameType(City.valueOf(city).getCity(), city));
                     TigerApplication.putObject(key, result, false);
-                    TigerApplication.weakHashMap.put(city, result);
+                    weakHashMap.put(city, result);
                 }, throwableConsumer);
     }
 
-    private void render(ViewState viewState) {
-        getView().render(viewState);
-    }
+
 }

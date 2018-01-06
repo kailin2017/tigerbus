@@ -1,4 +1,4 @@
-package com.tigerbus.data;
+package com.tigerbus.data.detail;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -14,6 +14,11 @@ public final class NameType implements Parcelable{
 
     private String Zh_tw;
     private String En;
+
+    public NameType(String Zh_tw,String En){
+        setZh_tw(Zh_tw);
+        setEn(En);
+    }
 
     protected NameType(Parcel in) {
         Zh_tw = in.readString();

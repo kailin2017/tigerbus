@@ -1,12 +1,9 @@
 package com.tigerbus.base;
 
-import android.os.Bundle;
-
 import com.google.auto.value.AutoValue;
 
-import io.reactivex.disposables.Disposable;
-
 public interface ViewState {
+
     @AutoValue
     abstract class Finish implements ViewState {
         public static Finish create() {
@@ -16,10 +13,18 @@ public interface ViewState {
 
     @AutoValue
     abstract class Loading implements ViewState {
-        public abstract Disposable disposable();
 
-        public static Loading create(Disposable disposable) {
-            return new AutoValue_ViewState_Loading(disposable);
+        public static Loading create() {
+            return new AutoValue_ViewState_Loading();
+        }
+    }
+
+    @AutoValue
+    abstract class LogInfo implements ViewState {
+        public abstract String logMessage();
+
+        public static LogInfo create(String logMessage) {
+            return new AutoValue_ViewState_LogInfo(logMessage);
         }
     }
 
@@ -33,11 +38,11 @@ public interface ViewState {
     }
 
     @AutoValue
-    abstract class Success implements ViewState {
-        public abstract Bundle bundle();
+    abstract class Success<T> implements ViewState {
+        public abstract T success();
 
-        public static Success create(Bundle bundle) {
-            return new AutoValue_ViewState_Success(bundle);
+        public static <T> Success create(T success) {
+            return new AutoValue_ViewState_Success(success);
         }
     }
 }

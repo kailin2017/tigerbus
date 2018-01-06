@@ -1,4 +1,4 @@
-package com.tigerbus.data;
+package com.tigerbus.data.detail;
 
 import android.os.Parcel;
 import android.os.Parcelable;
