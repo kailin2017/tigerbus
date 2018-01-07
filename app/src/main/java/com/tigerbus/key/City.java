@@ -23,7 +23,7 @@ public enum City {
     PingtungCounty("屏東縣"),
     YilanCounty("宜蘭縣"),//宜蘭
     HualienCounty("花蓮縣"),//花蓮
-    TaitungCounty("台中縣"),//台東
+    TaitungCounty("台東縣"),//台東
     PenghuCounty("澎湖縣"),//澎湖
     KinmenCounty("金門縣");//金門
 

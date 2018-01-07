@@ -6,12 +6,17 @@ import android.content.Context;
 import com.google.gson.Gson;
 import com.tigerbus.base.log.Tlog;
 import com.tigerbus.base.log.TlogType;
+import com.tigerbus.data.CityBusService;
 import com.tigerbus.data.bus.BusRoute;
 import com.tigerbus.util.TigerPreferences;
 
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public final class TigerApplication extends Application {
 

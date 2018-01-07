@@ -10,7 +10,7 @@ import android.view.View;
 import com.tigerbus.TigerApplication;
 
 public abstract class BaseFragment<V extends BaseView, P extends BasePresenter<V>> extends MvpFragment<V, P>
-        implements  DialogInterface.Progress, DialogInterface.Message {
+        implements DialogInterface.Progress, DialogInterface.Message {
 
     public TigerApplication application;
     public ProgressDialog progressDialog;
@@ -23,6 +23,13 @@ public abstract class BaseFragment<V extends BaseView, P extends BasePresenter<V
         application = (TigerApplication) context.getApplicationContext();
         initProgress();
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
+    public void onDestroy() {
+        if (presenter != null)
+            presenter.clearDisposable();
+        super.onDestroy();
     }
 
     @Override

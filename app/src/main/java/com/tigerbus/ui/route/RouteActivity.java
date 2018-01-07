@@ -5,26 +5,30 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
-import android.view.MenuItem;
 
 import com.tigerbus.R;
 import com.tigerbus.base.BaseActivity;
 import com.tigerbus.base.ViewStateRender;
 import com.tigerbus.base.annotation.ActivityView;
 import com.tigerbus.base.annotation.ViewInject;
-import com.tigerbus.data.bus.BusData;
+import com.tigerbus.data.CityBusService;
 import com.tigerbus.data.bus.BusEstimateTime;
 import com.tigerbus.data.bus.BusRoute;
-import com.tigerbus.data.CityBusService;
 import com.tigerbus.data.bus.BusStopOfRoute;
 
 import java.util.ArrayList;
 
+import io.reactivex.Observable;
+import io.reactivex.subjects.PublishSubject;
+
 @ActivityView(layout = R.layout.route_activity)
 public final class RouteActivity extends BaseActivity<RouteView, RoutePresenter>
-        implements RouteView<ViewStateRender>, ViewStateRender<ArrayList<BusData>> {
+        implements RouteView<ViewStateRender>, ViewStateRender<ArrayList> {
 
     private final static int routeViewId = R.id.routeview;
+    private final PublishSubject<BusRoute> busRouteSubject = PublishSubject.create();
+    private final PublishSubject<ArrayList<BusStopOfRoute>> stopOfRouteSubject = PublishSubject.create();
+    private final PublishSubject<ArrayList<BusEstimateTime>> estimateSubject = PublishSubject.create();
     private BusRoute busRoute;
     @ViewInject(R.id.toolbar)
     private Toolbar toolbar;
@@ -38,14 +42,17 @@ public final class RouteActivity extends BaseActivity<RouteView, RoutePresenter>
 
     protected void initItem() {
         busRoute = getIntent().getParcelableExtra(CityBusService.BUS_ROUTE);
+        busRouteSubject.onNext(busRoute);
     }
 
     protected void initView() {
         setSupportActionBar(toolbar);
+        toolbar.setTitle(busRoute.getRouteName().getZh_tw());
+        toolbar.setSubtitle(busRoute.getDepartureStopNameZh() + "-" + busRoute.getDestinationStopNameZh());
         toolbar.setNavigationIcon(R.drawable.ic_break);
-        toolbar.setNavigationOnClickListener(v -> onDestroy());
+        toolbar.setNavigationOnClickListener(v -> finish());
         toolbar.setOnMenuItemClickListener(item -> {
-            switch (item.getItemId()){
+            switch (item.getItemId()) {
                 case R.id.route_info:
                     break;
                 case R.id.route_map:
@@ -53,6 +60,9 @@ public final class RouteActivity extends BaseActivity<RouteView, RoutePresenter>
             }
             return false;
         });
+        ArrivalFragment arrivalFragment = new ArrivalFragment();
+        arrivalFragment.setSubject(stopOfRouteSubject, estimateSubject);
+        getFragmentManager().beginTransaction().replace(routeViewId, arrivalFragment);
     }
 
     @Override
@@ -74,12 +84,14 @@ public final class RouteActivity extends BaseActivity<RouteView, RoutePresenter>
     }
 
     @Override
-    public void renderSuccess(ArrayList<BusData> result) {
-        BusData busData = result.get(0);
-        if (busData instanceof BusStopOfRoute) {
-
-        } else if (busData instanceof BusEstimateTime) {
-
+    public void renderSuccess(ArrayList result) {
+        Object object = result.get(0);
+        if (object instanceof BusStopOfRoute) {
+            stopOfRouteSubject.onNext(result);
+        } else if (object instanceof BusEstimateTime) {
+            estimateSubject.onNext(result);
+        } else {
+            renderException("Error Data!!!");
         }
     }
 
@@ -87,4 +99,11 @@ public final class RouteActivity extends BaseActivity<RouteView, RoutePresenter>
     public void renderFinish() {
         dimessProgress();
     }
+
+
+    @Override
+    public Observable<BusRoute> bindStopOfRoute() {
+        return busRouteSubject;
+    }
+
 }

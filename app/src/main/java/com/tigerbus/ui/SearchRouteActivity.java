@@ -52,7 +52,7 @@ public final class SearchRouteActivity extends BaseActivity<SearchRouteView, Sea
     protected void initView() {
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_break);
-        toolbar.setNavigationOnClickListener(v -> onDestroy());
+        toolbar.setNavigationOnClickListener(v -> finish());
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(adapter);
@@ -86,7 +86,7 @@ public final class SearchRouteActivity extends BaseActivity<SearchRouteView, Sea
     }
 
     @Override
-    public Observable<String> bindIntent() {
+    public Observable<String> bindSearch() {
         return searchSubject;
     }
 

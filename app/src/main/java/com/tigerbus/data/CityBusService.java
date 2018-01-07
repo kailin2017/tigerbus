@@ -26,11 +26,11 @@ public interface CityBusService {
     Observable<ArrayList<BusRoute>> getBusRoute(@NonNull @Path("City") String city);
 
     @GET("http://ptx.transportdata.tw/MOTC/v2/Bus/DisplayStopOfRoute/City/{City}/{route}?$format=JSON")
-    Observable<ArrayList<BusStopOfRoute>> getBusDisplayStopOfRoute(
+    Observable<ArrayList<BusStopOfRoute>> getBusStopOfRoute(
             @NonNull @Path("City") String city, @NonNull @Path("route") String route);
 
     @GET("http://ptx.transportdata.tw/MOTC/v2/Bus/EstimatedTimeOfArrival/City/{City}/{route}?$format=JSON")
-    Observable<ArrayList<BusEstimateTime>> getBusN1EstimateTime(
+    Observable<ArrayList<BusEstimateTime>> getBusEstimateTime(
             @NonNull @Path("City") String city, @NonNull @Path("route") String route);
 
 

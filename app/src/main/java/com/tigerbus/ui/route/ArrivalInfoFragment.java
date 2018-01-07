@@ -7,7 +7,7 @@ import com.tigerbus.base.MvpPresenter;
  * Created by Kailin on 2018/1/6.
  */
 
-public final class MapFragment extends BaseFragment {
+public final class ArrivalInfoFragment extends BaseFragment {
     @Override
     public MvpPresenter createPresenter() {
         return null;

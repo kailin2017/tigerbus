@@ -7,5 +7,5 @@ import io.reactivex.Observable;
 
 interface SearchRouteView<VR extends ViewStateRender> extends BaseView<VR> {
 
-    Observable<String> bindIntent();
+    Observable<String> bindSearch();
 }
