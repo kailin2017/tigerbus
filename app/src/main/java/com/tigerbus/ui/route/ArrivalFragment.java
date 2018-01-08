@@ -33,12 +33,13 @@ public final class ArrivalFragment extends BaseFragment<ArrivalView, ArrivalPres
     @ViewInject(R.id.viewpager)
     private ViewPager viewPager;
     private BusRoute busRoute;
+    private boolean isOnCreateView = false, isSetSubject = false;
 
     public static ArrivalFragment newInstance(BusRoute busRoute) {
-        Bundle args = new Bundle();
-        args.putParcelable(CityBusService.BUS_ROUTE, busRoute);
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(CityBusService.BUS_ROUTE, busRoute);
         ArrivalFragment fragment = new ArrivalFragment();
-        fragment.setArguments(args);
+        fragment.setArguments(bundle);
         return fragment;
     }
 
@@ -56,11 +57,7 @@ public final class ArrivalFragment extends BaseFragment<ArrivalView, ArrivalPres
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        if (stopOfRouteSubject != null)
-            presenter.addDisposable(stopOfRouteSubject.subscribe(busStopOfRoutes ->
-                    viewPager.setAdapter(new ArrivalPagerAdapter(context, busRoute, busStopOfRoutes))));
-        if (estimateSubject != null)
-            presenter.addDisposable(estimateSubject.subscribe());
+        isOnCreateView = true;
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -70,5 +67,15 @@ public final class ArrivalFragment extends BaseFragment<ArrivalView, ArrivalPres
             PublishSubject<ArrayList<BusEstimateTime>> estimateSubject) {
         this.stopOfRouteSubject = stopOfRouteSubject;
         this.estimateSubject = estimateSubject;
+        this.isSetSubject = true;
+        initSubject();
     }
+
+    private void initSubject() {
+        presenter.addDisposable(stopOfRouteSubject.subscribe(busStopOfRoutes ->
+                viewPager.setAdapter(new ArrivalPagerAdapter(context, busRoute, busStopOfRoutes))));
+        presenter.addDisposable(estimateSubject.subscribe());
+    }
+
+
 }

@@ -60,7 +60,7 @@ public final class RouteActivity extends BaseActivity<RouteView, RoutePresenter>
             }
             return false;
         });
-        ArrivalFragment arrivalFragment = new ArrivalFragment();
+        ArrivalFragment arrivalFragment = ArrivalFragment.newInstance(busRoute);
         arrivalFragment.setSubject(stopOfRouteSubject, estimateSubject);
         getFragmentManager().beginTransaction().replace(routeViewId, arrivalFragment);
     }
