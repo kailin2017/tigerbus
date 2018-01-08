@@ -52,7 +52,7 @@ public final class SearchRouteActivity extends BaseActivity<SearchRouteView, Sea
     protected void initView() {
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_break);
-        toolbar.setNavigationOnClickListener(v -> finish());
+        toolbar.setNavigationOnClickListener(v -> onBackPressed());
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(adapter);

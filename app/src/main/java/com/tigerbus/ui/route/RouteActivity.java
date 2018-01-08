@@ -50,7 +50,7 @@ public final class RouteActivity extends BaseActivity<RouteView, RoutePresenter>
         toolbar.setTitle(busRoute.getRouteName().getZh_tw());
         toolbar.setSubtitle(busRoute.getDepartureStopNameZh() + "-" + busRoute.getDestinationStopNameZh());
         toolbar.setNavigationIcon(R.drawable.ic_break);
-        toolbar.setNavigationOnClickListener(v -> finish());
+        toolbar.setNavigationOnClickListener(v -> onBackPressed());
         toolbar.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
                 case R.id.route_info:
@@ -70,7 +70,6 @@ public final class RouteActivity extends BaseActivity<RouteView, RoutePresenter>
         getMenuInflater().inflate(R.menu.route_toolbar, menu);
         return true;
     }
-
 
     @NonNull
     @Override
