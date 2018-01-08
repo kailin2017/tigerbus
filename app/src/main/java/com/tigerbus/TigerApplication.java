@@ -9,6 +9,7 @@ import com.tigerbus.base.log.TlogType;
 import com.tigerbus.data.bus.BusRoute;
 import com.tigerbus.util.TigerPreferences;
 
+import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ public final class TigerApplication extends Application {
     private final static String TAG = TigerApplication.class.getName();
     private static Context context;
     private static TigerPreferences tigerPreferences;
-    private static WeakReference<ArrayList<BusRoute>> busRouteData;
+    private static SoftReference<ArrayList<BusRoute>> busRouteData;
     private static Gson gson = new Gson();
 
     public static void printLog(TlogType tlogType, String tag, String message) {
@@ -40,7 +41,7 @@ public final class TigerApplication extends Application {
     }
 
     public static void setBusRouteData(ArrayList<BusRoute> busRouteData) {
-        TigerApplication.busRouteData = new WeakReference<>(busRouteData);
+        TigerApplication.busRouteData = new SoftReference<>(busRouteData);
     }
 
     public static void putInt(String key, int value){
@@ -88,7 +89,7 @@ public final class TigerApplication extends Application {
         super.onCreate();
         this.context = getApplicationContext();
         this.tigerPreferences = new TigerPreferences(context);
-        CrashHandler crashHandler = new CrashHandler();
-        crashHandler.init(context);
+//        CrashHandler crashHandler = new CrashHandler();
+//        crashHandler.init(context);
     }
 }

@@ -4,32 +4,25 @@ import android.os.Bundle;
 
 import com.tigerbus.TigerApplication;
 import com.tigerbus.base.BasePresenter;
-import com.tigerbus.base.log.TlogType;
 import com.tigerbus.connection.RetrofitModel;
-import com.tigerbus.data.bus.BusRoute;
 import com.tigerbus.data.CityBusService;
+import com.tigerbus.data.DefaultService;
+import com.tigerbus.data.bus.BusRoute;
 import com.tigerbus.data.bus.BusVersion;
+import com.tigerbus.data.detail.City;
 import com.tigerbus.data.detail.NameType;
-import com.tigerbus.key.City;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.WeakHashMap;
-import java.util.concurrent.ConcurrentHashMap;
 
 import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.BiFunction;
-import io.reactivex.schedulers.Schedulers;
 
 public final class MainPresenter extends BasePresenter<MainView> {
 
     private final static String KEY_CITY = "city", KEY_BUS_VERSION = CityBusService.BUS_VERSION, KEY_BUS_ROUTE = CityBusService.BUS_ROUTE;
     private final static WeakHashMap<String, ArrayList<BusRoute>> weakHashMap = new WeakHashMap<>();
     private CityBusService cityBusService = RetrofitModel.getInstance().create(CityBusService.class);
-    private String[] citys = new String[]{"Taipei", "NewTaipei", "Taoyuan", "Taichung", "Tainan", "Kaohsiung", "Keelung",
-            "Hsinchu", "HsinchuCounty", "MiaoliCounty", "ChanghuaCounty", "NantouCounty", "YunlinCounty", "Chiayi", "ChiayiCounty",
-            "PingtungCounty", "YilanCounty", "HualienCounty", "TaitungCounty", "PenghuCounty", "KinmenCounty"};
+    private DefaultService defaultService = RetrofitModel.getInstance().create(DefaultService.class);
 
     @Override
     public void bindIntent() {
@@ -40,42 +33,45 @@ public final class MainPresenter extends BasePresenter<MainView> {
         Observable<Boolean> observable = getView().getInitDataSubject();
         observable
                 .filter(aBoolean -> aBoolean)
-                .flatMap(aBoolean -> Observable.fromArray(citys))
+                // 取得城市列表
+                .flatMap(aBoolean -> rxSwitchThread(defaultService.getCitys()))
+                .flatMap(citys -> Observable.fromIterable(citys))
                 .flatMap(city -> {
+                    // 取得版本資訊並與城市資訊封裝
                     Observable<Bundle> busVersionObserable = Observable.zip(
-                            cityBusService.getBusVersion(city), Observable.just(city),
-                            (busVersion, cityName) -> {
+                            cityBusService.getBusVersion(city.getEn()), Observable.just(city),
+                            (busVersion, cityObj) -> {
                                 Bundle bundle = new Bundle();
                                 bundle.putParcelable(KEY_BUS_VERSION, busVersion);
-                                bundle.putString(KEY_CITY, cityName);
+                                bundle.putParcelable(KEY_CITY, cityObj);
                                 return bundle;
                             });
                     return rxSwitchThread(busVersionObserable);
                 })
                 .flatMap(bundle -> {
                     BusVersion busVersion = bundle.getParcelable(KEY_BUS_VERSION);
-                    String city = bundle.getString(KEY_CITY);
-                    String keyVersion = KEY_BUS_VERSION + city;
-                    String keyRoute = KEY_BUS_ROUTE + city;
-                    boolean isReload;
+                    City city = bundle.getParcelable(KEY_CITY);
+                    String keyVersion = KEY_BUS_VERSION + city.getEn();
+                    String keyRoute = KEY_BUS_ROUTE + city.getEn();
+                    // 判斷local是否已存在路線資料,若有的畫清掉中文城市名稱
                     if (TigerApplication.getInt(keyVersion) < busVersion.getVersionID()) {
-                        isReload = true;
+                        city.setZh_tw("");
                         TigerApplication.putInt(keyVersion, busVersion.getVersionID());
                     } else {
-                        isReload = false;
                         ArrayList<BusRoute> busRoutes = TigerApplication.getObjectArrayList(keyRoute, BusRoute[].class, false);
-                        weakHashMap.put(city, busRoutes);
+                        weakHashMap.put(city.getEn(), busRoutes);
                     }
-                    return Observable.just(isReload ? city : "");
+                    return Observable.just(city);
                 })
-                .filter(city -> !city.isEmpty())
+                .filter(city -> city.getZh_tw().isEmpty() || city.getEn().isEmpty())
                 .flatMap(city -> {
+                    // 取得城市公車路線資料,並與城市資訊封裝
                     Observable<Bundle> busRoutesObservable = Observable.zip(
-                            cityBusService.getBusRoute(city), Observable.just(city),
-                            (busRoutes, cityName) -> {
+                            cityBusService.getBusRoute(city.getEn()), Observable.just(city),
+                            (busRoutes, cityObj) -> {
                                 Bundle bundle = new Bundle();
                                 bundle.putParcelableArrayList(KEY_BUS_ROUTE, busRoutes);
-                                bundle.putString(KEY_CITY, cityName);
+                                bundle.putParcelable(KEY_CITY, cityObj);
                                 return bundle;
                             });
                     return rxSwitchThread(busRoutesObservable);
@@ -84,13 +80,14 @@ public final class MainPresenter extends BasePresenter<MainView> {
                 .subscribe(
                         bundle -> {
                             ArrayList<BusRoute> busVersion = bundle.getParcelableArrayList(KEY_BUS_ROUTE);
-                            String city = bundle.getString(KEY_CITY);
-                            String keyRoute = KEY_BUS_ROUTE + city;
+                            City city = bundle.getParcelable(KEY_CITY);
+                            String keyRoute = KEY_BUS_ROUTE + city.getEn();
+                            // 路線資料寫入城市資訊
                             for (BusRoute busRoute : busVersion)
-                                busRoute.setCityName(new NameType(City.valueOf(city).getCity(), city));
+                                busRoute.setCityName(new NameType(city.getZh_tw(), city.getEn()));
                             TigerApplication.putObject(keyRoute, busVersion, false);
-                            weakHashMap.put(city, busVersion);
-                            render(MainViewState.LogInfo.create(city + "onNext"));
+                            weakHashMap.put(city.getEn(), busVersion);
+                            render(MainViewState.LogInfo.create(city.getZh_tw() + "onNext"));
                         },
                         throwableConsumer,
                         () -> {

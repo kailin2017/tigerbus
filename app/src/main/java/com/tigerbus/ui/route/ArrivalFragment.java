@@ -59,6 +59,7 @@ public final class ArrivalFragment extends BaseFragment<ArrivalView, ArrivalPres
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         isOnCreateView = true;
+        this.initSubject.filter(b -> b).subscribe(b -> initSubject());
         this.initSubject.onNext((isSetSubject && isOnCreateView));
         return super.onCreateView(inflater, container, savedInstanceState);
     }
@@ -71,11 +72,9 @@ public final class ArrivalFragment extends BaseFragment<ArrivalView, ArrivalPres
         this.estimateSubject = estimateSubject;
         this.isSetSubject = true;
         this.initSubject.onNext((isSetSubject && isOnCreateView));
-        initSubject();
     }
 
     private void initSubject() {
-        ArrivalPagerAdapter arrivalPagerAdapter;
         presenter.addDisposable(stopOfRouteSubject.subscribe(busStopOfRoutes ->
                 viewPager.setAdapter(new ArrivalPagerAdapter(context, busRoute, busStopOfRoutes))));
         presenter.addDisposable(estimateSubject.subscribe(busEstimateTimes -> {
