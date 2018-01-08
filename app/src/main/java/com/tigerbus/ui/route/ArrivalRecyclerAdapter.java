@@ -10,6 +10,7 @@ import com.tigerbus.R;
 import com.tigerbus.data.bus.BusEstimateTime;
 import com.tigerbus.data.bus.BusStopOfRoute;
 import com.tigerbus.data.detail.NameType;
+import com.tigerbus.data.detail.Stop;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,15 +30,15 @@ import io.reactivex.subjects.PublishSubject;
 public final class ArrivalRecyclerAdapter extends RecyclerView.Adapter<ArrivalRecyclerAdapter.ViewHolder> {
 
 
-    private ArrayList<BusStopOfRoute> busStopOfRoutes;
+    private BusStopOfRoute busStopOfRoute;
     private ArrayList<BusEstimateTime> busEstimateTimes;
     private Map<String, BusEstimateTime> busEstimateTimeMap = new HashMap<>();
     private PublishSubject<ArrayList<BusEstimateTime>> publishSubject;
     private Disposable disposable;
 
-    public ArrivalRecyclerAdapter(@NonNull ArrayList<BusStopOfRoute> busStopOfRoutes,
+    public ArrivalRecyclerAdapter(@NonNull BusStopOfRoute busStopOfRoute,
                                   @NonNull PublishSubject<ArrayList<BusEstimateTime>> publishSubject) {
-        this.busStopOfRoutes = busStopOfRoutes;
+        this.busStopOfRoute = busStopOfRoute;
         this.publishSubject = publishSubject;
         initPublicsh();
     }
@@ -59,8 +60,8 @@ public final class ArrivalRecyclerAdapter extends RecyclerView.Adapter<ArrivalRe
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        BusStopOfRoute busStopOfRoute = busStopOfRoutes.get(position);
-        holder.stopName.setText(busStopOfRoute.getRouteName().getZh_tw());
+        Stop stop = busStopOfRoute.getStops().get(position);
+        holder.stopName.setText(stop.getStopName().getZh_tw());
         if (busEstimateTimes != null) {
             BusEstimateTime busEstimateTime = busEstimateTimeMap.get(busStopOfRoute.getRouteUID());
             holder.estimateTime.setText(busEstimateTime.getEstimateTime() % 60);
@@ -69,7 +70,7 @@ public final class ArrivalRecyclerAdapter extends RecyclerView.Adapter<ArrivalRe
 
     @Override
     public int getItemCount() {
-        return busStopOfRoutes.size();
+        return busStopOfRoute.getStops().size();
     }
 
     final static class ViewHolder extends RecyclerView.ViewHolder {
