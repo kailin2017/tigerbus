@@ -19,22 +19,21 @@ import com.tigerbus.data.bus.BusStopOfRoute;
 
 import java.util.ArrayList;
 
-import io.reactivex.functions.Consumer;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.subjects.PublishSubject;
 
 @FragmentView(layout = R.layout.route_arrival_fragment)
 public final class ArrivalFragment extends BaseFragment<ArrivalView, ArrivalPresenter> implements ArrivalView {
 
-    private PublishSubject<ArrayList<BusStopOfRoute>> stopOfRouteSubject;
-    private PublishSubject<ArrayList<BusEstimateTime>> estimateSubject;
-    private PublishSubject<Boolean> initSubject = PublishSubject.create();
+//    private PublishSubject<ArrayList<BusStopOfRoute>> stopOfRouteSubject;
+//    private PublishSubject<ArrayList<BusEstimateTime>> estimateSubject;
+    private PublishSubject<Boolean> onCreateViewSubject = PublishSubject.create();
 
     @ViewInject(R.id.tablayout)
     private TabLayout tabLayout;
     @ViewInject(R.id.viewpager)
     private ViewPager viewPager;
     private BusRoute busRoute;
-    private boolean isOnCreateView = false, isSetSubject = false;
 
     public static ArrivalFragment newInstance(BusRoute busRoute) {
         Bundle bundle = new Bundle();
@@ -58,9 +57,7 @@ public final class ArrivalFragment extends BaseFragment<ArrivalView, ArrivalPres
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        isOnCreateView = true;
-        this.initSubject.filter(b -> b).subscribe(b -> initSubject());
-        this.initSubject.onNext((isSetSubject && isOnCreateView));
+        onCreateViewSubject.onNext(true);
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -68,18 +65,14 @@ public final class ArrivalFragment extends BaseFragment<ArrivalView, ArrivalPres
     public void setSubject(
             PublishSubject<ArrayList<BusStopOfRoute>> stopOfRouteSubject,
             PublishSubject<ArrayList<BusEstimateTime>> estimateSubject) {
-        this.stopOfRouteSubject = stopOfRouteSubject;
-        this.estimateSubject = estimateSubject;
-        this.isSetSubject = true;
-        this.initSubject.onNext((isSetSubject && isOnCreateView));
+        Disposable onCreateViewSubjectDisposable = onCreateViewSubject.filter(b -> b).subscribe(b -> {
+            Disposable stopOfRouteSubjectDisposable = stopOfRouteSubject.subscribe(busStopOfRoutes ->
+                    viewPager.setAdapter(new ArrivalPagerAdapter(context, busRoute, busStopOfRoutes)));
+            Disposable estimateSubjectDisposable = estimateSubject.subscribe(busStopOfRoutes -> {
+            });
+            presenter.addDisposable(stopOfRouteSubjectDisposable);
+            presenter.addDisposable(estimateSubjectDisposable);
+        });
+        presenter.addDisposable(onCreateViewSubjectDisposable);
     }
-
-    private void initSubject() {
-        presenter.addDisposable(stopOfRouteSubject.subscribe(busStopOfRoutes ->
-                viewPager.setAdapter(new ArrivalPagerAdapter(context, busRoute, busStopOfRoutes))));
-        presenter.addDisposable(estimateSubject.subscribe(busEstimateTimes -> {
-        }));
-    }
-
-
 }

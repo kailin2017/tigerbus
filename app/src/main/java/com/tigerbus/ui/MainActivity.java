@@ -17,12 +17,14 @@ import com.tigerbus.base.annotation.ActivityView;
 import com.tigerbus.base.annotation.ViewInject;
 
 import io.reactivex.Observable;
+import io.reactivex.subjects.PublishSubject;
 
 @ActivityView(layout = R.layout.main_activity)
 public final class MainActivity extends BaseActivity<MainView, MainPresenter>
         implements MainView<ViewStateRender>, ViewStateRender<Bundle>, NavigationView.OnNavigationItemSelectedListener {
 
     private final static String TAG = MainActivity.class.getSimpleName();
+    private PublishSubject<Boolean> bindSubject = PublishSubject.create();
     @ViewInject(R.id.toolbar)
     private Toolbar toolbar;
     @ViewInject(R.id.drawer_layout)
@@ -53,8 +55,14 @@ public final class MainActivity extends BaseActivity<MainView, MainPresenter>
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        bindSubject.onNext(true);
+    }
+
+    @Override
     public Observable<Boolean> getInitDataSubject() {
-        return Observable.just(true);
+        return bindSubject;
     }
 
     @Override

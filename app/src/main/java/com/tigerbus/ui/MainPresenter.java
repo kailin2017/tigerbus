@@ -55,15 +55,15 @@ public final class MainPresenter extends BasePresenter<MainView> {
                     String keyRoute = KEY_BUS_ROUTE + city.getEn();
                     // 判斷local是否已存在路線資料,若有的畫清掉中文城市名稱
                     if (TigerApplication.getInt(keyVersion) < busVersion.getVersionID()) {
-                        city.setZh_tw("");
                         TigerApplication.putInt(keyVersion, busVersion.getVersionID());
                     } else {
+                        city.setZh_tw("");
                         ArrayList<BusRoute> busRoutes = TigerApplication.getObjectArrayList(keyRoute, BusRoute[].class, false);
                         weakHashMap.put(city.getEn(), busRoutes);
                     }
                     return Observable.just(city);
                 })
-                .filter(city -> city.getZh_tw().isEmpty() || city.getEn().isEmpty())
+                .filter(city -> !city.getZh_tw().isEmpty())
                 .flatMap(city -> {
                     // 取得城市公車路線資料,並與城市資訊封裝
                     Observable<Bundle> busRoutesObservable = Observable.zip(

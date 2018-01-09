@@ -25,10 +25,10 @@ public abstract class BaseActivity<V extends BaseView, P extends BasePresenter<V
     }
 
     @Override
-    protected void onDestroy() {
+    protected void onStop() {
         if(presenter!=null)
             presenter.clearDisposable();
-        super.onDestroy();
+        super.onStop();
     }
 
     protected void startActivity(Class clazz, Bundle bundle) {
