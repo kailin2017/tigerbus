@@ -24,7 +24,6 @@ public final class MainActivity extends BaseActivity<MainView, MainPresenter>
         implements MainView<ViewStateRender>, ViewStateRender<Bundle>, NavigationView.OnNavigationItemSelectedListener {
 
     private final static String TAG = MainActivity.class.getSimpleName();
-    private PublishSubject<Boolean> bindSubject = PublishSubject.create();
     @ViewInject(R.id.toolbar)
     private Toolbar toolbar;
     @ViewInject(R.id.drawer_layout)
@@ -57,12 +56,11 @@ public final class MainActivity extends BaseActivity<MainView, MainPresenter>
     @Override
     protected void onStart() {
         super.onStart();
-        bindSubject.onNext(true);
     }
 
     @Override
     public Observable<Boolean> getInitDataSubject() {
-        return bindSubject;
+        return Observable.just(true);
     }
 
     @Override
