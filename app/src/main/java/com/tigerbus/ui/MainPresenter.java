@@ -19,7 +19,9 @@ import io.reactivex.Observable;
 
 public final class MainPresenter extends BasePresenter<MainView> {
 
-    private final static String KEY_CITY = "city", KEY_BUS_VERSION = CityBusService.BUS_VERSION, KEY_BUS_ROUTE = CityBusService.BUS_ROUTE;
+    private final static String KEY_CITY = DefaultService.CITYS;
+    private final static String KEY_BUS_VERSION = CityBusService.BUS_VERSION;
+    private final static String KEY_BUS_ROUTE = CityBusService.BUS_ROUTE;
     private final static WeakHashMap<String, ArrayList<BusRoute>> weakHashMap = new WeakHashMap<>();
     private CityBusService cityBusService = RetrofitModel.getInstance().create(CityBusService.class);
     private DefaultService defaultService = RetrofitModel.getInstance().create(DefaultService.class);

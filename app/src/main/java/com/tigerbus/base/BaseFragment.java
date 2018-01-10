@@ -27,9 +27,16 @@ public abstract class BaseFragment<V extends BaseView, P extends BasePresenter<V
 
     @Override
     public void onStop() {
+//        if (presenter != null)
+//            presenter.clearDisposable();
+        super.onStop();
+    }
+
+    @Override
+    public void onDestroyView() {
         if (presenter != null)
             presenter.clearDisposable();
-        super.onStop();
+        super.onDestroyView();
     }
 
     @Override

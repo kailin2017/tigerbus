@@ -10,7 +10,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class BasePresenter<V extends BaseView> extends MvpPresenterImpl<V> {
 
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private CompositeDisposable disposables = new CompositeDisposable(), uiDisposables = new CompositeDisposable();
     protected Consumer<Throwable> throwableConsumer = throwable -> render(ViewState.Exception.create(throwable.toString()));
     protected Consumer<Disposable> defaultDisposableConsumer = disposable -> addDisposable(disposable);
     protected Consumer<Disposable> renderDisposableConsumer = disposable -> {
@@ -18,23 +18,23 @@ public class BasePresenter<V extends BaseView> extends MvpPresenterImpl<V> {
         render(ViewState.Loading.create());
     };
 
-    public void removeDisposable(@NonNull Disposable disposabled){
-        compositeDisposable.remove(disposabled);
+    public void removeDisposable(@NonNull Disposable disposabled) {
+        disposables.remove(disposabled);
     }
 
     public void addDisposable(@NonNull Disposable disposabled) {
-        compositeDisposable.add(disposabled);
+        disposables.add(disposabled);
     }
 
     public void clearDisposable() {
-        compositeDisposable.clear();
+        disposables.clear();
     }
 
     protected void render(ViewState viewState) {
         getView().render(viewState, (ViewStateRender) getView());
     }
 
-    public <T> Observable<T> rxSwitchThread(Observable<T> observable){
+    public <T> Observable<T> rxSwitchThread(Observable<T> observable) {
         return observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
     }
 }

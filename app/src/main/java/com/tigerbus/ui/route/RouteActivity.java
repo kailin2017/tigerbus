@@ -61,7 +61,8 @@ public final class RouteActivity extends BaseActivity<RouteView, RoutePresenter>
             return false;
         });
         ArrivalFragment arrivalFragment = ArrivalFragment.newInstance(busRoute);
-        getFragmentManager().beginTransaction().replace(routeViewId, arrivalFragment);
+        arrivalFragment.setSubject(stopOfRouteSubject, estimateSubject);
+        getFragmentManager().beginTransaction().replace(routeViewId, arrivalFragment).commit();
     }
 
     @Override
@@ -74,7 +75,6 @@ public final class RouteActivity extends BaseActivity<RouteView, RoutePresenter>
         super.onStart();
         bindBusRouteSubject.onNext(busRoute);
     }
-
 
 
     @Override
@@ -117,8 +117,6 @@ public final class RouteActivity extends BaseActivity<RouteView, RoutePresenter>
     public void renderFinish() {
         dimessProgress();
     }
-
-
 
 
 }

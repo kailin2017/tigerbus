@@ -9,6 +9,8 @@ import retrofit2.http.GET;
 
 public interface DefaultService {
 
+    String CITYS = "CITYS";
+
     @GET("https://us-central1-kailinfire.cloudfunctions.net/citylist")
     Observable<ArrayList<City>> getCitys();
 }
