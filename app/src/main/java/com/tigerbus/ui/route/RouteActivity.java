@@ -24,7 +24,7 @@ import io.reactivex.subjects.PublishSubject;
 
 @ActivityView(layout = R.layout.route_activity)
 public final class RouteActivity extends BaseActivity<RouteView, RoutePresenter>
-        implements RouteView<ViewStateRender>, ViewStateRender<Object> {
+        implements RouteView<ViewStateRender>, ViewStateRender<Bundle> {
 
     private final static int routeViewId = R.id.routeview;
     private final PublishSubject<BusRoute> bindBusRouteSubject = PublishSubject.create();
@@ -60,9 +60,6 @@ public final class RouteActivity extends BaseActivity<RouteView, RoutePresenter>
             }
             return false;
         });
-        ArrivalFragment arrivalFragment = ArrivalFragment.newInstance(busRoute);
-        arrivalFragment.setSubject(stopOfRouteSubject, estimateSubject);
-        getFragmentManager().beginTransaction().replace(routeViewId, arrivalFragment).commit();
     }
 
     @Override
@@ -100,17 +97,20 @@ public final class RouteActivity extends BaseActivity<RouteView, RoutePresenter>
     }
 
     @Override
-    public void renderSuccess(Object result) {
-        if (result instanceof ArrayList) {
-            Object object = ((ArrayList) result).get(0);
-            if (object instanceof BusStopOfRoute) {
-                stopOfRouteSubject.onNext((ArrayList<BusStopOfRoute>) result);
-            } else if (object instanceof BusEstimateTime) {
-                estimateSubject.onNext((ArrayList<BusEstimateTime>) result);
-            } else {
-                renderException("Error Data!!!");
-            }
-        }
+    public void renderSuccess(Bundle bundle) {
+        ArrivalFragment arrivalFragment = ArrivalFragment.newInstance(bundle);
+        getFragmentManager().beginTransaction().replace(routeViewId, arrivalFragment).commit();
+//        if (result instanceof ArrayList) {
+//            Object object = ((ArrayList) result).get(0);
+//            if (object instanceof BusStopOfRoute) {
+//                stopOfRouteSubject.onNext((ArrayList<BusStopOfRoute>) result);
+//
+//            } else if (object instanceof BusEstimateTime) {
+//                estimateSubject.onNext((ArrayList<BusEstimateTime>) result);
+//            } else {
+//                renderException("Error Data!!!");
+//            }
+//        }
     }
 
     @Override

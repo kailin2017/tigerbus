@@ -1,14 +1,14 @@
 package com.tigerbus.ui.route;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
-import android.support.v4.view.PagerAdapter;
+import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.tigerbus.R;
 import com.tigerbus.TigerApplication;
@@ -25,18 +25,20 @@ import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.subjects.PublishSubject;
 
-public final class ArrivalPagerAdapter extends PagerAdapter {
+public class ArrivalPagerAdapter2 extends FragmentStatePagerAdapter {
 
     private final static String TAG = ArrivalPagerAdapter.class.getSimpleName();
     private final static String KEY_SUBROUTENAME = "KEY_SUBROUTENAME", KEY_SUBROUTEkEY = "KEY_SUBROUTEkEY", KEY_STOPFORROUTE = "KEY_STOPFORROUTE";
     private ArrayList<RecyclerView> recyclerViews = new ArrayList<>();
+    private ArrayList<ArrivalRecyclerFragment> fragments = new ArrayList<>();
     private BusRoute busRoute;
     private Map<String, PublishSubject<ArrayList<BusEstimateTime>>> publishSubjectMap = new HashMap<>();
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
-    private Context context;
 
-    public ArrivalPagerAdapter(Context context, TabLayout tabLayout, BusRoute busRoute, ArrayList<BusStopOfRoute> busStopOfRoutes) {
-        this.context = context;
+    public ArrivalPagerAdapter2(
+            FragmentManager fragmentManager, Context context, TabLayout tabLayout,
+            BusRoute busRoute, ArrayList<BusStopOfRoute> busStopOfRoutes) {
+        super(fragmentManager);
         this.busRoute = busRoute;
         Map<String, BusStopOfRoute> busStopOfRouteMap = initBusStopOfRouteMap(busStopOfRoutes);
         initSubject(context, tabLayout, busStopOfRouteMap);
@@ -66,7 +68,7 @@ public final class ArrivalPagerAdapter extends PagerAdapter {
                     mapKey.append(busSubRoute.getSubRouteUID());
                     mapKey.append("_");
                     mapKey.append(busSubRoute.getDirection());
-                    //產生view及綁定subject
+                    // 產生view及綁定subject
                     PublishSubject<ArrayList<BusEstimateTime>> publishSubject = PublishSubject.create();
                     ArrivalRecyclerAdapter adapter = new ArrivalRecyclerAdapter(
                             busStopOfRouteMap.get(busSubRoute.getDirection()), publishSubject);
@@ -92,6 +94,11 @@ public final class ArrivalPagerAdapter extends PagerAdapter {
     @Override
     public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
         container.removeView(recyclerViews.get(position));
+    }
+
+    @Override
+    public Fragment getItem(int position) {
+        return null;
     }
 
     @Override

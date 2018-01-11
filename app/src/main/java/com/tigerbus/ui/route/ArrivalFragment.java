@@ -31,6 +31,7 @@ public final class ArrivalFragment extends BaseFragment<ArrivalView, ArrivalPres
 //    private PublishSubject<ArrayList<BusEstimateTime>> estimateSubject;
     private PublishSubject<Boolean> onCreateViewSubject = PublishSubject.create();
     private Disposable onCreateViewSubjectDisposable;
+    private ArrayList<BusStopOfRoute> busStopOfRoutes;
 
     @ViewInject(R.id.tablayout)
     private TabLayout tabLayout;
@@ -38,9 +39,7 @@ public final class ArrivalFragment extends BaseFragment<ArrivalView, ArrivalPres
     private ViewPager viewPager;
     private BusRoute busRoute;
 
-    public static ArrivalFragment newInstance(@NonNull BusRoute busRoute) {
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(CityBusService.BUS_ROUTE, busRoute);
+    public static ArrivalFragment newInstance(@NonNull Bundle bundle) {
         ArrivalFragment arrivalFragment = new ArrivalFragment();
         arrivalFragment.setArguments(bundle);
         return arrivalFragment;
@@ -54,7 +53,9 @@ public final class ArrivalFragment extends BaseFragment<ArrivalView, ArrivalPres
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        busRoute = getArguments().getParcelable(CityBusService.BUS_ROUTE);
+        Bundle bundle = getArguments();
+        busRoute = bundle.getParcelable(CityBusService.BUS_ROUTE);
+        busStopOfRoutes = bundle.getParcelableArrayList(CityBusService.BUS_STOP_OF_ROUTE);
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 

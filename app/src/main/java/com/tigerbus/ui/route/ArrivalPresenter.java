@@ -7,4 +7,9 @@ import com.tigerbus.base.BasePresenter;
  */
 
 public final class ArrivalPresenter extends BasePresenter<ArrivalView> {
+
+    @Override
+    public void bindIntent() {
+
+    }
 }
