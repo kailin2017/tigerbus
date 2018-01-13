@@ -20,7 +20,7 @@ import com.tigerbus.data.detail.NameType;
  }
  */
 
-public final class BusSubRoute implements Parcelable,BusData{
+public final class BusSubRoute implements Parcelable,BusSubRouteInterface {
     private String SubRouteUID;
     private String SubRouteID;
     private String[] OperatorIDs;
@@ -77,6 +77,7 @@ public final class BusSubRoute implements Parcelable,BusData{
         }
     };
 
+    @Override
     public String getSubRouteUID() {
         return SubRouteUID;
     }
@@ -117,6 +118,7 @@ public final class BusSubRoute implements Parcelable,BusData{
         Headsign = headsign;
     }
 
+    @Override
     public String getDirection() {
         return Direction;
     }
@@ -155,5 +157,9 @@ public final class BusSubRoute implements Parcelable,BusData{
 
     public void setHolidayLastBusTime(String holidayLastBusTime) {
         HolidayLastBusTime = holidayLastBusTime;
+    }
+
+    public static Creator<BusSubRoute> getCREATOR() {
+        return CREATOR;
     }
 }

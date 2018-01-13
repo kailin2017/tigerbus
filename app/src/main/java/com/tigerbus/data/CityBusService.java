@@ -25,7 +25,7 @@ public interface CityBusService {
     @GET("http://ptx.transportdata.tw/MOTC/v2/Bus/Route/City/{City}?$format=JSON")
     Observable<ArrayList<BusRoute>> getBusRoute(@NonNull @Path("City") String city);
 
-    @GET("http://ptx.transportdata.tw/MOTC/v2/Bus/DisplayStopOfRoute/City/{City}/{route}?$format=JSON")
+    @GET("http://ptx.transportdata.tw/MOTC/v2/Bus/StopOfRoute/City/{City}/{route}?$format=JSON")
     Observable<ArrayList<BusStopOfRoute>> getBusStopOfRoute(
             @NonNull @Path("City") String city, @NonNull @Path("route") String route);
 

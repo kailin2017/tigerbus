@@ -26,9 +26,18 @@ public class BasePresenter<V extends BaseView> extends MvpPresenterImpl<V> {
         disposables.add(disposabled);
     }
 
+    public void addUiDisposable(@NonNull Disposable disposabled){
+        uiDisposables.add(disposabled);
+    }
+
     public void clearDisposable() {
         disposables.clear();
     }
+
+    public void clearUiDisposable(){
+        uiDisposables.clear();
+    }
+
 
     protected void render(ViewState viewState) {
         getView().render(viewState, (ViewStateRender) getView());

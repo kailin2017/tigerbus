@@ -13,7 +13,7 @@
     <string name="dialog_cancel">取消</string>
 
     <string name="search_hint">搜尋路線</string>
-    <string name="route_go">往</string>
+    <string name="route_go">往 </string>
 
 
 </resources>

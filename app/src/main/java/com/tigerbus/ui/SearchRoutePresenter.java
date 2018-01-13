@@ -2,7 +2,6 @@ package com.tigerbus.ui;
 
 import com.tigerbus.TigerApplication;
 import com.tigerbus.base.BasePresenter;
-import com.tigerbus.data.CityBusService;
 import com.tigerbus.data.bus.BusRoute;
 
 import java.util.ArrayList;

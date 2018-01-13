@@ -10,6 +10,6 @@ import io.reactivex.Observable;
 
 public interface RouteView<VR extends ViewStateRender> extends BaseView<VR> {
 
-    Observable<BusRoute> bindStopOfRoute();
+    Observable<BusRoute> bindIntent();
 
 }

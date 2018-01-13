@@ -9,14 +9,27 @@
     tools:context="com.tigerbus.ui.MainActivity"
     tools:showIn="@layout/main_appbar">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerview"
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/mainview"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" >
+
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:src="@drawable/ic_nav_search"
+        app:layout_anchor="@+id/mainview"
+        app:layout_anchorGravity="right|bottom"
+        app:layout_constraintBottom_toBottomOf="@+id/mainview"
+        app:layout_constraintEnd_toEndOf="@+id/mainview"/>
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/bottomNavigationView"

@@ -8,7 +8,6 @@ import android.view.Menu;
 
 import com.tigerbus.R;
 import com.tigerbus.base.BaseActivity;
-import com.tigerbus.base.ViewState;
 import com.tigerbus.base.ViewStateRender;
 import com.tigerbus.base.annotation.ActivityView;
 import com.tigerbus.base.annotation.ViewInject;
@@ -28,7 +27,6 @@ public final class RouteActivity extends BaseActivity<RouteView, RoutePresenter>
 
     private final static int routeViewId = R.id.routeview;
     private final PublishSubject<BusRoute> bindBusRouteSubject = PublishSubject.create();
-    private final PublishSubject<ArrayList<BusStopOfRoute>> stopOfRouteSubject = PublishSubject.create();
     private final PublishSubject<ArrayList<BusEstimateTime>> estimateSubject = PublishSubject.create();
     private BusRoute busRoute;
     @ViewInject(R.id.toolbar)
@@ -63,7 +61,7 @@ public final class RouteActivity extends BaseActivity<RouteView, RoutePresenter>
     }
 
     @Override
-    public Observable<BusRoute> bindStopOfRoute() {
+    public Observable<BusRoute> bindIntent() {
         return bindBusRouteSubject;
     }
 
@@ -83,12 +81,7 @@ public final class RouteActivity extends BaseActivity<RouteView, RoutePresenter>
     @NonNull
     @Override
     public RoutePresenter createPresenter() {
-        return new RoutePresenter();
-    }
-
-    @Override
-    public void render(ViewState viewState) {
-
+        return new RoutePresenter(estimateSubject);
     }
 
     @Override
@@ -99,18 +92,8 @@ public final class RouteActivity extends BaseActivity<RouteView, RoutePresenter>
     @Override
     public void renderSuccess(Bundle bundle) {
         ArrivalFragment arrivalFragment = ArrivalFragment.newInstance(bundle);
+        arrivalFragment.setPublishSubject(estimateSubject);
         getFragmentManager().beginTransaction().replace(routeViewId, arrivalFragment).commit();
-//        if (result instanceof ArrayList) {
-//            Object object = ((ArrayList) result).get(0);
-//            if (object instanceof BusStopOfRoute) {
-//                stopOfRouteSubject.onNext((ArrayList<BusStopOfRoute>) result);
-//
-//            } else if (object instanceof BusEstimateTime) {
-//                estimateSubject.onNext((ArrayList<BusEstimateTime>) result);
-//            } else {
-//                renderException("Error Data!!!");
-//            }
-//        }
     }
 
     @Override

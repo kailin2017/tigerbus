@@ -7,20 +7,22 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.tigerbus.R;
+import com.tigerbus.TigerApplication;
+import com.tigerbus.base.log.TlogType;
 import com.tigerbus.data.bus.BusEstimateTime;
 import com.tigerbus.data.bus.BusStopOfRoute;
-import com.tigerbus.data.detail.NameType;
 import com.tigerbus.data.detail.Stop;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
 
 /**
@@ -29,27 +31,30 @@ import io.reactivex.subjects.PublishSubject;
 
 public final class ArrivalRecyclerAdapter extends RecyclerView.Adapter<ArrivalRecyclerAdapter.ViewHolder> {
 
-
+    private final static String TAG = ArrivalRecyclerAdapter.class.getSimpleName();
     private BusStopOfRoute busStopOfRoute;
-    private ArrayList<BusEstimateTime> busEstimateTimes;
     private Map<String, BusEstimateTime> busEstimateTimeMap = new HashMap<>();
-    private PublishSubject<ArrayList<BusEstimateTime>> publishSubject;
     private Disposable disposable;
 
     public ArrivalRecyclerAdapter(@NonNull BusStopOfRoute busStopOfRoute,
                                   @NonNull PublishSubject<ArrayList<BusEstimateTime>> publishSubject) {
         this.busStopOfRoute = busStopOfRoute;
-        this.publishSubject = publishSubject;
-        initPublicsh();
+        this.disposable = publishSubject.subscribe(busEstimateTimes -> initData(busEstimateTimes));
     }
 
-    public void initPublicsh() {
-        disposable = publishSubject
-                .flatMap(busEstimateTimes -> Observable.fromIterable(busEstimateTimes))
-                .subscribe(busEstimateTime -> busEstimateTimeMap.put(busEstimateTime.getRouteUID(), busEstimateTime));
+    private void initData(ArrayList<BusEstimateTime> busEstimateTimes) {
+        // 不可使用rxJava 否則會有notifyDataSetChanged失效問題
+        for (BusEstimateTime busEstimateTime : busEstimateTimes) {
+            if (busEstimateTime.getDirection().equalsIgnoreCase(busStopOfRoute.getDirection()) &&
+                    (busEstimateTime.getSubRouteUID() != null ?
+                            busEstimateTime.getSubRouteUID().equalsIgnoreCase(busStopOfRoute.getSubRouteUID()) : true)) {
+                busEstimateTimeMap.put(busEstimateTime.getStopUID(), busEstimateTime);
+            }
+        }
+        notifyDataSetChanged();
     }
 
-    public Disposable getDiaposable(){
+    public Disposable getDiaposable() {
         return disposable;
     }
 
@@ -62,9 +67,9 @@ public final class ArrivalRecyclerAdapter extends RecyclerView.Adapter<ArrivalRe
     public void onBindViewHolder(ViewHolder holder, int position) {
         Stop stop = busStopOfRoute.getStops().get(position);
         holder.stopName.setText(stop.getStopName().getZh_tw());
-        if (busEstimateTimes != null) {
-            BusEstimateTime busEstimateTime = busEstimateTimeMap.get(busStopOfRoute.getRouteUID());
-            holder.estimateTime.setText(busEstimateTime.getEstimateTime() % 60);
+        BusEstimateTime busEstimateTime = busEstimateTimeMap.get(stop.getStopUID());
+        if (busEstimateTime != null) {
+            holder.estimateTime.setText(busEstimateTime.getEstimateTime() + "");
         }
     }
 

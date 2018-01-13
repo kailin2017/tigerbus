@@ -52,7 +52,7 @@ import java.util.ArrayList;
  }
  */
 
-public final class BusRoute implements Parcelable, Comparable<BusRoute>,BusData {
+public final class BusRoute implements Parcelable, Comparable<BusRoute>,BusRouteInterface {
     private String RouteUID;
     private String RouteID;
     private boolean HasSubRoutes;
@@ -144,6 +144,13 @@ public final class BusRoute implements Parcelable, Comparable<BusRoute>,BusData 
         }
     };
 
+    @Override
+    public int compareTo(@NonNull BusRoute busRoute) {
+        int compareAge = busRoute.getSearchSocre();
+        return this.getSearchSocre() - compareAge;
+    }
+
+    @Override
     public String getRouteUID() {
         return RouteUID;
     }
@@ -208,6 +215,7 @@ public final class BusRoute implements Parcelable, Comparable<BusRoute>,BusData 
         BusRouteType = busRouteType;
     }
 
+    @Override
     public NameType getRouteName() {
         return RouteName;
     }
@@ -320,9 +328,7 @@ public final class BusRoute implements Parcelable, Comparable<BusRoute>,BusData 
         SearchSocre = searchSocre;
     }
 
-    @Override
-    public int compareTo(@NonNull BusRoute busRoute) {
-        int compareAge = busRoute.getSearchSocre();
-        return this.getSearchSocre() - compareAge;
+    public static Creator<BusRoute> getCREATOR() {
+        return CREATOR;
     }
 }

@@ -10,7 +10,6 @@ import com.tigerbus.data.bus.BusRoute;
 import com.tigerbus.util.TigerPreferences;
 
 import java.lang.ref.SoftReference;
-import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 

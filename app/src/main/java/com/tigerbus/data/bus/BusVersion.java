@@ -7,7 +7,7 @@ import android.os.Parcelable;
  * Created by Kailin on 2017/12/31.
  */
 
-public final class BusVersion implements Parcelable,BusData{
+public final class BusVersion implements Parcelable{
     private int VersionID;
     private String UpdateTime;
     private String UpdateCheckTime;
