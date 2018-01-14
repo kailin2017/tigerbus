@@ -28,7 +28,6 @@ public abstract class MvpFragment<V extends MvpView, P extends MvpPresenter<V>>
     private FragmentView fragmentView;
 
 
-
     @NonNull
     public boolean isMVP() {
         return true;
@@ -80,15 +79,16 @@ public abstract class MvpFragment<V extends MvpView, P extends MvpPresenter<V>>
 
     public void onAttachs(Context context) {
         this.context = context;
+        fragmentView = getClass().getAnnotation(FragmentView.class);
+        if (fragmentView != null) {
+            isMvpPatten = fragmentView.mvp();
+            layoutId = fragmentView.layout();
+        }
         getMvpDelegate().onAttach(context);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        fragmentView = getClass().getAnnotation(FragmentView.class);
-        if (fragmentView != null) {
-            isMvpPatten = fragmentView.mvp();
-        }
         super.onCreate(savedInstanceState);
         getMvpDelegate().onCreate(savedInstanceState);
     }
@@ -156,7 +156,7 @@ public abstract class MvpFragment<V extends MvpView, P extends MvpPresenter<V>>
 
     @NonNull
     protected FragmentMvpDelegate<V, P> getMvpDelegate() {
-        synchronized (FragmentMvpDelegate.class){
+        synchronized (FragmentMvpDelegate.class) {
             if (mvpDelegate == null) {
                 mvpDelegate = isMvpPatten ? new FragmentMvpDelegateImpl<>(this) : new FragmentMvpDelegateImplnon();
             }

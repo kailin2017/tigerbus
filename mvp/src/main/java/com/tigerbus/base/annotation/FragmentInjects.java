@@ -29,7 +29,7 @@ public final class FragmentInjects {
     }
 
     private static void injectViews(Class<? extends MvpFragment> clazz, MvpFragment mvpFragment, View layoutView) throws IllegalAccessException {
-        for (Field field : clazz.getFields()) {
+        for (Field field : clazz.getDeclaredFields()) {
             ViewInject viewInject = field.getAnnotation(ViewInject.class);
             if (viewInject != null) {
                 int viewId = viewInject.value();
@@ -43,7 +43,7 @@ public final class FragmentInjects {
     }
 
     private static void injectEvent(Class<? extends MvpFragment> clazz, MvpFragment mvpFragment, View layoutView) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        for (Method method : clazz.getMethods()) {
+        for (Method method : clazz.getDeclaredMethods()) {
             for (Annotation annotation : method.getAnnotations()) {
                 Class<? extends Annotation> annotationType = annotation.annotationType();
                 BaseEvent baseEvent = annotationType.getAnnotation(BaseEvent.class);

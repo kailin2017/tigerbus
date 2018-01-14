@@ -26,6 +26,14 @@ android {
         sourceCompatibility rootProject.javaVersion
         targetCompatibility rootProject.javaVersion
     }
+    signingConfigs {
+        config {
+            keyAlias 'key0'
+            keyPassword '963852'
+            storePassword '963852'
+            storeFile file('C:/Users/Kailin/Documents/tiger.jks')
+        }
+    }
     buildTypes {
         release {
             minifyEnabled false
@@ -34,14 +42,6 @@ android {
         }
         debug {
             signingConfig signingConfigs.config
-        }
-    }
-    signingConfigs {
-        config {
-            keyAlias 'key0'
-            keyPassword '963852'
-            storePassword '963852'
-            storeFile file('C:/Users/Kailin/Documents/tiger.jks')
         }
     }
     externalNativeBuild {

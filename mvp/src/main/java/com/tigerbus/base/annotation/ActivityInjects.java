@@ -54,7 +54,7 @@ public final class ActivityInjects {
     }
 
     private static void injectEvent(Class<? extends MvpActivity> clazz, MvpActivity mvpActivity) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        for (Method method : clazz.getMethods()) {
+        for (Method method : clazz.getDeclaredMethods()) {
             for (Annotation annotation : method.getAnnotations()) {
                 Class<? extends Annotation> annotationType = annotation.annotationType();
                 BaseEvent baseEvent = annotationType.getAnnotation(BaseEvent.class);
