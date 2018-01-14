@@ -11,18 +11,18 @@ import android.os.Parcelable;
  */
 
 public final class PointType implements Parcelable {
-    private String PositionLat;
-    private String PositionLon;
+    private double PositionLat;
+    private double PositionLon;
 
     protected PointType(Parcel in) {
-        PositionLat = in.readString();
-        PositionLon = in.readString();
+        PositionLat = in.readDouble();
+        PositionLon = in.readDouble();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(PositionLat);
-        dest.writeString(PositionLon);
+        dest.writeDouble(PositionLat);
+        dest.writeDouble(PositionLon);
     }
 
     @Override
@@ -42,19 +42,19 @@ public final class PointType implements Parcelable {
         }
     };
 
-    public String getPositionLat() {
+    public double getPositionLat() {
         return PositionLat;
     }
 
-    public void setPositionLat(String positionLat) {
+    public void setPositionLat(double positionLat) {
         PositionLat = positionLat;
     }
 
-    public String getPositionLon() {
+    public double getPositionLon() {
         return PositionLon;
     }
 
-    public void setPositionLon(String positionLon) {
+    public void setPositionLon(double positionLon) {
         PositionLon = positionLon;
     }
 }

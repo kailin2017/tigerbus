@@ -30,6 +30,18 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
+        }
+        debug {
+            signingConfig signingConfigs.config
+        }
+    }
+    signingConfigs {
+        config {
+            keyAlias 'key0'
+            keyPassword '963852'
+            storePassword '963852'
+            storeFile file('C:/Users/Kailin/Documents/tiger.jks')
         }
     }
     externalNativeBuild {
@@ -43,6 +55,7 @@ dependencies {
     implementation project(':mvp')
     // google play & firebase
     implementation "com.google.android.gms:play-services:${rootProject.firebaseVersion}"
+    implementation "com.google.android.gms:play-services-maps:${rootProject.firebaseVersion}"
     implementation "com.google.firebase:firebase-core:${rootProject.firebaseVersion}"
     implementation "com.google.firebase:firebase-crash:${rootProject.firebaseVersion}"
     implementation "com.google.firebase:firebase-messaging:${rootProject.firebaseVersion}"

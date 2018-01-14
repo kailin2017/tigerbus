@@ -14,7 +14,9 @@ import com.tigerbus.base.annotation.ViewInject;
 import com.tigerbus.data.CityBusService;
 import com.tigerbus.data.bus.BusEstimateTime;
 import com.tigerbus.data.bus.BusRoute;
-import com.tigerbus.data.bus.BusStopOfRoute;
+import com.tigerbus.ui.route.arrival.ArrivalInfoFragment;
+import com.tigerbus.ui.route.arrival.ArrivalMainFragment;
+import com.tigerbus.ui.route.arrival.ArrivalMapFragment;
 
 import java.util.ArrayList;
 
@@ -29,8 +31,22 @@ public final class RouteActivity extends BaseActivity<RouteView, RoutePresenter>
     private final PublishSubject<BusRoute> bindBusRouteSubject = PublishSubject.create();
     private final PublishSubject<ArrayList<BusEstimateTime>> estimateSubject = PublishSubject.create();
     private BusRoute busRoute;
+    private Bundle initResut;
+
     @ViewInject(R.id.toolbar)
     private Toolbar toolbar;
+
+    private OnPrimissionListener onPrimissionListener = new OnPrimissionListener() {
+        @Override
+        public void onSuccess() {
+            goArrivalMap();
+        }
+
+        @Override
+        public void onFail() {
+
+        }
+    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,13 +68,16 @@ public final class RouteActivity extends BaseActivity<RouteView, RoutePresenter>
         toolbar.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
                 case R.id.route_info:
+                    goArrivalInfo();
                     break;
                 case R.id.route_map:
+                    checkPrimission(onPrimissionListener);
                     break;
             }
             return false;
         });
     }
+
 
     @Override
     public Observable<BusRoute> bindIntent() {
@@ -91,15 +110,32 @@ public final class RouteActivity extends BaseActivity<RouteView, RoutePresenter>
 
     @Override
     public void renderSuccess(Bundle bundle) {
-        ArrivalFragment arrivalFragment = ArrivalFragment.newInstance(bundle);
-        arrivalFragment.setPublishSubject(estimateSubject);
-        getFragmentManager().beginTransaction().replace(routeViewId, arrivalFragment).commit();
+        this.initResut = bundle;
+        goArrival();
     }
 
     @Override
     public void renderFinish() {
         dimessProgress();
     }
+
+    private void goArrival() {
+        ArrivalMainFragment arrivalFragment = ArrivalMainFragment.newInstance(initResut);
+        arrivalFragment.setEstimateSubject(estimateSubject);
+        nextFragment(routeViewId, arrivalFragment);
+    }
+
+    private void goArrivalInfo() {
+        ArrivalInfoFragment arrivalInfoFragment = ArrivalInfoFragment.newInstance();
+        nextFragment(routeViewId, arrivalInfoFragment);
+    }
+
+    private void goArrivalMap() {
+        ArrivalMapFragment arrivalMapFragment = ArrivalMapFragment.newInstance(initResut);
+        arrivalMapFragment.setEstimateSubject(estimateSubject);
+        nextFragment(routeViewId, arrivalMapFragment);
+    }
+
 
 
 }

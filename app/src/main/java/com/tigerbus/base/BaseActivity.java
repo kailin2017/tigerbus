@@ -1,17 +1,27 @@
 package com.tigerbus.base;
 
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v13.app.ActivityCompat;
 
 import com.tigerbus.TigerApplication;
+
+import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 public abstract class BaseActivity<V extends BaseView, P extends BasePresenter<V>> extends MvpActivity<V, P>
         implements DialogInterface.Progress, DialogInterface.Message {
 
+    private final static String[] primissionList = new String[]{ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION};
+    private OnPrimissionListener onPrimissionListener;
+    public final static int PRIMISSION_SUCCESS = 0;
     public TigerApplication application;
     public ProgressDialog progressDialog;
     public AlertDialog messageDialog;
@@ -38,10 +48,59 @@ public abstract class BaseActivity<V extends BaseView, P extends BasePresenter<V
         super.onDestroy();
     }
 
-    protected void startActivity(Class clazz, Bundle bundle) {
+    @Override
+    public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() > 0) {
+            getFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    public void checkPrimission(@NonNull OnPrimissionListener onPrimissionListener) {
+        this.onPrimissionListener = onPrimissionListener;
+        for (String primission : primissionList) {
+            if (ActivityCompat.checkSelfPermission(context, primission) == PackageManager.PERMISSION_DENIED) {
+                requestPermissions();
+                return;
+            }
+        }
+        onPrimissionListener.onSuccess();
+    }
+
+    private void requestPermissions() {
+        ActivityCompat.requestPermissions(this, primissionList, PRIMISSION_SUCCESS);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case PRIMISSION_SUCCESS:
+                for (int result : grantResults) {
+                    if (result == PackageManager.PERMISSION_DENIED) {
+                        onPrimissionListener.onFail();
+                        return;
+                    }
+                }
+                onPrimissionListener.onSuccess();
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    protected void startActivity(@NonNull Class clazz) {
+        startActivity(new Intent(context, clazz));
+    }
+
+    protected void startActivity(@NonNull Class clazz, @NonNull Bundle bundle) {
         Intent intent = new Intent(context, clazz);
         intent.putExtras(bundle);
         startActivity(intent);
+    }
+
+    protected void nextFragment(@NonNull int viewId, @NonNull Fragment fragment) {
+        getFragmentManager().beginTransaction().replace(viewId, fragment).commit();
     }
 
     @Override
@@ -103,5 +162,11 @@ public abstract class BaseActivity<V extends BaseView, P extends BasePresenter<V
     @Override
     public AlertDialog getMessageDialog() {
         return messageDialog;
+    }
+
+    protected interface OnPrimissionListener {
+        void onSuccess();
+
+        void onFail();
     }
 }

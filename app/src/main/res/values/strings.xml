@@ -15,5 +15,6 @@
     <string name="search_hint">搜尋路線</string>
     <string name="route_go">往 </string>
 
-
+    <string name="google_map_key">AIzaSyC9htzu12_uzx5KNc_R8M4pQK9fHlShxvA</string>
+    <string name="google_map_error1">請開啟定位服務</string>
 </resources>

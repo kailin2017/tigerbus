@@ -43,35 +43,35 @@ public final class TigerApplication extends Application {
         TigerApplication.busRouteData = new SoftReference<>(busRouteData);
     }
 
-    public static void putInt(String key, int value){
-        tigerPreferences.putInt(key,value);
+    public static void putInt(String key, int value) {
+        tigerPreferences.putInt(key, value);
     }
 
-    public static int getInt(String key){
+    public static int getInt(String key) {
         return tigerPreferences.getInt(key);
     }
 
-    public static void putString(String key,String value){
-        tigerPreferences.putString(key,value);
+    public static void putString(String key, String value) {
+        tigerPreferences.putString(key, value);
     }
 
-    public static String getString(String key){
+    public static String getString(String key) {
         return tigerPreferences.getString(key);
     }
 
     public static <T> void putObject(String key, T value, boolean isEncrypt) {
-        tigerPreferences.putObject(key,value,isEncrypt);
+        tigerPreferences.putObject(key, value, isEncrypt);
     }
 
     public static <T> T getObject(String key, Class<T> clazz, boolean isEncrypt) {
-        return tigerPreferences.getObject(key,clazz,isEncrypt);
+        return tigerPreferences.getObject(key, clazz, isEncrypt);
     }
 
     public static <T> ArrayList<T> getObjectArrayList(String key, Class<T[]> clazz, boolean isEncrypt) {
-        return tigerPreferences.getObjectArrayList(key,clazz,isEncrypt);
+        return tigerPreferences.getObjectArrayList(key, clazz, isEncrypt);
     }
 
-    public static <T> String object2String(T t){
+    public static <T> String object2String(T t) {
         return gson.toJson(t);
     }
 

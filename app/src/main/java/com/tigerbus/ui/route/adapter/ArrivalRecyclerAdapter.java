@@ -1,4 +1,4 @@
-package com.tigerbus.ui.route;
+package com.tigerbus.ui.route.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,27 +7,17 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.tigerbus.R;
-import com.tigerbus.TigerApplication;
-import com.tigerbus.base.log.TlogType;
 import com.tigerbus.data.bus.BusEstimateTime;
 import com.tigerbus.data.bus.BusStopOfRoute;
 import com.tigerbus.data.detail.Stop;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
-
-/**
- * Created by Kailin on 2018/1/6.
- */
 
 public final class ArrivalRecyclerAdapter extends RecyclerView.Adapter<ArrivalRecyclerAdapter.ViewHolder> {
 

@@ -1,4 +1,4 @@
-package com.tigerbus.ui.route;
+package com.tigerbus.ui.route.arrival;
 
 import com.tigerbus.base.ViewState;
 

@@ -1,4 +1,4 @@
-package com.tigerbus.ui.route;
+package com.tigerbus.ui.route.adapter;
 
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
@@ -9,28 +9,28 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
-public class ArrivalPagerAdapter extends PagerAdapter {
+public final class ArrivalPagerAdapter extends PagerAdapter {
 
     private ArrayList<RecyclerView> recyclerViews = new ArrayList<>();
 
-    public ArrivalPagerAdapter(TabLayout tabLayout, ArrayList<ArrivalPagerObject> objects) {
+    public ArrivalPagerAdapter(TabLayout tabLayout, ArrayList<ArrivalRecyclerObj> objects) {
         tabLayout.setTabMode(objects.size() > 2 ? TabLayout.MODE_SCROLLABLE : TabLayout.MODE_FIXED);
-        for (ArrivalPagerObject object : objects) {
-            recyclerViews.add(object.getRecyclerView());
+        for (ArrivalRecyclerObj object : objects) {
+            recyclerViews.add(object.getView());
             tabLayout.addTab(tabLayout.newTab().setText(object.getPagerTitle()));
         }
     }
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        RecyclerView recyclerView = recyclerViews.get(position);
-        container.addView(recyclerView);
-        return recyclerView;
+        RecyclerView view = recyclerViews.get(position);
+        container.addView(view);
+        return view;
     }
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
-        container.removeView((View) object);
+        container.removeView((RecyclerView) object);
     }
 
     @Override

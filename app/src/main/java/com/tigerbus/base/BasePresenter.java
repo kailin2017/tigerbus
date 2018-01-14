@@ -22,11 +22,12 @@ public class BasePresenter<V extends BaseView> extends MvpPresenterImpl<V> {
         disposables.remove(disposabled);
     }
 
-    public void addDisposable(@NonNull Disposable disposabled) {
-        disposables.add(disposabled);
+    public void addDisposable(@NonNull Disposable... disposable) {
+        for (Disposable d : disposable)
+            disposables.add(d);
     }
 
-    public void addUiDisposable(@NonNull Disposable disposabled){
+    public void addUiDisposable(@NonNull Disposable disposabled) {
         uiDisposables.add(disposabled);
     }
 
@@ -34,7 +35,7 @@ public class BasePresenter<V extends BaseView> extends MvpPresenterImpl<V> {
         disposables.clear();
     }
 
-    public void clearUiDisposable(){
+    public void clearUiDisposable() {
         uiDisposables.clear();
     }
 

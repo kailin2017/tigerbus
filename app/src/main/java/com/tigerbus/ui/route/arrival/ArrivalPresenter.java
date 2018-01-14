@@ -1,4 +1,4 @@
-package com.tigerbus.ui.route;
+package com.tigerbus.ui.route.arrival;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
