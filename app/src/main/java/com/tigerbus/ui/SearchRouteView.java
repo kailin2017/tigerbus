@@ -5,7 +5,7 @@ import com.tigerbus.base.ViewStateRender;
 
 import io.reactivex.Observable;
 
-interface SearchRouteView<VR extends ViewStateRender> extends BaseView<VR> {
+public interface SearchRouteView<VR extends ViewStateRender> extends BaseView<VR> {
 
     Observable<String> bindSearch();
 }

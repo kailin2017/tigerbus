@@ -85,6 +85,7 @@ public final class ArrivalMapAdapter implements OnMapReadyCallback {
         if (googleMap == null || busEstimateTimeMap.size() == 0)
             return;
         Observable.fromIterable(busStopOfRoute.getStops())
+                .doOnSubscribe(disposable -> googleMap.clear())
                 .subscribe(stop -> {
                     MarkerOptions markerOptions = new MarkerOptions();
                     markerOptions.position(getLatLng(stop.getStopPosition().getPositionLat(), stop.getStopPosition().getPositionLon()));

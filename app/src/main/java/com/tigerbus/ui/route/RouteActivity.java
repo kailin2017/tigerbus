@@ -126,7 +126,7 @@ public final class RouteActivity extends BaseActivity<RouteView, RoutePresenter>
     }
 
     private void goArrivalInfo() {
-        ArrivalInfoFragment arrivalInfoFragment = ArrivalInfoFragment.newInstance();
+        ArrivalInfoFragment arrivalInfoFragment = ArrivalInfoFragment.newInstance(busRoute);
         nextFragment(routeViewId, arrivalInfoFragment);
     }
 

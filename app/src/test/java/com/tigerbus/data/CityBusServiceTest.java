@@ -50,14 +50,14 @@ public final class CityBusServiceTest {
     public void getBusDisplayStopOfRoute() throws Exception {
         UnitTestTools.rxJavaTest(
                 result -> assertTrue(result.get(0).getRouteName().equals("235")),
-                serviceSuccess.getBusStopOfRoute("Taipei", "235"));
+                serviceSuccess.getBusStopOfRoute("Taipei", CityBusService.getRoureUIDQuery("TPE10283")));
     }
 
     @Test
     public void getBusN1EstimateTime() throws Exception {
         UnitTestTools.rxJavaTest(
                 result -> assertTrue(result.get(0).getRouteName().equals("235")),
-                serviceSuccess.getBusEstimateTime("Taipei", "235"));
+                serviceSuccess.getBusEstimateTime("Taipei", CityBusService.getRoureUIDQuery("TPE10283")));
     }
 
 }

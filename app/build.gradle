@@ -34,6 +34,14 @@ android {
             storeFile file('C:/Users/Kailin/Documents/tiger.jks')
         }
     }
+//    productFlavors {
+//        Taiwan {}
+//        Taipei {}
+//        Taoyuan {}
+//        Taichung {}
+//        Tainan {}
+//        Kaohsiung {}
+//    }
     buildTypes {
         release {
             minifyEnabled false

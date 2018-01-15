@@ -20,7 +20,7 @@ public final class RoutePresenter extends BasePresenter<RouteView> {
 
     private PublishSubject<ArrayList<BusEstimateTime>> publishSubject;
     private CityBusService cityBusService = RetrofitModel.getInstance().create(CityBusService.class);
-    private String cityNameEn, routeName;
+    private String cityNameEn, routeUID;
 
     public RoutePresenter(PublishSubject<ArrayList<BusEstimateTime>> publishSubject) {
         this.publishSubject = publishSubject;
@@ -35,10 +35,10 @@ public final class RoutePresenter extends BasePresenter<RouteView> {
 
     private void initData(BusRoute busRoute) {
         cityNameEn = busRoute.getCityName().getEn();
-        routeName = busRoute.getRouteName().getZh_tw();
+        routeUID = CityBusService.getRoureUIDQuery(busRoute.getRouteUID());
         Observable.zip(
-                cityBusService.getBusStopOfRoute(cityNameEn, routeName),
-                cityBusService.getBusEstimateTime(cityNameEn, routeName),
+                cityBusService.getBusStopOfRoute(cityNameEn, routeUID),
+                cityBusService.getBusEstimateTime(cityNameEn, routeUID),
                 (busStopOfRoutes, busEstimateTimes) -> {
                     Bundle bundle = new Bundle();
                     bundle.putParcelable(cityBusService.BUS_ROUTE, busRoute);
@@ -52,7 +52,7 @@ public final class RoutePresenter extends BasePresenter<RouteView> {
     }
 
     private void initEstimateTime() {
-        rxSwitchThread(cityBusService.getBusEstimateTime(cityNameEn, routeName)).subscribe(publishSubject::onNext);
+        rxSwitchThread(cityBusService.getBusEstimateTime(cityNameEn, routeUID)).subscribe(publishSubject::onNext);
     }
 
 

@@ -11,6 +11,7 @@ import io.reactivex.Observable;
 import io.reactivex.annotations.NonNull;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface CityBusService {
 
@@ -25,13 +26,15 @@ public interface CityBusService {
     @GET("http://ptx.transportdata.tw/MOTC/v2/Bus/Route/City/{City}?$format=JSON")
     Observable<ArrayList<BusRoute>> getBusRoute(@NonNull @Path("City") String city);
 
-    @GET("http://ptx.transportdata.tw/MOTC/v2/Bus/StopOfRoute/City/{City}/{route}?$format=JSON")
+    @GET("http://ptx.transportdata.tw/MOTC/v2/Bus/StopOfRoute/City/{City}?$format=JSON")
     Observable<ArrayList<BusStopOfRoute>> getBusStopOfRoute(
-            @NonNull @Path("City") String city, @NonNull @Path("route") String route);
+            @NonNull @Path("City") String city, @NonNull @Query("$filter") String uid);
 
-    @GET("http://ptx.transportdata.tw/MOTC/v2/Bus/EstimatedTimeOfArrival/City/{City}/{route}?$format=JSON")
+    @GET("http://ptx.transportdata.tw/MOTC/v2/Bus/EstimatedTimeOfArrival/City/{City}?$format=JSON")
     Observable<ArrayList<BusEstimateTime>> getBusEstimateTime(
-            @NonNull @Path("City") String city, @NonNull @Path("route") String route);
+            @NonNull @Path("City") String city, @NonNull @Query("$filter") String uid);
 
-
+    static String getRoureUIDQuery(String routeUID) {
+        return "RouteUID eq '" + routeUID + "'";
+    }
 }
