@@ -15,7 +15,7 @@ android {
                 cppFlags "-std=c++14"
             }
         }
-        buildConfigField "String", "MainService", "\"https://www.youtube.com\""
+        buildConfigField "String", "MainService", "\"http://ptx.transportdata.tw\""
     }
     testOptions {
         unitTests {

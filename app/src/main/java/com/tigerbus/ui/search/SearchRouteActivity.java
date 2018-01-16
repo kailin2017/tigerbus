@@ -1,4 +1,4 @@
-package com.tigerbus.ui;
+package com.tigerbus.ui.search;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;

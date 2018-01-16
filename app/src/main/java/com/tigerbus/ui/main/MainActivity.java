@@ -1,13 +1,13 @@
-package com.tigerbus.ui;
+package com.tigerbus.ui.main;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.*;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,22 +18,25 @@ import com.tigerbus.base.ViewStateRender;
 import com.tigerbus.base.annotation.ActivityView;
 import com.tigerbus.base.annotation.ViewInject;
 import com.tigerbus.base.annotation.event.onClick;
+import com.tigerbus.ui.search.SearchRouteActivity;
 
 import io.reactivex.Observable;
-import io.reactivex.subjects.PublishSubject;
 
 @ActivityView(layout = R.layout.main_activity)
 public final class MainActivity extends BaseActivity<MainView, MainPresenter>
         implements MainView<ViewStateRender>, ViewStateRender<Bundle>, NavigationView.OnNavigationItemSelectedListener {
 
     private final static String TAG = MainActivity.class.getSimpleName();
-    private final int mainViewId = R.id.mainview;
     @ViewInject(R.id.toolbar)
     private Toolbar toolbar;
     @ViewInject(R.id.drawer_layout)
     private DrawerLayout drawer;
     @ViewInject(R.id.nav_view)
     private NavigationView navigationView;
+    @ViewInject(R.id.viewpager)
+    private ViewPager viewPager;
+    @ViewInject(R.id.bottomNavigationView)
+    private BottomNavigationView bottomNavigationView;
 
     @NonNull
     @Override

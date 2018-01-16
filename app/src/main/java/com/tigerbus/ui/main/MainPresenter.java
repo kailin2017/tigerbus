@@ -1,4 +1,4 @@
-package com.tigerbus.ui;
+package com.tigerbus.ui.main;
 
 import android.os.Bundle;
 

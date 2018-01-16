@@ -1,7 +1,10 @@
 package com.tigerbus.data;
 
+import com.tigerbus.data.bus.BusA2Data;
+import com.tigerbus.data.bus.BusA1Data;
 import com.tigerbus.data.bus.BusEstimateTime;
 import com.tigerbus.data.bus.BusRoute;
+import com.tigerbus.data.bus.BusShape;
 import com.tigerbus.data.bus.BusStopOfRoute;
 import com.tigerbus.data.bus.BusVersion;
 
@@ -19,19 +22,34 @@ public interface CityBusService {
     String BUS_ROUTE = "BUS_ROUTE";
     String BUS_STOP_OF_ROUTE = "BUS_STOP_OF_ROUTE";
     String BUS_ESTIMATE_TIME = "BUS_ESTIMATE_TIME";
+    String BUS_SHAPE= "BUS_SHAPE";
+    String BUS_A1DATA = "BUS_A1DATA";
+    String BUS_A2DATA = "BUS_A2DATA";
 
-    @GET("http://ptx.transportdata.tw/MOTC/v2/Bus/DataVersion/City/{City}?$format=JSON")
+    @GET("/MOTC/v2/Bus/DataVersion/City/{City}?$format=JSON")
     Observable<BusVersion> getBusVersion(@NonNull @Path("City") String city);
 
-    @GET("http://ptx.transportdata.tw/MOTC/v2/Bus/Route/City/{City}?$format=JSON")
+    @GET("/MOTC/v2/Bus/Route/City/{City}?$format=JSON")
     Observable<ArrayList<BusRoute>> getBusRoute(@NonNull @Path("City") String city);
 
-    @GET("http://ptx.transportdata.tw/MOTC/v2/Bus/StopOfRoute/City/{City}?$format=JSON")
+    @GET("/MOTC/v2/Bus/StopOfRoute/City/{City}?$format=JSON")
     Observable<ArrayList<BusStopOfRoute>> getBusStopOfRoute(
             @NonNull @Path("City") String city, @NonNull @Query("$filter") String uid);
 
-    @GET("http://ptx.transportdata.tw/MOTC/v2/Bus/EstimatedTimeOfArrival/City/{City}?$format=JSON")
+    @GET("/MOTC/v2/Bus/EstimatedTimeOfArrival/City/{City}?$format=JSON")
     Observable<ArrayList<BusEstimateTime>> getBusEstimateTime(
+            @NonNull @Path("City") String city, @NonNull @Query("$filter") String uid);
+
+    @GET("/MOTC/v2/Bus/Shape/City/{City}?$format=JSON")
+    Observable<ArrayList<BusShape>> getShape(
+            @NonNull @Path("City") String city, @NonNull @Query("$filter") String uid);
+
+    @GET("/MOTC/v2/Bus/RealTimeByFrequency/City/{City}?$format=JSON")
+    Observable<ArrayList<BusA2Data>> getBusA1Data(
+            @NonNull @Path("City") String city, @NonNull @Query("$filter") String uid);
+
+    @GET("/MOTC/v2/Bus/BusEstimateTime/City/{City}?$format=JSON")
+    Observable<ArrayList<BusA1Data>> getBusA2Data(
             @NonNull @Path("City") String city, @NonNull @Query("$filter") String uid);
 
     static String getRoureUIDQuery(String routeUID) {

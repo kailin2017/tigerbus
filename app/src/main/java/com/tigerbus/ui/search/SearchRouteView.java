@@ -1,4 +1,4 @@
-package com.tigerbus.ui;
+package com.tigerbus.ui.search;
 
 import com.tigerbus.base.BaseView;
 import com.tigerbus.base.ViewStateRender;

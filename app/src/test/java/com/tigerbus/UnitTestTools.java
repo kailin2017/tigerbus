@@ -36,8 +36,7 @@ public final class UnitTestTools {
 
     public static <T> void rxJavaTest(Consumer<T> consumer, Observable<T>... observables) {
         for (Observable<T> o : observables) {
-            o.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(consumer, throwable -> UnitTestTools.printLog(throwable.toString()));
+            o.subscribe(consumer, throwable -> UnitTestTools.printLog(throwable.toString()));
         }
     }
 

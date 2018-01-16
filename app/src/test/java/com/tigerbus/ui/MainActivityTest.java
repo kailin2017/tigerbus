@@ -2,17 +2,16 @@ package com.tigerbus.ui;
 
 import com.tigerbus.BuildConfig;
 import com.tigerbus.UnitTestTools;
+import com.tigerbus.ui.main.MainActivity;
+import com.tigerbus.ui.main.MainViewState;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowLog;
-
-import io.reactivex.disposables.Disposable;
 
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
