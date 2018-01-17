@@ -37,8 +37,19 @@ import com.tigerbus.data.detail.NameType;
  }
  */
 
-public final class BusA2Data implements Parcelable {
+public final class BusA2Data implements Parcelable, BusRouteInterface {
 
+    public static final Creator<BusA2Data> CREATOR = new Creator<BusA2Data>() {
+        @Override
+        public BusA2Data createFromParcel(Parcel in) {
+            return new BusA2Data(in);
+        }
+
+        @Override
+        public BusA2Data[] newArray(int size) {
+            return new BusA2Data[size];
+        }
+    };
     private String PlateNumb;
     private String OperatorID;
     private String RouteUID;
@@ -121,18 +132,6 @@ public final class BusA2Data implements Parcelable {
         return 0;
     }
 
-    public static final Creator<BusA2Data> CREATOR = new Creator<BusA2Data>() {
-        @Override
-        public BusA2Data createFromParcel(Parcel in) {
-            return new BusA2Data(in);
-        }
-
-        @Override
-        public BusA2Data[] newArray(int size) {
-            return new BusA2Data[size];
-        }
-    };
-
     public String getPlateNumb() {
         return PlateNumb;
     }
@@ -149,6 +148,7 @@ public final class BusA2Data implements Parcelable {
         OperatorID = operatorID;
     }
 
+    @Override
     public String getRouteUID() {
         return RouteUID;
     }
@@ -165,6 +165,7 @@ public final class BusA2Data implements Parcelable {
         RouteID = routeID;
     }
 
+    @Override
     public NameType getRouteName() {
         return RouteName;
     }
@@ -173,6 +174,7 @@ public final class BusA2Data implements Parcelable {
         RouteName = routeName;
     }
 
+    @Override
     public String getSubRouteUID() {
         return SubRouteUID;
     }
@@ -189,6 +191,7 @@ public final class BusA2Data implements Parcelable {
         SubRouteID = subRouteID;
     }
 
+    @Override
     public NameType getSubRouteName() {
         return SubRouteName;
     }
@@ -197,6 +200,7 @@ public final class BusA2Data implements Parcelable {
         SubRouteName = subRouteName;
     }
 
+    @Override
     public String getDirection() {
         return Direction;
     }

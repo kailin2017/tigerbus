@@ -52,7 +52,18 @@ import java.util.ArrayList;
  }
  */
 
-public final class BusRoute implements Parcelable, Comparable<BusRoute>,BusRouteInterface {
+public final class BusRoute implements Parcelable, Comparable<BusRoute>, BusRouteInterface {
+    public static final Creator<BusRoute> CREATOR = new Creator<BusRoute>() {
+        @Override
+        public BusRoute createFromParcel(Parcel in) {
+            return new BusRoute(in);
+        }
+
+        @Override
+        public BusRoute[] newArray(int size) {
+            return new BusRoute[size];
+        }
+    };
     private String RouteUID;
     private String RouteID;
     private boolean HasSubRoutes;
@@ -101,6 +112,10 @@ public final class BusRoute implements Parcelable, Comparable<BusRoute>,BusRoute
         SearchSocre = in.readInt();
     }
 
+    public static Creator<BusRoute> getCREATOR() {
+        return CREATOR;
+    }
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(RouteUID);
@@ -131,18 +146,6 @@ public final class BusRoute implements Parcelable, Comparable<BusRoute>,BusRoute
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<BusRoute> CREATOR = new Creator<BusRoute>() {
-        @Override
-        public BusRoute createFromParcel(Parcel in) {
-            return new BusRoute(in);
-        }
-
-        @Override
-        public BusRoute[] newArray(int size) {
-            return new BusRoute[size];
-        }
-    };
 
     @Override
     public int compareTo(@NonNull BusRoute busRoute) {
@@ -326,9 +329,5 @@ public final class BusRoute implements Parcelable, Comparable<BusRoute>,BusRoute
 
     public void setSearchSocre(int searchSocre) {
         SearchSocre = searchSocre;
-    }
-
-    public static Creator<BusRoute> getCREATOR() {
-        return CREATOR;
     }
 }

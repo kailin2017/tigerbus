@@ -7,7 +7,18 @@ import android.os.Parcelable;
  * Created by Kailin on 2017/12/31.
  */
 
-public final class BusVersion implements Parcelable{
+public final class BusVersion implements Parcelable {
+    public static final Creator<BusVersion> CREATOR = new Creator<BusVersion>() {
+        @Override
+        public BusVersion createFromParcel(Parcel in) {
+            return new BusVersion(in);
+        }
+
+        @Override
+        public BusVersion[] newArray(int size) {
+            return new BusVersion[size];
+        }
+    };
     private int VersionID;
     private String UpdateTime;
     private String UpdateCheckTime;
@@ -29,18 +40,6 @@ public final class BusVersion implements Parcelable{
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<BusVersion> CREATOR = new Creator<BusVersion>() {
-        @Override
-        public BusVersion createFromParcel(Parcel in) {
-            return new BusVersion(in);
-        }
-
-        @Override
-        public BusVersion[] newArray(int size) {
-            return new BusVersion[size];
-        }
-    };
 
     public int getVersionID() {
         return VersionID;

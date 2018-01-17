@@ -45,7 +45,18 @@ import com.tigerbus.data.detail.NameType;
  * }
  */
 
-public final class BusEstimateTime implements Parcelable, BusRouteInterface, BusSubRouteInterface {
+public final class BusEstimateTime implements Parcelable, BusRouteInterface {
+    public static final Creator<BusEstimateTime> CREATOR = new Creator<BusEstimateTime>() {
+        @Override
+        public BusEstimateTime createFromParcel(Parcel in) {
+            return new BusEstimateTime(in);
+        }
+
+        @Override
+        public BusEstimateTime[] newArray(int size) {
+            return new BusEstimateTime[size];
+        }
+    };
     private String PlateNumb;
     private String StopUID;
     private String StopID;
@@ -102,6 +113,15 @@ public final class BusEstimateTime implements Parcelable, BusRouteInterface, Bus
         UpdateTime = in.readString();
     }
 
+    public static Creator<BusEstimateTime> getCREATOR() {
+        return CREATOR;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(PlateNumb);
@@ -131,23 +151,6 @@ public final class BusEstimateTime implements Parcelable, BusRouteInterface, Bus
         dest.writeString(SrcUpdateTime);
         dest.writeString(UpdateTime);
     }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    public static final Creator<BusEstimateTime> CREATOR = new Creator<BusEstimateTime>() {
-        @Override
-        public BusEstimateTime createFromParcel(Parcel in) {
-            return new BusEstimateTime(in);
-        }
-
-        @Override
-        public BusEstimateTime[] newArray(int size) {
-            return new BusEstimateTime[size];
-        }
-    };
 
     public String getPlateNumb() {
         return PlateNumb;
@@ -224,6 +227,7 @@ public final class BusEstimateTime implements Parcelable, BusRouteInterface, Bus
         SubRouteID = subRouteID;
     }
 
+    @Override
     public NameType getSubRouteName() {
         return SubRouteName;
     }
@@ -359,9 +363,5 @@ public final class BusEstimateTime implements Parcelable, BusRouteInterface, Bus
 
     public void setUpdateTime(String updateTime) {
         UpdateTime = updateTime;
-    }
-
-    public static Creator<BusEstimateTime> getCREATOR() {
-        return CREATOR;
     }
 }

@@ -40,7 +40,18 @@ import java.util.ArrayList;
  * }
  */
 
-public final class BusStopOfRoute implements Parcelable, BusRouteInterface, BusSubRouteInterface {
+public final class BusStopOfRoute implements Parcelable, BusRouteInterface {
+    public static final Creator<BusStopOfRoute> CREATOR = new Creator<BusStopOfRoute>() {
+        @Override
+        public BusStopOfRoute createFromParcel(Parcel in) {
+            return new BusStopOfRoute(in);
+        }
+
+        @Override
+        public BusStopOfRoute[] newArray(int size) {
+            return new BusStopOfRoute[size];
+        }
+    };
     private String RouteUID;
     private String RouteID;
     private NameType RouteName;
@@ -86,18 +97,6 @@ public final class BusStopOfRoute implements Parcelable, BusRouteInterface, BusS
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<BusStopOfRoute> CREATOR = new Creator<BusStopOfRoute>() {
-        @Override
-        public BusStopOfRoute createFromParcel(Parcel in) {
-            return new BusStopOfRoute(in);
-        }
-
-        @Override
-        public BusStopOfRoute[] newArray(int size) {
-            return new BusStopOfRoute[size];
-        }
-    };
 
     @Override
     public String getRouteUID() {
@@ -150,6 +149,7 @@ public final class BusStopOfRoute implements Parcelable, BusRouteInterface, BusS
         SubRouteID = subRouteID;
     }
 
+    @Override
     public NameType getSubRouteName() {
         return SubRouteName;
     }

@@ -7,41 +7,52 @@ import com.tigerbus.data.detail.NameType;
 import com.tigerbus.data.detail.PointType;
 
 /**
- BusA1Data {
- PlateNumb (string): 車牌號碼 ,
- OperatorID (string, optional): 營運業者代碼 ,
- RouteUID (string, optional): 路線唯一識別代碼，規則為 {業管機關代碼} + {RouteID}，其中 {業管機關代碼} 可於Authority API中的AuthorityCode欄位查詢 ,
- RouteID (string, optional): 地區既用中之路線代碼(為原資料內碼) ,
- RouteName (NameType, optional): 路線名稱 ,
- SubRouteUID (string, optional): 子路線唯一識別代碼，規則為 {業管機關代碼} + {SubRouteID}，其中 {業管機關代碼} 可於Authority API中的AuthorityCode欄位查詢 ,
- SubRouteID (string, optional): 地區既用中之子路線代碼(為原資料內碼) ,
- SubRouteName (NameType, optional): 子路線名稱 ,
- Direction (string, optional): 去返程 = ['0: 去程', '1: 返程'],
- BusPosition (PointType, optional): 車輛位置經度 ,
- Speed (number, optional): 行駛速度(kph) ,
- Azimuth (number, optional): 方位角 ,
- DutyStatus (string, optional): 勤務狀態 = ['0: 正常', '1: 開始', '2: 結束'],
- BusStatus (string, optional): 行車狀況 = ['0: 正常', '1: 車禍', '2: 故障', '3: 塞車', '4: 緊急求援', '5: 加油', '90: 不明', '91: 去回不明', '98: 偏移路線', '99: 非營運狀態', '100: 客滿', '101: 包車出租', '255: 未知'],
- MessageType (string, optional): 資料型態種類 = ['0: 未知', '1: 定期', '2: 非定期'],
- GPSTime (DateTime): 車機時間(ISO8601格式:yyyy-MM-ddTHH:mm:sszzz) ,
- TransTime (DateTime, optional): 車機資料傳輸時間(ISO8601格式:yyyy-MM-ddTHH:mm:sszzz)[多數單位沒有提供此欄位資訊] ,
- SrcRecTime (DateTime, optional): 來源端平台接收時間(ISO8601格式:yyyy-MM-ddTHH:mm:sszzz) ,
- SrcTransTime (DateTime, optional): 來源端平台資料傳出時間(ISO8601格式:yyyy-MM-ddTHH:mm:sszzz)[公總使用TCP動態即時推播故有提供此欄位, 而非公總系統因使用整包資料更新, 故沒有提供此欄位] ,
- SrcUpdateTime (DateTime, optional): 來源端平台資料更新時間(ISO8601格式:yyyy-MM-ddTHH:mm:sszzz)[公總使用TCP動態即時推播故沒有提供此欄位, 而非公總系統因提供整包資料更新, 故有提供此欄] ,
- UpdateTime (DateTime): 本平台資料更新時間(ISO8601格式:yyyy-MM-ddTHH:mm:sszzz)
- }
- NameType {
- Zh_tw (string, optional): 中文繁體名稱 ,
- En (string, optional): 英文名稱
- }
- PointType {
- PositionLat (number, optional): 位置緯度(WGS84) ,
- PositionLon (number, optional): 位置經度(WGS84)
- }
+ * BusA1Data {
+ * PlateNumb (string): 車牌號碼 ,
+ * OperatorID (string, optional): 營運業者代碼 ,
+ * RouteUID (string, optional): 路線唯一識別代碼，規則為 {業管機關代碼} + {RouteID}，其中 {業管機關代碼} 可於Authority API中的AuthorityCode欄位查詢 ,
+ * RouteID (string, optional): 地區既用中之路線代碼(為原資料內碼) ,
+ * RouteName (NameType, optional): 路線名稱 ,
+ * SubRouteUID (string, optional): 子路線唯一識別代碼，規則為 {業管機關代碼} + {SubRouteID}，其中 {業管機關代碼} 可於Authority API中的AuthorityCode欄位查詢 ,
+ * SubRouteID (string, optional): 地區既用中之子路線代碼(為原資料內碼) ,
+ * SubRouteName (NameType, optional): 子路線名稱 ,
+ * Direction (string, optional): 去返程 = ['0: 去程', '1: 返程'],
+ * BusPosition (PointType, optional): 車輛位置經度 ,
+ * Speed (number, optional): 行駛速度(kph) ,
+ * Azimuth (number, optional): 方位角 ,
+ * DutyStatus (string, optional): 勤務狀態 = ['0: 正常', '1: 開始', '2: 結束'],
+ * BusStatus (string, optional): 行車狀況 = ['0: 正常', '1: 車禍', '2: 故障', '3: 塞車', '4: 緊急求援', '5: 加油', '90: 不明', '91: 去回不明', '98: 偏移路線', '99: 非營運狀態', '100: 客滿', '101: 包車出租', '255: 未知'],
+ * MessageType (string, optional): 資料型態種類 = ['0: 未知', '1: 定期', '2: 非定期'],
+ * GPSTime (DateTime): 車機時間(ISO8601格式:yyyy-MM-ddTHH:mm:sszzz) ,
+ * TransTime (DateTime, optional): 車機資料傳輸時間(ISO8601格式:yyyy-MM-ddTHH:mm:sszzz)[多數單位沒有提供此欄位資訊] ,
+ * SrcRecTime (DateTime, optional): 來源端平台接收時間(ISO8601格式:yyyy-MM-ddTHH:mm:sszzz) ,
+ * SrcTransTime (DateTime, optional): 來源端平台資料傳出時間(ISO8601格式:yyyy-MM-ddTHH:mm:sszzz)[公總使用TCP動態即時推播故有提供此欄位, 而非公總系統因使用整包資料更新, 故沒有提供此欄位] ,
+ * SrcUpdateTime (DateTime, optional): 來源端平台資料更新時間(ISO8601格式:yyyy-MM-ddTHH:mm:sszzz)[公總使用TCP動態即時推播故沒有提供此欄位, 而非公總系統因提供整包資料更新, 故有提供此欄] ,
+ * UpdateTime (DateTime): 本平台資料更新時間(ISO8601格式:yyyy-MM-ddTHH:mm:sszzz)
+ * }
+ * NameType {
+ * Zh_tw (string, optional): 中文繁體名稱 ,
+ * En (string, optional): 英文名稱
+ * }
+ * PointType {
+ * PositionLat (number, optional): 位置緯度(WGS84) ,
+ * PositionLon (number, optional): 位置經度(WGS84)
+ * }
  */
 
-public final class BusA1Data implements Parcelable {
+public final class BusA1Data implements Parcelable, BusRouteInterface {
 
+    public static final Creator<BusA1Data> CREATOR = new Creator<BusA1Data>() {
+        @Override
+        public BusA1Data createFromParcel(Parcel in) {
+            return new BusA1Data(in);
+        }
+
+        @Override
+        public BusA1Data[] newArray(int size) {
+            return new BusA1Data[size];
+        }
+    };
     private String PlateNumb;
     private String OperatorID;
     private String RouteUID;
@@ -118,18 +129,6 @@ public final class BusA1Data implements Parcelable {
         return 0;
     }
 
-    public static final Creator<BusA1Data> CREATOR = new Creator<BusA1Data>() {
-        @Override
-        public BusA1Data createFromParcel(Parcel in) {
-            return new BusA1Data(in);
-        }
-
-        @Override
-        public BusA1Data[] newArray(int size) {
-            return new BusA1Data[size];
-        }
-    };
-
     public String getPlateNumb() {
         return PlateNumb;
     }
@@ -146,6 +145,7 @@ public final class BusA1Data implements Parcelable {
         OperatorID = operatorID;
     }
 
+    @Override
     public String getRouteUID() {
         return RouteUID;
     }
@@ -162,6 +162,7 @@ public final class BusA1Data implements Parcelable {
         RouteID = routeID;
     }
 
+    @Override
     public NameType getRouteName() {
         return RouteName;
     }
@@ -170,6 +171,7 @@ public final class BusA1Data implements Parcelable {
         RouteName = routeName;
     }
 
+    @Override
     public String getSubRouteUID() {
         return SubRouteUID;
     }
@@ -186,6 +188,7 @@ public final class BusA1Data implements Parcelable {
         SubRouteID = subRouteID;
     }
 
+    @Override
     public NameType getSubRouteName() {
         return SubRouteName;
     }
@@ -194,6 +197,7 @@ public final class BusA1Data implements Parcelable {
         SubRouteName = subRouteName;
     }
 
+    @Override
     public String getDirection() {
         return Direction;
     }

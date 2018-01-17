@@ -5,6 +5,9 @@ import android.os.Bundle;
 import com.tigerbus.base.BasePresenter;
 import com.tigerbus.connection.RetrofitModel;
 import com.tigerbus.data.CityBusService;
+import com.tigerbus.data.autovalue.BusA1DataListAutoValue;
+import com.tigerbus.data.autovalue.BusA2DataListAutoValue;
+import com.tigerbus.data.bus.BusA2Data;
 import com.tigerbus.data.bus.BusEstimateTime;
 import com.tigerbus.data.bus.BusRoute;
 
@@ -19,6 +22,8 @@ import io.reactivex.subjects.PublishSubject;
 public final class RoutePresenter extends BasePresenter<RouteView> {
 
     private PublishSubject<ArrayList<BusEstimateTime>> publishSubject;
+    private PublishSubject<Bundle> busA1Data;
+    private PublishSubject<Bundle> busA2Data;
     private CityBusService cityBusService = RetrofitModel.getInstance().create(CityBusService.class);
     private String cityNameEn, routeUID;
 
@@ -39,11 +44,13 @@ public final class RoutePresenter extends BasePresenter<RouteView> {
         Observable.zip(
                 cityBusService.getBusStopOfRoute(cityNameEn, routeUID),
                 cityBusService.getBusEstimateTime(cityNameEn, routeUID),
-                (busStopOfRoutes, busEstimateTimes) -> {
+                cityBusService.getShape(cityNameEn,routeUID),
+                (busStopOfRoutes, busEstimateTimes,busShapes) -> {
                     Bundle bundle = new Bundle();
                     bundle.putParcelable(cityBusService.BUS_ROUTE, busRoute);
                     bundle.putParcelableArrayList(cityBusService.BUS_STOP_OF_ROUTE, busStopOfRoutes);
                     bundle.putParcelableArrayList(cityBusService.BUS_ESTIMATE_TIME, busEstimateTimes);
+                    bundle.putParcelableArrayList(cityBusService.BUS_SHAPE,busShapes);
                     return bundle;
                 })
                 .subscribeOn(Schedulers.io())
@@ -52,7 +59,40 @@ public final class RoutePresenter extends BasePresenter<RouteView> {
     }
 
     private void initEstimateTime() {
-        rxSwitchThread(cityBusService.getBusEstimateTime(cityNameEn, routeUID)).subscribe(publishSubject::onNext);
+        rxSwitchThread(getEstimateTime()).subscribe(publishSubject::onNext);
+    }
+
+    private void initA1Data(){
+        Observable.zip(
+                getEstimateTime(),
+                cityBusService.getBusA1Data(cityNameEn, routeUID),
+                (busEstimateTimes, busA1Data) -> {
+                    BusA1DataListAutoValue busA1DataAutoValue =
+                            BusA1DataListAutoValue.create(busA1Data,busEstimateTimes);
+                    return Observable.just(busA1DataAutoValue);
+                }
+        );
+    }
+
+    private void initA2Data(){
+        Observable.zip(
+                getEstimateTime(),
+                cityBusService.getBusA2Data(cityNameEn, routeUID),
+                (busEstimateTimes, busA2Data) -> {
+                    BusA2DataListAutoValue busA2DataAutoValue =
+                            BusA2DataListAutoValue.create(busA2Data,busEstimateTimes);
+                    return busA2DataAutoValue;
+                }
+        )
+        .flatMap(busA2DataListAutoValue -> {
+            ArrayList<BusEstimateTime> busEstimateTimes = busA2DataListAutoValue.busEstimateTimes();
+            ArrayList<BusA2Data> busA2Data = busA2DataListAutoValue.busA2Datas();
+            return Observable.just(busA2Data);
+        });
+    }
+
+    private Observable<ArrayList<BusEstimateTime>> getEstimateTime(){
+        return cityBusService.getBusEstimateTime(cityNameEn,routeUID);
     }
 
 

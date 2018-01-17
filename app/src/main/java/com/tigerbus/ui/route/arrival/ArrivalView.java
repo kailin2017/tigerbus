@@ -1,6 +1,5 @@
 package com.tigerbus.ui.route.arrival;
 
-
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,8 +11,8 @@ import com.tigerbus.R;
 import com.tigerbus.base.BaseView;
 import com.tigerbus.data.bus.BusEstimateTime;
 import com.tigerbus.data.bus.BusRoute;
+import com.tigerbus.data.bus.BusRouteInterface;
 import com.tigerbus.data.bus.BusSubRoute;
-import com.tigerbus.data.bus.BusSubRouteInterface;
 
 import java.util.ArrayList;
 
@@ -55,7 +54,7 @@ public interface ArrivalView extends BaseView {
         return Observable.just(bundle);
     }
 
-    default <T extends BusSubRouteInterface> String getKey(@NonNull T t) {
+    default <T extends BusRouteInterface> String getKey(@NonNull T t) {
         StringBuffer stringBuffer = new StringBuffer();
         stringBuffer.append(t.getSubRouteUID());
         stringBuffer.append("_");

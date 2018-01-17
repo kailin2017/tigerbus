@@ -30,6 +30,8 @@ public final class RouteActivity extends BaseActivity<RouteView, RoutePresenter>
     private final static int routeViewId = R.id.routeview;
     private final PublishSubject<BusRoute> bindBusRouteSubject = PublishSubject.create();
     private final PublishSubject<ArrayList<BusEstimateTime>> estimateSubject = PublishSubject.create();
+    private final PublishSubject<Bundle> busA1Data = PublishSubject.create();
+    private final PublishSubject<Bundle> busA2Data = PublishSubject.create();
     private BusRoute busRoute;
     private Bundle initResut;
 

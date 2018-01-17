@@ -45,11 +45,11 @@ public interface CityBusService {
             @NonNull @Path("City") String city, @NonNull @Query("$filter") String uid);
 
     @GET("/MOTC/v2/Bus/RealTimeByFrequency/City/{City}?$format=JSON")
-    Observable<ArrayList<BusA2Data>> getBusA1Data(
+    Observable<ArrayList<BusA1Data>> getBusA1Data(
             @NonNull @Path("City") String city, @NonNull @Query("$filter") String uid);
 
     @GET("/MOTC/v2/Bus/BusEstimateTime/City/{City}?$format=JSON")
-    Observable<ArrayList<BusA1Data>> getBusA2Data(
+    Observable<ArrayList<BusA2Data>> getBusA2Data(
             @NonNull @Path("City") String city, @NonNull @Query("$filter") String uid);
 
     static String getRoureUIDQuery(String routeUID) {

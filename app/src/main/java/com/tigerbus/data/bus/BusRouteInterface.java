@@ -2,13 +2,26 @@ package com.tigerbus.data.bus;
 
 import com.tigerbus.data.detail.NameType;
 
-/**
- * Created by Kailin on 2018/1/6.
- */
-
 public interface BusRouteInterface {
 
-    String getRouteUID();
+    default String getRouteUID() {
+        return null;
+    }
 
-    NameType getRouteName();
+    default NameType getRouteName() {
+        return null;
+    }
+
+    default String getDirection() {
+        return null;
+    }
+
+    default String getSubRouteUID() {
+        return null;
+    }
+
+    default NameType getSubRouteName() {
+        return null;
+    }
+
 }

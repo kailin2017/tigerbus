@@ -5,8 +5,19 @@ import android.os.Parcelable;
 
 import com.tigerbus.data.detail.NameType;
 
-public final class BusShape implements Parcelable{
+public final class BusShape implements Parcelable, BusRouteInterface {
 
+    public static final Creator<BusShape> CREATOR = new Creator<BusShape>() {
+        @Override
+        public BusShape createFromParcel(Parcel in) {
+            return new BusShape(in);
+        }
+
+        @Override
+        public BusShape[] newArray(int size) {
+            return new BusShape[size];
+        }
+    };
     private String RouteUID;
     private String RouteID;
     private NameType RouteName;
@@ -41,18 +52,7 @@ public final class BusShape implements Parcelable{
         return 0;
     }
 
-    public static final Creator<BusShape> CREATOR = new Creator<BusShape>() {
-        @Override
-        public BusShape createFromParcel(Parcel in) {
-            return new BusShape(in);
-        }
-
-        @Override
-        public BusShape[] newArray(int size) {
-            return new BusShape[size];
-        }
-    };
-
+    @Override
     public String getRouteUID() {
         return RouteUID;
     }
@@ -69,6 +69,7 @@ public final class BusShape implements Parcelable{
         RouteID = routeID;
     }
 
+    @Override
     public NameType getRouteName() {
         return RouteName;
     }
@@ -77,6 +78,7 @@ public final class BusShape implements Parcelable{
         RouteName = routeName;
     }
 
+    @Override
     public String getDirection() {
         return Direction;
     }
