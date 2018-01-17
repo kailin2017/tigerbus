@@ -1,5 +1,6 @@
 package com.tigerbus.ui.route.adapter;
 
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,7 @@ public final class ArrivalRecyclerAdapter extends RecyclerView.Adapter<ArrivalRe
     private final static String TAG = ArrivalRecyclerAdapter.class.getSimpleName();
     private BusStopOfRoute busStopOfRoute;
     private Map<String, BusEstimateTime> busEstimateTimeMap = new HashMap<>();
+    private PublishSubject<Stop> publishSubject = PublishSubject.create();
     private Disposable disposable;
 
     public ArrivalRecyclerAdapter(@NonNull BusStopOfRoute busStopOfRoute,
@@ -48,6 +50,10 @@ public final class ArrivalRecyclerAdapter extends RecyclerView.Adapter<ArrivalRe
         return disposable;
     }
 
+    public PublishSubject<Stop> getClickSubject() {
+        return publishSubject;
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.route_arrival_item, parent, false));
@@ -56,6 +62,7 @@ public final class ArrivalRecyclerAdapter extends RecyclerView.Adapter<ArrivalRe
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Stop stop = busStopOfRoute.getStops().get(position);
+        holder.itemLayout.setTag(stop);
         holder.stopName.setText(stop.getStopName().getZh_tw());
         BusEstimateTime busEstimateTime = busEstimateTimeMap.get(stop.getStopUID());
         if (busEstimateTime != null) {
@@ -68,14 +75,18 @@ public final class ArrivalRecyclerAdapter extends RecyclerView.Adapter<ArrivalRe
         return busStopOfRoute.getStops().size();
     }
 
-    final static class ViewHolder extends RecyclerView.ViewHolder {
+    final class ViewHolder extends RecyclerView.ViewHolder {
 
         public TextView stopName, estimateTime;
+        public ConstraintLayout itemLayout;
 
         public ViewHolder(View view) {
             super(view);
             stopName = view.findViewById(R.id.stopname);
             estimateTime = view.findViewById(R.id.estimatetime);
+            itemLayout = view.findViewById(R.id.item);
+            itemLayout.setOnClickListener(v -> publishSubject.onNext((Stop) v.getTag()));
+
         }
     }
 }

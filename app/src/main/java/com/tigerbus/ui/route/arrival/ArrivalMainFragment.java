@@ -74,6 +74,7 @@ public final class ArrivalMainFragment extends BaseFragment<ArrivalView, Arrival
             ArrivalRecyclerAdapter arrivalRecyclerAdapter = new ArrivalRecyclerAdapter(busStopOfRoute, publishSubject);
             objects.add(new ArrivalRecyclerObj(getTitle(context, route, subRoute), arrivalRecyclerAdapter, context));
             presenter.addDisposable(arrivalRecyclerAdapter.getDiaposable());
+            presenter.addDisposable(arrivalRecyclerAdapter.getClickSubject().subscribe(stop -> {}));
         }
 
         publishSubject.onNext(bundle.getParcelableArrayList(CityBusService.BUS_ESTIMATE_TIME));
