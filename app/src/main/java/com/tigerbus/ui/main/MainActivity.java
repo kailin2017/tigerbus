@@ -18,7 +18,14 @@ import com.tigerbus.base.ViewStateRender;
 import com.tigerbus.base.annotation.ActivityView;
 import com.tigerbus.base.annotation.ViewInject;
 import com.tigerbus.base.annotation.event.onClick;
+import com.tigerbus.ui.main.sub.HomeFragment;
+import com.tigerbus.ui.main.sub.RemindFragment;
+import com.tigerbus.ui.main.sub.SearchFragment;
+import com.tigerbus.ui.main.sub.StationFragment;
+import com.tigerbus.ui.main.sub.SubFragment;
 import com.tigerbus.ui.search.SearchRouteActivity;
+
+import java.util.ArrayList;
 
 import io.reactivex.Observable;
 
@@ -56,6 +63,12 @@ public final class MainActivity extends BaseActivity<MainView, MainPresenter>
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         toggle.syncState();
         drawer.addDrawerListener(toggle);
+//        ArrayList<SubFragment> subFragments = new ArrayList<>();
+//        subFragments.add(HomeFragment.newInstance());
+//        subFragments.add(StationFragment.newInstance());
+//        subFragments.add(SearchFragment.newInstance());
+//        subFragments.add(RemindFragment.newInstance());
+//        viewPager.setAdapter(new MainAdapter(getFragmentManager(), subFragments));
     }
 
     @Override
@@ -64,8 +77,8 @@ public final class MainActivity extends BaseActivity<MainView, MainPresenter>
     }
 
     @onClick({R.id.fab})
-    public void onClick(View view){
-        switch (view.getId()){
+    public void onClick(View view) {
+        switch (view.getId()) {
             case R.id.fab:
                 startActivity(SearchRouteActivity.class);
                 break;

@@ -9,6 +9,12 @@
     <string name="navigation_bottom_station">公車站</string>
     <string name="navigation_bottom_remind">提醒</string>
 
+    <string name="sheetitem_save_station">儲存站牌</string>
+    <string name="sheetitem_remind">到站提醒</string>
+    <string name="sheetitem_station_bus">站牌其他路線</string>
+    <string name="sheetitem_station_lcaotion">站牌地圖位置</string>
+    <string name="sheetitem_station_view">站牌地圖街景</string>
+
     <string name="dialog_ok">確定</string>
     <string name="dialog_cancel">取消</string>
 

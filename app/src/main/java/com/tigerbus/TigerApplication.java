@@ -6,12 +6,16 @@ import android.content.Context;
 import com.google.gson.Gson;
 import com.tigerbus.base.log.Tlog;
 import com.tigerbus.base.log.TlogType;
+import com.tigerbus.data.CityBusService;
 import com.tigerbus.data.bus.BusRoute;
+import com.tigerbus.data.detail.Stop;
 import com.tigerbus.util.TigerPreferences;
 
 import java.lang.ref.SoftReference;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public final class TigerApplication extends Application {
 
@@ -19,6 +23,7 @@ public final class TigerApplication extends Application {
     private static Context context;
     private static TigerPreferences tigerPreferences;
     private static SoftReference<ArrayList<BusRoute>> busRouteData;
+    private static SoftReference<HashSet<Stop>> commodStop;
     private static Gson gson = new Gson();
 
     public static void printLog(TlogType tlogType, String tag, String message) {
@@ -75,12 +80,44 @@ public final class TigerApplication extends Application {
         return gson.toJson(t);
     }
 
+    public static <T> T string2Object(Class<T> clazz, String s) {
+        return gson.fromJson(s, clazz);
+    }
+
     public static void putEncrypt(String key, String value) {
         tigerPreferences.putEncrypt(key, value);
     }
 
     public static String getEncrypt(String key) {
         return tigerPreferences.getEncrypt(key);
+    }
+
+    public static HashSet<Stop> getStopSet() {
+        if (commodStop == null)
+            commodStop = new SoftReference<>(
+                    getStringSet(Stop.class, CityBusService.BUS_STOP_OF_ROUTE));
+        return commodStop.get();
+    }
+
+    public static void commodStopAdd(Stop stop) {
+        HashSet<Stop> hashSet = commodStop.get();
+        hashSet.add(stop);
+        putStringSet(CityBusService.BUS_STOP_OF_ROUTE, hashSet);
+    }
+
+    public static <T> void putStringSet(String key, Set<T> tSet) {
+        Set<String> temp = new HashSet<>();
+        for (T t : tSet)
+            temp.add(object2String(t));
+        tigerPreferences.putStringSet(key, temp);
+    }
+
+    public static <T> HashSet<T> getStringSet(Class<T> clazz, String key) {
+        HashSet<T> result = new HashSet<>();
+        for (String s : tigerPreferences.getStringset(key)) {
+            result.add(string2Object(clazz, s));
+        }
+        return result;
     }
 
     @Override

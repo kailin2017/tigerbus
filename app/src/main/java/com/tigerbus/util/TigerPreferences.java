@@ -31,6 +31,14 @@ public final class TigerPreferences {
         return preferences.getString(key, "");
     }
 
+    public void putStringSet(String key,Set<String> value){
+        preferences.edit().putStringSet(key, value).apply();
+    }
+
+    public Set<String> getStringset(String key){
+        return preferences.getStringSet(key,new HashSet<>());
+    }
+
     public void putInt(String key, int value) {
         preferences.edit().putInt(key, value).apply();
     }
