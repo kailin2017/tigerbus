@@ -7,8 +7,8 @@ import com.google.gson.Gson;
 import com.tigerbus.base.log.Tlog;
 import com.tigerbus.base.log.TlogType;
 import com.tigerbus.data.CityBusService;
+import com.tigerbus.data.bus.RouteStop;
 import com.tigerbus.data.bus.BusRoute;
-import com.tigerbus.data.detail.Stop;
 import com.tigerbus.util.TigerPreferences;
 
 import java.lang.ref.SoftReference;
@@ -23,7 +23,7 @@ public final class TigerApplication extends Application {
     private static Context context;
     private static TigerPreferences tigerPreferences;
     private static SoftReference<ArrayList<BusRoute>> busRouteData;
-    private static SoftReference<HashSet<Stop>> commodStop;
+    private static SoftReference<HashSet<RouteStop>> commodStop;
     private static Gson gson = new Gson();
 
     public static void printLog(TlogType tlogType, String tag, String message) {
@@ -92,15 +92,14 @@ public final class TigerApplication extends Application {
         return tigerPreferences.getEncrypt(key);
     }
 
-    public static HashSet<Stop> getStopSet() {
+    public static HashSet<RouteStop> getStopSet() {
         if (commodStop == null)
-            commodStop = new SoftReference<>(
-                    getStringSet(Stop.class, CityBusService.BUS_STOP_OF_ROUTE));
+            commodStop = new SoftReference<>(getStringSet(RouteStop.class, CityBusService.BUS_STOP_OF_ROUTE));
         return commodStop.get();
     }
 
-    public static void commodStopAdd(Stop stop) {
-        HashSet<Stop> hashSet = commodStop.get();
+    public static void commodStopAdd(RouteStop stop) {
+        HashSet<RouteStop> hashSet = getStopSet();
         hashSet.add(stop);
         putStringSet(CityBusService.BUS_STOP_OF_ROUTE, hashSet);
     }
@@ -128,4 +127,5 @@ public final class TigerApplication extends Application {
 //        CrashHandler crashHandler = new CrashHandler();
 //        crashHandler.init(context);
     }
+
 }

@@ -8,4 +8,10 @@ import io.reactivex.Observable;
 public interface MainView<VR extends ViewStateRender> extends BaseView<VR>{
 
     Observable<Boolean> getInitDataSubject();
+
+    void goHome();
+
+    void goSearch();
+
+    void goRemind();
 }

@@ -2,12 +2,12 @@ package com.tigerbus.ui.route.adapter;
 
 import com.google.android.gms.maps.MapFragment;
 
-public final class ArrivalMapObj {
+public final class MapObj {
 
     private MapFragment mapFragment;
     private String pagerTitle;
 
-    public ArrivalMapObj(String pagerTitle, ArrivalMapAdapter arrivalMapAdapter) {
+    public MapObj(String pagerTitle, ArrivalMapAdapter arrivalMapAdapter) {
         setPagerTitle(pagerTitle);
         setView(arrivalMapAdapter.getMapFragment());
     }

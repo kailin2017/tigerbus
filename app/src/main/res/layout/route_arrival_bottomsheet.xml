@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/coordinatorlayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/bottom_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:behavior_hideable="true"
+        app:layout_behavior="@string/bottom_sheet_behavior"
+        app:layout_constraintBottom_toBottomOf="@+id/coordinatorlayout">
+        <LinearLayout
+            android:id="@+id/bottom_sheet_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/white">
+
+            <TextView
+                android:id="@+id/sheetitem_remind"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/ui8dp"
+                android:text="@string/sheetitem_remind"
+                android:textSize="@dimen/text18sp"
+                android:gravity="left|center"
+                android:clickable="true"
+                android:background="@color/transparent"
+                android:drawableLeft="@drawable/ic_audiotrack_light"/>
+
+            <TextView
+                android:id="@+id/sheetitem_station_save"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/ui8dp"
+                android:text="@string/sheetitem_station_save"
+                android:textSize="@dimen/text18sp"
+                android:gravity="left|center"
+                android:clickable="true"
+                android:background="@color/transparent"
+                android:drawableLeft="@drawable/ic_audiotrack_light"/>
+
+            <TextView
+                android:id="@+id/sheetitem_station_bus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/ui8dp"
+                android:text="@string/sheetitem_station_bus"
+                android:textSize="@dimen/text18sp"
+                android:gravity="left|center"
+                android:clickable="true"
+                android:background="@color/transparent"
+                android:drawableLeft="@drawable/ic_audiotrack_light"/>
+
+            <TextView
+                android:id="@+id/sheetitem_station_lcaotion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/ui8dp"
+                android:text="@string/sheetitem_station_lcaotion"
+                android:textSize="@dimen/text18sp"
+                android:gravity="left|center"
+                android:clickable="true"
+                android:background="@color/transparent"
+                android:drawableLeft="@drawable/ic_audiotrack_light"/>
+
+            <TextView
+                android:id="@+id/sheetitem_station_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/ui8dp"
+                android:text="@string/sheetitem_station_view"
+                android:textSize="@dimen/text18sp"
+                android:gravity="left|center"
+                android:clickable="true"
+                android:background="@color/transparent"
+                android:drawableLeft="@drawable/ic_audiotrack_light"/>
+
+
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+</android.support.design.widget.CoordinatorLayout>

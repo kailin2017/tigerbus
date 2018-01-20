@@ -10,12 +10,12 @@ import android.os.Parcelable;
  * }
  */
 
-public class NameType implements Parcelable{
+public class NameType implements Parcelable {
 
     private String Zh_tw;
     private String En;
 
-    public NameType(String Zh_tw,String En){
+    public NameType(String Zh_tw, String En) {
         setZh_tw(Zh_tw);
         setEn(En);
     }

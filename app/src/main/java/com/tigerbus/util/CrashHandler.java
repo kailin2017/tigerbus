@@ -1,9 +1,10 @@
-package com.tigerbus;
+package com.tigerbus.util;
 
 import android.content.Context;
 import android.os.Process;
 
 import com.google.firebase.crash.FirebaseCrash;
+import com.tigerbus.TigerApplication;
 import com.tigerbus.base.log.TlogType;
 
 public final class CrashHandler implements Thread.UncaughtExceptionHandler {

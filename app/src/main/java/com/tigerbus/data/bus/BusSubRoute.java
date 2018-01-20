@@ -5,8 +5,6 @@ import android.os.Parcelable;
 
 import com.tigerbus.data.detail.NameType;
 
-import java.util.Arrays;
-
 /**
  * BusSubRoute {
  * SubRouteUID (string): 附屬路線唯一識別代碼，規則為 {業管機關代碼} + {SubRouteID}，其中 {業管機關代碼} 可於Authority API中的AuthorityCode欄位查詢 ,

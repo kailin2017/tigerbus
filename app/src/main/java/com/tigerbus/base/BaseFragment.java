@@ -4,13 +4,14 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.tigerbus.TigerApplication;
 
-public abstract class BaseFragment<V extends BaseView, P extends BasePresenter<V>> extends MvpFragment<V, P>
-        implements DialogInterface.Progress, DialogInterface.Message {
+public abstract class BaseFragment<V extends BaseView, P extends BasePresenter<V>>
+        extends MvpFragment<V, P> implements BaseUIInterface {
 
     public TigerApplication application;
     public ProgressDialog progressDialog;
@@ -98,5 +99,13 @@ public abstract class BaseFragment<V extends BaseView, P extends BasePresenter<V
     @Override
     public AlertDialog getMessageDialog() {
         return messageDialog;
+    }
+
+    protected void startActivity(@NonNull Class clazz) {
+        startActivity(context, clazz);
+    }
+
+    protected void startActivity(@NonNull Class clazz, @NonNull Bundle bundle) {
+        startActivity(context, clazz, bundle);
     }
 }

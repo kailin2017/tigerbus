@@ -9,29 +9,18 @@
     tools:context="com.tigerbus.ui.main.MainActivity"
     tools:showIn="@layout/main_appbar">
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/viewpager"
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/mainview"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_nav_view"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" >
-    </android.support.v4.view.ViewPager>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:src="@drawable/fab_search"
-        app:layout_anchor="@+id/viewpager"
-        app:layout_anchorGravity="right|bottom"
-        app:layout_constraintBottom_toBottomOf="@+id/viewpager"
-        app:layout_constraintEnd_toEndOf="@+id/viewpager"/>
+    </android.support.constraint.ConstraintLayout>
 
     <android.support.design.widget.BottomNavigationView
-        android:id="@+id/bottomNavigationView"
+        android:id="@+id/bottom_nav_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:menu="@menu/main_bottom_navigation"

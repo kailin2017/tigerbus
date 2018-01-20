@@ -1,15 +1,17 @@
-package com.tigerbus.ui.route.adapter;
+package com.tigerbus.ui.widget;
 
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-public final class ArrivalRecyclerObj {
+import com.tigerbus.ui.route.adapter.ArrivalRecyclerAdapter;
+
+public final class PagerRecyclerObj {
 
     private RecyclerView recyclerView;
     private String pagerTitle;
 
-    public ArrivalRecyclerObj(String pagerTitle, ArrivalRecyclerAdapter adapter, Context context){
+    public PagerRecyclerObj(String pagerTitle, ArrivalRecyclerAdapter adapter, Context context){
         setPagerTitle(pagerTitle);
         recyclerView = new RecyclerView(context);
         recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));

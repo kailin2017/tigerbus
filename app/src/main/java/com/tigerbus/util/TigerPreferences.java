@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
+import com.tigerbus.TigerApplication;
+import com.tigerbus.base.log.TlogType;
+import com.tigerbus.ui.route.arrival.ArrivalView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,12 +34,12 @@ public final class TigerPreferences {
         return preferences.getString(key, "");
     }
 
-    public void putStringSet(String key,Set<String> value){
+    public void putStringSet(String key, Set<String> value) {
         preferences.edit().putStringSet(key, value).apply();
     }
 
-    public Set<String> getStringset(String key){
-        return preferences.getStringSet(key,new HashSet<>());
+    public Set<String> getStringset(String key) {
+        return preferences.getStringSet(key, new HashSet<>());
     }
 
     public void putInt(String key, int value) {
@@ -49,21 +52,25 @@ public final class TigerPreferences {
 
     public <T> void putObject(String key, T value, boolean isEncrypt) {
         String strValue = gson.toJson(value);
-        if (isEncrypt)
+        putPreferencesLog(key, strValue);
+        if (isEncrypt) {
             putEncrypt(key, strValue);
-        else
+        } else {
             preferences.edit().putString(key, strValue).apply();
+        }
     }
 
     public <T> T getObject(String key, Class<T> clazz, boolean isEncrypt) {
         String result = isEncrypt ? getEncrypt(key) : preferences.getString(key, "");
+        getPreferencesLog(key, result);
         return gson.fromJson(result, clazz);
     }
 
     public <T> ArrayList<T> getObjectArrayList(String key, Class<T[]> clazz, boolean isEncrypt) {
         String result = isEncrypt ? getEncrypt(key) : preferences.getString(key, "");
-        T[] busRoutes = gson.fromJson(result, clazz);
-        return new ArrayList<>(Arrays.asList(busRoutes));
+        T[] ts = gson.fromJson(result, clazz);
+        getPreferencesLog(key, ts);
+        return new ArrayList<>(Arrays.asList(ts));
     }
 
     public void putEncrypt(String key, String value) {
@@ -75,5 +82,23 @@ public final class TigerPreferences {
         Set<String> stringSet = preferences.getStringSet(key, new HashSet<>());
         return stringSet.size() == 2 ? AESGCMHelper.decrypt(stringSet) : "";
     }
+
+    public <T> void putPreferencesLog(String key, T t) {
+        TigerApplication.printLog(TlogType.debug, "putPreferencesLog", getLogMsg(key, t));
+    }
+
+    public <T> void getPreferencesLog(String key, T t) {
+        TigerApplication.printLog(TlogType.debug, "getPreferencesLog", getLogMsg(key, t));
+    }
+
+    private <T> String getLogMsg(String key, T t) {
+        StringBuffer stringBuffer = new StringBuffer();
+        stringBuffer.append("key:");
+        stringBuffer.append(key);
+        stringBuffer.append(",value:");
+        stringBuffer.append(TigerApplication.object2String(t));
+        return stringBuffer.toString();
+    }
+
 
 }

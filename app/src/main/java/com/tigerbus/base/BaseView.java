@@ -1,5 +1,11 @@
 package com.tigerbus.base;
 
+import android.view.View;
+
+import com.jakewharton.rxbinding2.view.RxView;
+
+import io.reactivex.Observable;
+
 public interface BaseView<VR extends ViewStateRender> extends MvpView {
 
     default void render(ViewState viewState) {
@@ -17,5 +23,9 @@ public interface BaseView<VR extends ViewStateRender> extends MvpView {
         } else if (viewState instanceof ViewState.Finish) {
             vr.renderFinish();
         }
+    }
+
+    default Observable<Object> rxClick(View view){
+        return RxView.clicks(view);
     }
 }

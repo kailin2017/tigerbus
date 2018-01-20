@@ -9,17 +9,19 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 
 import com.tigerbus.R;
+import com.tigerbus.Service.RemindService;
 import com.tigerbus.base.BaseFragment;
 import com.tigerbus.base.ViewStateRender;
 import com.tigerbus.base.annotation.FragmentView;
 import com.tigerbus.base.annotation.ViewInject;
 import com.tigerbus.data.CityBusService;
+import com.tigerbus.data.bus.RouteStop;
 import com.tigerbus.data.bus.BusEstimateTime;
 import com.tigerbus.data.bus.BusRoute;
 import com.tigerbus.data.bus.BusStopOfRoute;
 import com.tigerbus.data.bus.BusSubRoute;
 import com.tigerbus.ui.route.adapter.ArrivalMapAdapter;
-import com.tigerbus.ui.route.adapter.ArrivalMapObj;
+import com.tigerbus.ui.route.adapter.MapObj;
 import com.tigerbus.ui.route.adapter.ArrivalPagerMapAdapter;
 import com.tigerbus.util.LocationUtil;
 
@@ -30,14 +32,14 @@ import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
 
 @FragmentView(layout = R.layout.route_arrival_fragment)
-public final class ArrivalMapFragment extends BaseFragment<ArrivalView, ArrivalPresenter>
+public final class ArrivalMapFragment extends BaseFragment<ArrivalView, ArrivalMapPresenter>
         implements ArrivalView, ViewStateRender<Bundle>, LocationUtil.LocationStatusListener {
 
     protected PublishSubject<ArrayList<BusEstimateTime>> estimateSubject = PublishSubject.create();
     protected PublishSubject<Location> locationSubject = PublishSubject.create();
     @ViewInject(R.id.tablayout)
     protected TabLayout tabLayout;
-    @ViewInject(R.id.viewpager)
+    @ViewInject(R.id.mainview)
     protected ViewPager viewPager;
 
     public static ArrivalMapFragment newInstance(@NonNull Bundle bundle) {
@@ -59,13 +61,13 @@ public final class ArrivalMapFragment extends BaseFragment<ArrivalView, ArrivalP
     }
 
     @Override
-    public ArrivalPresenter createPresenter() {
-        return createArrivalPresenter();
+    public ArrivalMapPresenter createPresenter() {
+        return new ArrivalMapPresenter();
     }
 
 
     @Override
-    public Observable<Bundle> initDataIntent() {
+    public Observable<Bundle> bindInitData() {
         return bundle2Obserable(getArguments());
     }
 
@@ -76,7 +78,7 @@ public final class ArrivalMapFragment extends BaseFragment<ArrivalView, ArrivalP
 
     @Override
     public void renderSuccess(Bundle bundle) {
-        ArrayList<ArrivalMapObj> objects = new ArrayList<>();
+        ArrayList<MapObj> objects = new ArrayList<>();
         HashMap<String, BusStopOfRoute> busStopOfRouteMap = (HashMap<String, BusStopOfRoute>) bundle.getSerializable(CityBusService.BUS_STOP_OF_ROUTE);
         BusRoute route = bundle.getParcelable(CityBusService.BUS_ROUTE);
 
@@ -84,7 +86,7 @@ public final class ArrivalMapFragment extends BaseFragment<ArrivalView, ArrivalP
             BusStopOfRoute busStopOfRoute = busStopOfRouteMap.get(getKey(subRoute));
             ArrivalMapAdapter arrivalMapAdapter =
                     new ArrivalMapAdapter(context, busStopOfRoute, estimateSubject, locationSubject);
-            objects.add(new ArrivalMapObj(getTitle(context, route, subRoute), arrivalMapAdapter));
+            objects.add(new MapObj(getTitle(context, route, subRoute), arrivalMapAdapter));
             presenter.addDisposable(arrivalMapAdapter.getDiaposables());
         }
 

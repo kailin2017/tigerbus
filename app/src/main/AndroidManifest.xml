@@ -46,6 +46,8 @@
         <activity
             android:name="com.tigerbus.ui.route.RouteActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
+
+        <service android:name=".Service.RemindService" android:enabled="true" />
     </application>
 
 </manifest>

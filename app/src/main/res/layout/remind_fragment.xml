@@ -26,6 +26,4 @@
         android:background="@android:color/white"
         app:layout_constraintTop_toBottomOf="@+id/appbarlayout" />
 
-    <include layout="@layout/route_arrival_bottomsheet" />
-
 </android.support.constraint.ConstraintLayout>

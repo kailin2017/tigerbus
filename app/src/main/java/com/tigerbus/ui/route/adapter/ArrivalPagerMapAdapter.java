@@ -15,10 +15,10 @@ public final class ArrivalPagerMapAdapter extends FragmentStatePagerAdapter {
 
     private ArrayList<Fragment> fragments = new ArrayList<>();
 
-    public ArrivalPagerMapAdapter(FragmentManager fm, TabLayout tabLayout, ArrayList<ArrivalMapObj> objects) {
+    public ArrivalPagerMapAdapter(FragmentManager fm, TabLayout tabLayout, ArrayList<MapObj> objects) {
         super(fm);
         tabLayout.setTabMode(objects.size() > 2 ? TabLayout.MODE_SCROLLABLE : TabLayout.MODE_FIXED);
-        for (ArrivalMapObj object : objects) {
+        for (MapObj object : objects) {
             fragments.add(object.getView());
             tabLayout.addTab(tabLayout.newTab().setText(object.getPagerTitle()));
         }

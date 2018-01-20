@@ -9,6 +9,7 @@ import android.support.v4.view.ViewPager;
 
 import com.tigerbus.R;
 import com.tigerbus.base.BaseView;
+import com.tigerbus.data.bus.RouteStop;
 import com.tigerbus.data.bus.BusEstimateTime;
 import com.tigerbus.data.bus.BusRoute;
 import com.tigerbus.data.bus.BusRouteInterface;
@@ -21,13 +22,9 @@ import io.reactivex.subjects.PublishSubject;
 
 public interface ArrivalView extends BaseView {
 
-    Observable<Bundle> initDataIntent();
+    Observable<Bundle> bindInitData();
 
     void setEstimateSubject(@NonNull PublishSubject<ArrayList<BusEstimateTime>> estimateSubject);
-
-    default ArrivalPresenter createArrivalPresenter() {
-        return new ArrivalPresenter();
-    }
 
     default void initView(ViewPager viewPager, TabLayout tabLayout, PagerAdapter adapter) {
         viewPager.setAdapter(adapter);

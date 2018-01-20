@@ -1,4 +1,4 @@
-package com.tigerbus.ui.route.adapter;
+package com.tigerbus.ui.widget;
 
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
@@ -9,13 +9,13 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
-public final class ArrivalPagerAdapter extends PagerAdapter {
+public final class PagerRecyclerAdapter extends PagerAdapter {
 
     private ArrayList<RecyclerView> recyclerViews = new ArrayList<>();
 
-    public ArrivalPagerAdapter(TabLayout tabLayout, ArrayList<ArrivalRecyclerObj> objects) {
+    public PagerRecyclerAdapter(TabLayout tabLayout, ArrayList<PagerRecyclerObj> objects) {
         tabLayout.setTabMode(objects.size() > 2 ? TabLayout.MODE_SCROLLABLE : TabLayout.MODE_FIXED);
-        for (ArrivalRecyclerObj object : objects) {
+        for (PagerRecyclerObj object : objects) {
             recyclerViews.add(object.getView());
             tabLayout.addTab(tabLayout.newTab().setText(object.getPagerTitle()));
         }

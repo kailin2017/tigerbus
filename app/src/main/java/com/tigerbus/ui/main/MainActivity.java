@@ -1,48 +1,40 @@
 package com.tigerbus.ui.main;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.tigerbus.R;
 import com.tigerbus.base.BaseActivity;
 import com.tigerbus.base.ViewStateRender;
 import com.tigerbus.base.annotation.ActivityView;
 import com.tigerbus.base.annotation.ViewInject;
-import com.tigerbus.base.annotation.event.onClick;
 import com.tigerbus.ui.main.sub.HomeFragment;
 import com.tigerbus.ui.main.sub.RemindFragment;
-import com.tigerbus.ui.main.sub.SearchFragment;
-import com.tigerbus.ui.main.sub.StationFragment;
-import com.tigerbus.ui.main.sub.SubFragment;
 import com.tigerbus.ui.search.SearchRouteActivity;
-
-import java.util.ArrayList;
 
 import io.reactivex.Observable;
 
 @ActivityView(layout = R.layout.main_activity)
 public final class MainActivity extends BaseActivity<MainView, MainPresenter>
-        implements MainView<ViewStateRender>, ViewStateRender<Bundle>, NavigationView.OnNavigationItemSelectedListener {
+        implements MainView<ViewStateRender>, ViewStateRender<Bundle>{
 
     private final static String TAG = MainActivity.class.getSimpleName();
+    private final static int MAINVIEWID = R.id.mainview;
     @ViewInject(R.id.toolbar)
     private Toolbar toolbar;
     @ViewInject(R.id.drawer_layout)
     private DrawerLayout drawer;
-    @ViewInject(R.id.nav_view)
+    @ViewInject(R.id.drawer_nav_view)
     private NavigationView navigationView;
-    @ViewInject(R.id.viewpager)
-    private ViewPager viewPager;
-    @ViewInject(R.id.bottomNavigationView)
+    @ViewInject(R.id.bottom_nav_view)
     private BottomNavigationView bottomNavigationView;
 
     @NonNull
@@ -59,16 +51,15 @@ public final class MainActivity extends BaseActivity<MainView, MainPresenter>
 
     private void initView() {
         setSupportActionBar(toolbar);
-        navigationView.setNavigationItemSelectedListener(this);
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         toggle.syncState();
         drawer.addDrawerListener(toggle);
-//        ArrayList<SubFragment> subFragments = new ArrayList<>();
-//        subFragments.add(HomeFragment.newInstance());
-//        subFragments.add(StationFragment.newInstance());
-//        subFragments.add(SearchFragment.newInstance());
-//        subFragments.add(RemindFragment.newInstance());
-//        viewPager.setAdapter(new MainAdapter(getFragmentManager(), subFragments));
+
+        navigationView.setNavigationItemSelectedListener(this::onNavigationItemSelected);
+        bottomNavigationView.setOnNavigationItemSelectedListener(this::onNavigationItemSelected);
+
+        goHome();
     }
 
     @Override
@@ -76,18 +67,25 @@ public final class MainActivity extends BaseActivity<MainView, MainPresenter>
         super.onStart();
     }
 
-    @onClick({R.id.fab})
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.fab:
-                startActivity(SearchRouteActivity.class);
-                break;
-        }
-    }
-
     @Override
     public Observable<Boolean> getInitDataSubject() {
         return Observable.just(true);
+    }
+
+    @Override
+    public void goHome() {
+        nextFragment(MAINVIEWID, HomeFragment.newInstance());
+    }
+
+    @Override
+    public void goSearch() {
+//        nextFragment(MAINVIEWID, SearchRouteFragment.newInstance());
+        startActivity(SearchRouteActivity.class);
+    }
+
+    @Override
+    public void goRemind() {
+        nextFragment(MAINVIEWID, RemindFragment.newInstance());
     }
 
     @Override
@@ -100,8 +98,6 @@ public final class MainActivity extends BaseActivity<MainView, MainPresenter>
         }
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         drawer.closeDrawer(GravityCompat.START);
         switch (item.getItemId()) {
@@ -117,6 +113,15 @@ public final class MainActivity extends BaseActivity<MainView, MainPresenter>
                 break;
             case R.id.nav_send:
                 break;
+            case R.id.home:
+                goHome();
+                break;
+            case R.id.search:
+                goSearch();
+                break;
+            case R.id.remind:
+                goRemind();
+                break;
         }
         return true;
     }
@@ -128,7 +133,6 @@ public final class MainActivity extends BaseActivity<MainView, MainPresenter>
 
     @Override
     public void renderSuccess(Bundle result) {
-
     }
 
     @Override

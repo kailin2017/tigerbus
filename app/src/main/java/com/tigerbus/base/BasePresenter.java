@@ -1,5 +1,7 @@
 package com.tigerbus.base;
 
+import android.view.View;
+
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
@@ -8,7 +10,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
-public class BasePresenter<V extends BaseView> extends MvpPresenterImpl<V> {
+public abstract class BasePresenter<V extends BaseView> extends MvpPresenterImpl<V> {
 
     private CompositeDisposable disposables = new CompositeDisposable(), uiDisposables = new CompositeDisposable();
     protected Consumer<Throwable> throwableConsumer = throwable -> render(ViewState.Exception.create(throwable.toString()));
@@ -44,7 +46,8 @@ public class BasePresenter<V extends BaseView> extends MvpPresenterImpl<V> {
         getView().render(viewState, (ViewStateRender) getView());
     }
 
-    public <T> Observable<T> rxSwitchThread(Observable<T> observable) {
+    protected <T> Observable<T> rxSwitchThread(Observable<T> observable) {
         return observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
     }
+
 }

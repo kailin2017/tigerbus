@@ -15,14 +15,23 @@ import java.util.HashMap;
 
 import io.reactivex.Observable;
 
-public final class ArrivalPresenter extends BasePresenter<ArrivalView> {
+public class ArrivalPresenter<V extends ArrivalView> extends BasePresenter<V> {
 
     @Override
     public void bindIntent() {
-        getView().initDataIntent().subscribe(this::initData);
+        getView().bindInitData().subscribe(this::initData);
     }
 
-    private void initData(Bundle defaultBundle) {
+    protected  <T extends BusRouteInterface, F extends BusRouteInterface> ArrayList<T> filterBusRoute(@NonNull ArrayList<T> tArrayList, @NonNull F f) {
+        ArrayList<T> fitlers = new ArrayList<>();
+        Observable.fromIterable(tArrayList)
+                .filter(busStopOfRoute -> busStopOfRoute.getRouteUID().equalsIgnoreCase(f.getRouteUID()))
+                .subscribe(busStopOfRoute -> fitlers.add(busStopOfRoute));
+        return fitlers;
+    }
+
+
+    protected void initData(Bundle defaultBundle) {
         BusRoute busRoute = defaultBundle.getParcelable(CityBusService.BUS_ROUTE);
         ArrayList<BusStopOfRoute> busStopOfRoutesTemp = defaultBundle.getParcelableArrayList(CityBusService.BUS_STOP_OF_ROUTE);
         ArrayList<BusEstimateTime> busEstimateTimesTemp = defaultBundle.getParcelableArrayList(CityBusService.BUS_ESTIMATE_TIME);
@@ -40,14 +49,4 @@ public final class ArrivalPresenter extends BasePresenter<ArrivalView> {
 
         render(ArrivalViewState.Success.create(nextBundle));
     }
-
-
-    private <T extends BusRouteInterface, F extends BusRouteInterface> ArrayList<T> filterBusRoute(@NonNull ArrayList<T> tArrayList, @NonNull F f) {
-        ArrayList<T> fitlers = new ArrayList<>();
-        Observable.fromIterable(tArrayList)
-                .filter(busStopOfRoute -> busStopOfRoute.getRouteUID().equalsIgnoreCase(f.getRouteUID()))
-                .subscribe(busStopOfRoute -> fitlers.add(busStopOfRoute));
-        return fitlers;
-    }
-
 }

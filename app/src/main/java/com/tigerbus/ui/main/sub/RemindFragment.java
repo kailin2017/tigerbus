@@ -1,31 +1,25 @@
 package com.tigerbus.ui.main.sub;
 
-import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 
+import com.tigerbus.R;
+import com.tigerbus.base.BaseFragment;
 import com.tigerbus.base.MvpPresenter;
+import com.tigerbus.base.annotation.FragmentView;
+import com.tigerbus.base.annotation.ViewInject;
 
-/**
- * Created by Kailin on 2018/1/16.
- */
+@FragmentView(mvp = false, layout = R.layout.remind_fragment)
+public final class RemindFragment extends BaseFragment {
 
-public final class RemindFragment extends SubFragment{
+    @ViewInject(R.id.viewpager)
+    private ViewPager viewPager;
+    @ViewInject(R.id.tablayout)
+    private TabLayout tabLayout;
 
     public static RemindFragment newInstance() {
-
-        Bundle args = new Bundle();
-
         RemindFragment fragment = new RemindFragment();
-        fragment.setArguments(args);
         return fragment;
-    }
-    @Override
-    public String getTitle() {
-        return null;
-    }
-
-    @Override
-    public int getIconRes() {
-        return 0;
     }
 
     @Override

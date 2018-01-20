@@ -16,8 +16,8 @@ import com.tigerbus.TigerApplication;
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
-public abstract class BaseActivity<V extends BaseView, P extends BasePresenter<V>> extends MvpActivity<V, P>
-        implements DialogInterface.Progress, DialogInterface.Message {
+public abstract class BaseActivity<V extends BaseView, P extends BasePresenter<V>>
+        extends MvpActivity<V, P> implements BaseUIInterface {
 
     private final static String[] primissionList = new String[]{ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION};
     private OnPrimissionListener onPrimissionListener;
@@ -89,16 +89,6 @@ public abstract class BaseActivity<V extends BaseView, P extends BasePresenter<V
         }
     }
 
-    protected void startActivity(@NonNull Class clazz) {
-        startActivity(new Intent(context, clazz));
-    }
-
-    protected void startActivity(@NonNull Class clazz, @NonNull Bundle bundle) {
-        Intent intent = new Intent(context, clazz);
-        intent.putExtras(bundle);
-        startActivity(intent);
-    }
-
     protected void nextFragment(@NonNull int viewId, @NonNull Fragment fragment) {
         getFragmentManager().beginTransaction().replace(viewId, fragment).commit();
     }
@@ -162,6 +152,15 @@ public abstract class BaseActivity<V extends BaseView, P extends BasePresenter<V
     @Override
     public AlertDialog getMessageDialog() {
         return messageDialog;
+    }
+
+
+    protected void startActivity(@NonNull Class clazz) {
+        startActivity(context, clazz);
+    }
+
+    protected void startActivity(@NonNull Class clazz, @NonNull Bundle bundle) {
+        startActivity(context, clazz, bundle);
     }
 
     protected interface OnPrimissionListener {

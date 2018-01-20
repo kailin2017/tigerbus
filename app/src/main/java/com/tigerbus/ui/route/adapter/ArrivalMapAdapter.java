@@ -91,10 +91,6 @@ public final class ArrivalMapAdapter implements OnMapReadyCallback {
                     markerOptions.position(getLatLng(stop.getStopPosition().getPositionLat(), stop.getStopPosition().getPositionLon()));
                     markerOptions.icon(BitmapDescriptorFactory.fromBitmap(markerIcon));
                     markerOptions.title(stop.getStopName().getZh_tw());
-                    BusEstimateTime busEstimateTime = busEstimateTimeMap.get(stop.getStopUID());
-                    if (busEstimateTime != null) {
-                        markerOptions.snippet(busEstimateTime.getEstimateTime() + "");
-                    }
                     googleMap.addMarker(markerOptions);
                 }, throwable -> TigerApplication.printLog(TlogType.error, "", throwable.toString()));
     }

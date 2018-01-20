@@ -3,10 +3,6 @@ package com.tigerbus.data.bus;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-/**
- * Created by Kailin on 2017/12/31.
- */
-
 public final class BusVersion implements Parcelable {
     public static final Creator<BusVersion> CREATOR = new Creator<BusVersion>() {
         @Override
@@ -19,6 +15,7 @@ public final class BusVersion implements Parcelable {
             return new BusVersion[size];
         }
     };
+
     private int VersionID;
     private String UpdateTime;
     private String UpdateCheckTime;
