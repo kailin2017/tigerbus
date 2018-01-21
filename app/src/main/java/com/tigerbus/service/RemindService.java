@@ -55,13 +55,14 @@ public final class RemindService extends Service {
                             return bundle;
                         })
                 )
-                .subscribe(bundle -> {
+                .filter(bundle -> {
                     BusEstimateTime busEstimateTime = bundle.getParcelable(EXTRA_ESTIMATE);
+                    return busEstimateTime.getEstimateTime() < 180;
+                })
+                .subscribe(bundle -> {
                     RouteStop routeStop = bundle.getParcelable(EXTRA_ROUTESTOP);
-                    if (busEstimateTime.getEstimateTime() < 120) {
-                        routeStops.remove(getKey(routeStop));
-                        sendNotification();
-                    }
+                    routeStops.remove(getKey(routeStop));
+                    sendNotification();
                 }, throwable -> TigerApplication.printLog(TlogType.error, TAG, throwable.toString()));
     }
 
