@@ -11,6 +11,15 @@ import android.content.Intent;
 public final class TigerBroadCast extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-
+        switch (intent.getAction()){
+            case Intent.ACTION_PACKAGE_ADDED:
+                break;
+            case Intent.ACTION_PACKAGE_DATA_CLEARED:
+                break;
+            case Intent.ACTION_UNINSTALL_PACKAGE:
+                break;
+            case Intent.ACTION_USER_BACKGROUND:
+                break;
+        }
     }
 }

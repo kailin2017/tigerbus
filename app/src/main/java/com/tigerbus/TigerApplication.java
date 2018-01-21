@@ -1,24 +1,17 @@
 package com.tigerbus;
 
 import android.app.Application;
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
-import android.os.Bundle;
-import android.os.IBinder;
 
 import com.google.gson.Gson;
 import com.tigerbus.base.log.Tlog;
 import com.tigerbus.base.log.TlogType;
 import com.tigerbus.data.CityBusService;
-import com.tigerbus.data.bus.RouteStop;
 import com.tigerbus.data.bus.BusRoute;
-import com.tigerbus.service.RemindService;
+import com.tigerbus.data.bus.RouteStop;
 import com.tigerbus.util.TigerPreferences;
 
 import java.lang.ref.SoftReference;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -31,20 +24,9 @@ public final class TigerApplication extends Application {
     private static SoftReference<ArrayList<BusRoute>> busRouteData;
     private static SoftReference<HashSet<RouteStop>> commodStop;
     private static Gson gson = new Gson();
-    private static RemindService remindService;
 
     public static void printLog(TlogType tlogType, String tag, String message) {
         Tlog.printLog(tlogType, tag, message);
-    }
-
-    public static <T> T injectResource(String clazz, String resource) {
-        try {
-            Field field = Class.forName(clazz).getDeclaredField(resource);
-            return (T) field.get(null);
-        } catch (Exception e) {
-            printLog(TlogType.error, TAG, e.toString());
-            return null;
-        }
     }
 
     public static ArrayList<BusRoute> getBusRouteData() {
@@ -99,14 +81,14 @@ public final class TigerApplication extends Application {
         return tigerPreferences.getEncrypt(key);
     }
 
-    public static HashSet<RouteStop> getStopSet() {
+    public static synchronized HashSet<RouteStop> getRouteStopHashSet() {
         if (commodStop == null)
             commodStop = new SoftReference<>(getStringSet(RouteStop.class, CityBusService.BUS_STOP_OF_ROUTE));
         return commodStop.get();
     }
 
-    public static void commodStopAdd(RouteStop stop) {
-        HashSet<RouteStop> hashSet = getStopSet();
+    public static synchronized void commodStopAdd(RouteStop stop) {
+        HashSet<RouteStop> hashSet = getRouteStopHashSet();
         hashSet.add(stop);
         putStringSet(CityBusService.BUS_STOP_OF_ROUTE, hashSet);
     }

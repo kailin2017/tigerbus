@@ -4,12 +4,12 @@ import android.os.Bundle;
 
 import com.tigerbus.R;
 import com.tigerbus.base.BaseFragment;
-import com.tigerbus.base.BasePresenter;
-import com.tigerbus.base.MvpPresenter;
+import com.tigerbus.base.ViewStateRender;
 import com.tigerbus.base.annotation.FragmentView;
 
-@FragmentView(mvp = false, layout = R.layout.default_recycler)
-public final class HomeFragment extends BaseFragment {
+@FragmentView(layout = R.layout.default_recycler)
+public final class HomeFragment extends BaseFragment<HomeView, HomePresenter>
+        implements HomeView<ViewStateRender>, ViewStateRender {
 
     public static HomeFragment newInstance() {
 
@@ -21,7 +21,22 @@ public final class HomeFragment extends BaseFragment {
     }
 
     @Override
-    public MvpPresenter createPresenter() {
-        return null;
+    public HomePresenter createPresenter() {
+        return new HomePresenter();
+    }
+
+    @Override
+    public void renderLoading() {
+
+    }
+
+    @Override
+    public void renderSuccess(Object result) {
+
+    }
+
+    @Override
+    public void renderFinish() {
+
     }
 }

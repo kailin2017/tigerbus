@@ -9,7 +9,6 @@ import android.os.IBinder;
 import com.tigerbus.BuildConfig;
 import com.tigerbus.TigerApplication;
 import com.tigerbus.base.log.TlogType;
-import com.tigerbus.connection.RetrofitModel;
 import com.tigerbus.data.CityBusService;
 import com.tigerbus.data.bus.BusEstimateTime;
 import com.tigerbus.data.bus.RouteStop;
@@ -20,15 +19,11 @@ import java.util.concurrent.TimeUnit;
 import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
 
-
-public final class RemindService extends Service {
+public final class RemindService extends Service implements ServiceInterface {
 
     private final static String TAG = RemindService.class.getSimpleName();
-    private final static String EXTRA_ROUTESTOP = RouteStop.class.getSimpleName();
-    private final static String EXTRA_ESTIMATE = CityBusService.BUS_ESTIMATE_TIME;
-    private CityBusService cityBusService = RetrofitModel.getInstance().create(CityBusService.class);
-    private HashMap<String, RouteStop> routeStops = new HashMap<>();
-    private RemindBinder remindBinder = new RemindBinder();
+    private final HashMap<String, RouteStop> routeStops = new HashMap<>();
+    private final RemindBinder remindBinder = new RemindBinder();
 
     @Override
     public IBinder onBind(Intent arg0) {
@@ -79,26 +74,6 @@ public final class RemindService extends Service {
             TigerApplication.printLog(TlogType.debug, TAG, TigerApplication.object2String(routeStop));
         }
         return super.onStartCommand(intent, flags, startId);
-    }
-
-    private String getKey(RouteStop routeStop) {
-        StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append(routeStop.getBusRoute().getRouteUID());
-        stringBuffer.append(routeStop.getBusSubRoute().getSubRouteUID());
-        stringBuffer.append(routeStop.getStop().getStopUID());
-        return stringBuffer.toString();
-    }
-
-    @Override
-    public boolean onUnbind(Intent intent) {
-        TigerApplication.printLog(TlogType.debug, TAG, "onUnbind");
-        return super.onUnbind(intent);
-    }
-
-    @Override
-    public void onDestroy() {
-        TigerApplication.printLog(TlogType.debug, TAG, "onDestroy");
-        super.onDestroy();
     }
 
     public class RemindBinder extends Binder {
