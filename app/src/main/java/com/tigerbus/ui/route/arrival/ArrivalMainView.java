@@ -22,7 +22,7 @@ public interface ArrivalMainView extends ArrivalView {
 
     Observable<Object> bindClickStationView();
 
-    Observable<Stop> bindSaveStation();
+    Observable<RouteStop> bindSaveStation();
 
     void bindService(RouteStop routeStop);
 

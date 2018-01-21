@@ -9,7 +9,10 @@ import android.widget.TextView;
 
 import com.tigerbus.R;
 import com.tigerbus.data.bus.BusEstimateTime;
+import com.tigerbus.data.bus.BusRoute;
 import com.tigerbus.data.bus.BusStopOfRoute;
+import com.tigerbus.data.bus.BusSubRoute;
+import com.tigerbus.data.bus.RouteStop;
 import com.tigerbus.data.detail.Stop;
 
 import java.util.ArrayList;
@@ -22,14 +25,19 @@ import io.reactivex.subjects.PublishSubject;
 
 public final class ArrivalRecyclerAdapter extends RecyclerView.Adapter<ArrivalRecyclerAdapter.ViewHolder> {
 
-    private final static String TAG = ArrivalRecyclerAdapter.class.getSimpleName();
     private BusStopOfRoute busStopOfRoute;
     private Map<String, BusEstimateTime> busEstimateTimeMap = new HashMap<>();
-    private PublishSubject<Stop> publishSubject = PublishSubject.create();
+    private PublishSubject<RouteStop> publishSubject = PublishSubject.create();
     private Disposable disposable;
+    private BusRoute busRoute;
+    private BusSubRoute busSubRoute;
 
-    public ArrivalRecyclerAdapter(@NonNull BusStopOfRoute busStopOfRoute,
+    public ArrivalRecyclerAdapter(@NonNull BusRoute busRoute,
+                                  @NonNull BusSubRoute busSubRoute,
+                                  @NonNull BusStopOfRoute busStopOfRoute,
                                   @NonNull PublishSubject<ArrayList<BusEstimateTime>> publishSubject) {
+        this.busRoute = busRoute;
+        this.busSubRoute = busSubRoute;
         this.busStopOfRoute = busStopOfRoute;
         this.disposable = publishSubject.subscribe(busEstimateTimes -> initData(busEstimateTimes));
     }
@@ -50,7 +58,7 @@ public final class ArrivalRecyclerAdapter extends RecyclerView.Adapter<ArrivalRe
         return disposable;
     }
 
-    public PublishSubject<Stop> getClickSubject() {
+    public PublishSubject<RouteStop> getClickSubject() {
         return publishSubject;
     }
 
@@ -62,7 +70,7 @@ public final class ArrivalRecyclerAdapter extends RecyclerView.Adapter<ArrivalRe
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Stop stop = busStopOfRoute.getStops().get(position);
-        holder.itemLayout.setTag(stop);
+        holder.itemLayout.setTag(new RouteStop(busRoute, busSubRoute, stop));
         holder.stopName.setText(stop.getStopName().getZh_tw());
         BusEstimateTime busEstimateTime = busEstimateTimeMap.get(stop.getStopUID());
         if (busEstimateTime != null) {
@@ -85,8 +93,7 @@ public final class ArrivalRecyclerAdapter extends RecyclerView.Adapter<ArrivalRe
             stopName = view.findViewById(R.id.stopname);
             estimateTime = view.findViewById(R.id.estimatetime);
             itemLayout = view.findViewById(R.id.item);
-            itemLayout.setOnClickListener(v -> publishSubject.onNext((Stop) v.getTag()));
-
+            itemLayout.setOnClickListener(v -> publishSubject.onNext((RouteStop) v.getTag()));
         }
     }
 }

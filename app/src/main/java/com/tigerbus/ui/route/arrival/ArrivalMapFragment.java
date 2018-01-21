@@ -9,13 +9,11 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 
 import com.tigerbus.R;
-import com.tigerbus.Service.RemindService;
 import com.tigerbus.base.BaseFragment;
 import com.tigerbus.base.ViewStateRender;
 import com.tigerbus.base.annotation.FragmentView;
 import com.tigerbus.base.annotation.ViewInject;
 import com.tigerbus.data.CityBusService;
-import com.tigerbus.data.bus.RouteStop;
 import com.tigerbus.data.bus.BusEstimateTime;
 import com.tigerbus.data.bus.BusRoute;
 import com.tigerbus.data.bus.BusStopOfRoute;

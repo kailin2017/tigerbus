@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.tigerbus.R;
-import com.tigerbus.Service.RemindService;
 import com.tigerbus.base.BaseFragment;
 import com.tigerbus.base.ViewStateRender;
 import com.tigerbus.base.annotation.FragmentView;
@@ -22,10 +21,10 @@ import com.tigerbus.data.bus.BusRoute;
 import com.tigerbus.data.bus.BusStopOfRoute;
 import com.tigerbus.data.bus.BusSubRoute;
 import com.tigerbus.data.bus.RouteStop;
-import com.tigerbus.data.detail.Stop;
+import com.tigerbus.service.RemindService;
+import com.tigerbus.ui.route.adapter.ArrivalRecyclerAdapter;
 import com.tigerbus.ui.widget.PagerRecyclerAdapter;
 import com.tigerbus.ui.widget.PagerRecyclerObj;
-import com.tigerbus.ui.route.adapter.ArrivalRecyclerAdapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,7 +37,7 @@ public final class ArrivalMainFragment extends BaseFragment<ArrivalMainView, Arr
         implements ArrivalMainView, ViewStateRender<Bundle> {
 
     private PublishSubject<ArrayList<BusEstimateTime>> publishSubject = PublishSubject.create();
-    private PublishSubject<Stop> stopSubject = PublishSubject.create();
+    private PublishSubject<RouteStop> stopSubject = PublishSubject.create();
     private BottomSheetBehavior bottomSheetBehavior;
     private BusRoute busRoute;
 
@@ -79,7 +78,7 @@ public final class ArrivalMainFragment extends BaseFragment<ArrivalMainView, Arr
 
     @Override
     public ArrivalMainPresenter createPresenter() {
-        return new ArrivalMainPresenter(busRoute);
+        return new ArrivalMainPresenter();
     }
 
     @Override
@@ -113,7 +112,7 @@ public final class ArrivalMainFragment extends BaseFragment<ArrivalMainView, Arr
     }
 
     @Override
-    public Observable<Stop> bindSaveStation() {
+    public Observable<RouteStop> bindSaveStation() {
         return stopSubject;
     }
 
@@ -121,7 +120,7 @@ public final class ArrivalMainFragment extends BaseFragment<ArrivalMainView, Arr
     public void bindService(RouteStop routeStop) {
         Bundle bundle = new Bundle();
         bundle.putParcelable(RouteStop.class.getSimpleName(), routeStop);
-        bindService(context, RemindService.class, bundle);
+        startService(context, RemindService.class, bundle);
     }
 
     @Override
@@ -166,7 +165,7 @@ public final class ArrivalMainFragment extends BaseFragment<ArrivalMainView, Arr
 
         for (BusSubRoute subRoute : route.getSubRoutes()) {
             BusStopOfRoute busStopOfRoute = busStopOfRouteMap.get(getKey(subRoute));
-            ArrivalRecyclerAdapter arrivalRecyclerAdapter = new ArrivalRecyclerAdapter(busStopOfRoute, publishSubject);
+            ArrivalRecyclerAdapter arrivalRecyclerAdapter = new ArrivalRecyclerAdapter(route, subRoute, busStopOfRoute, publishSubject);
             objects.add(new PagerRecyclerObj(getTitle(context, route, subRoute), arrivalRecyclerAdapter, context));
             presenter.addDisposable(arrivalRecyclerAdapter.getDiaposable());
             presenter.addDisposable(arrivalRecyclerAdapter.getClickSubject().subscribe(stop -> {

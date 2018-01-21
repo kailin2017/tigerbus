@@ -7,12 +7,7 @@ import com.tigerbus.data.detail.Stop;
 
 public final class ArrivalMainPresenter extends ArrivalPresenter<ArrivalMainView> {
 
-    private BusRoute busRoute;
-    private Stop selectStop;
-
-    public ArrivalMainPresenter(BusRoute busRoute) {
-        this.busRoute = busRoute;
-    }
+    private RouteStop routeStop;
 
     @Override
     public void bindIntent() {
@@ -26,11 +21,11 @@ public final class ArrivalMainPresenter extends ArrivalPresenter<ArrivalMainView
     }
 
     private void bindClickRemind(Object o) {
-        getView().bindService(getRouteStop());
+        getView().bindService(routeStop);
     }
 
     private void bindClickStationSave(Object o) {
-        TigerApplication.commodStopAdd(getRouteStop());
+        TigerApplication.commodStopAdd(routeStop);
     }
 
     private void bindClickSataionAllBus(Object o) {
@@ -42,12 +37,8 @@ public final class ArrivalMainPresenter extends ArrivalPresenter<ArrivalMainView
     private void bindClickStationView(Object o) {
     }
 
-    private void bindSaveStation(Stop stop) {
-        this.selectStop = stop;
-    }
-
-    private RouteStop getRouteStop(){
-        return new RouteStop(busRoute, selectStop);
+    private void bindSaveStation(RouteStop routeStop) {
+        this.routeStop = routeStop;
     }
 
 }

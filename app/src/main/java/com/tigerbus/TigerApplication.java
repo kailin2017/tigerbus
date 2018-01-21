@@ -1,7 +1,12 @@
 package com.tigerbus;
 
 import android.app.Application;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.Bundle;
+import android.os.IBinder;
 
 import com.google.gson.Gson;
 import com.tigerbus.base.log.Tlog;
@@ -9,6 +14,7 @@ import com.tigerbus.base.log.TlogType;
 import com.tigerbus.data.CityBusService;
 import com.tigerbus.data.bus.RouteStop;
 import com.tigerbus.data.bus.BusRoute;
+import com.tigerbus.service.RemindService;
 import com.tigerbus.util.TigerPreferences;
 
 import java.lang.ref.SoftReference;
@@ -25,6 +31,7 @@ public final class TigerApplication extends Application {
     private static SoftReference<ArrayList<BusRoute>> busRouteData;
     private static SoftReference<HashSet<RouteStop>> commodStop;
     private static Gson gson = new Gson();
+    private static RemindService remindService;
 
     public static void printLog(TlogType tlogType, String tag, String message) {
         Tlog.printLog(tlogType, tag, message);

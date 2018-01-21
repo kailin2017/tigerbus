@@ -3,29 +3,30 @@ package com.tigerbus.data.bus;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.google.auto.value.AutoValue;
 import com.tigerbus.data.detail.Stop;
 
-import java.io.Serializable;
+public final class RouteStop implements Parcelable {
 
-public final class RouteStop implements Parcelable{
-
-    private  BusRoute route;
+    private BusRoute busRoute;
+    private BusSubRoute busSubRoute;
     private Stop stop;
 
-    public RouteStop(BusRoute route, Stop stop) {
-        this.route = route;
+    public RouteStop(BusRoute busRoute, BusSubRoute busSubRoute, Stop stop) {
+        this.busRoute = busRoute;
+        this.busSubRoute = busSubRoute;
         this.stop = stop;
     }
 
     protected RouteStop(Parcel in) {
-        route = in.readParcelable(BusRoute.class.getClassLoader());
+        busRoute = in.readParcelable(BusRoute.class.getClassLoader());
+        busSubRoute = in.readParcelable(BusSubRoute.class.getClassLoader());
         stop = in.readParcelable(Stop.class.getClassLoader());
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeParcelable(route, flags);
+        dest.writeParcelable(busRoute, flags);
+        dest.writeParcelable(busSubRoute, flags);
         dest.writeParcelable(stop, flags);
     }
 
@@ -46,12 +47,20 @@ public final class RouteStop implements Parcelable{
         }
     };
 
-    public BusRoute getRoute() {
-        return route;
+    public BusRoute getBusRoute() {
+        return busRoute;
     }
 
-    public void setRoute(BusRoute route) {
-        this.route = route;
+    public void setBusRoute(BusRoute busRoute) {
+        this.busRoute = busRoute;
+    }
+
+    public BusSubRoute getBusSubRoute() {
+        return busSubRoute;
+    }
+
+    public void setBusSubRoute(BusSubRoute busSubRoute) {
+        this.busSubRoute = busSubRoute;
     }
 
     public Stop getStop() {

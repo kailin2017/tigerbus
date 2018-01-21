@@ -2,6 +2,7 @@ package com.tigerbus.ui.route;
 
 import android.os.Bundle;
 
+import com.tigerbus.BuildConfig;
 import com.tigerbus.base.BasePresenter;
 import com.tigerbus.connection.RetrofitModel;
 import com.tigerbus.data.CityBusService;
@@ -35,7 +36,7 @@ public final class RoutePresenter extends BasePresenter<RouteView> {
     public void bindIntent() {
         Observable<BusRoute> stopOfRouteSubject = getView().bindIntent();
         addUiDisposable(stopOfRouteSubject.subscribe(this::initData));
-        addUiDisposable(Observable.interval(15, TimeUnit.SECONDS, Schedulers.io()).subscribe(aLong -> initEstimateTime()));
+        addUiDisposable(Observable.interval(BuildConfig.updateTime, TimeUnit.SECONDS, Schedulers.io()).subscribe(aLong -> initEstimateTime()));
     }
 
     private void initData(BusRoute busRoute) {

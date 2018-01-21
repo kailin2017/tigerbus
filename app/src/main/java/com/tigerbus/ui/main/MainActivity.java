@@ -16,6 +16,7 @@ import com.tigerbus.base.BaseActivity;
 import com.tigerbus.base.ViewStateRender;
 import com.tigerbus.base.annotation.ActivityView;
 import com.tigerbus.base.annotation.ViewInject;
+import com.tigerbus.service.RemindService;
 import com.tigerbus.ui.main.sub.HomeFragment;
 import com.tigerbus.ui.main.sub.RemindFragment;
 import com.tigerbus.ui.search.SearchRouteActivity;
@@ -24,7 +25,7 @@ import io.reactivex.Observable;
 
 @ActivityView(layout = R.layout.main_activity)
 public final class MainActivity extends BaseActivity<MainView, MainPresenter>
-        implements MainView<ViewStateRender>, ViewStateRender<Bundle>{
+        implements MainView<ViewStateRender>, ViewStateRender<Bundle> {
 
     private final static String TAG = MainActivity.class.getSimpleName();
     private final static int MAINVIEWID = R.id.mainview;
@@ -47,6 +48,7 @@ public final class MainActivity extends BaseActivity<MainView, MainPresenter>
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initView();
+        initService();
     }
 
     private void initView() {
@@ -60,6 +62,10 @@ public final class MainActivity extends BaseActivity<MainView, MainPresenter>
         bottomNavigationView.setOnNavigationItemSelectedListener(this::onNavigationItemSelected);
 
         goHome();
+    }
+
+    private void initService() {
+        startService(context, RemindService.class, new Bundle());
     }
 
     @Override

@@ -16,6 +16,7 @@ android {
             }
         }
         buildConfigField "String", "MainService", "\"http://ptx.transportdata.tw\""
+        buildConfigField "Integer","updateTime","10";
     }
     testOptions {
         unitTests {

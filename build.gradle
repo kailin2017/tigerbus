@@ -1,26 +1,26 @@
 buildscript {
     repositories {
-        google()
         jcenter()
+        google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.1'
-//        classpath 'com.google.gms:google-services:3.1.0'
+        classpath "com.android.tools.build:gradle:3.0.+"
+//        classpath "com.google.gms:google-services:3.1.0"
     }
 }
 allprojects {
     repositories {
-        google()
         jcenter()
+        google()
     }
 }
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
-ext{
+ext {
     sdkversionCompile = 27
     sdkversionMin = 23
-    versionName = '4.0.0'
+    versionName = '1.0.0'
     versionCode = 1
     javaVersion = JavaVersion.VERSION_1_8
 

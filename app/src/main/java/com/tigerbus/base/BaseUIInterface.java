@@ -3,10 +3,11 @@ package com.tigerbus.base;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
-import com.tigerbus.Service.RemindService;
+import static android.content.Context.BIND_AUTO_CREATE;
 
 /**
  * Created by Kailin on 2018/1/20.
@@ -24,10 +25,18 @@ public interface BaseUIInterface extends DialogInterface.Progress, DialogInterfa
         context.startActivity(intent);
     }
 
-    default <T extends Service> void bindService(@NonNull Context context, @NonNull Class<T> clazz, Bundle bundle) {
+    default <T extends Service> void startService(
+            @NonNull Context context, @NonNull Class<T> clazz, Bundle bundle) {
         Intent intent = new Intent(context, clazz);
         intent.putExtras(bundle);
         context.startService(intent);
+    }
+
+    default <T extends Service> void bindService(
+            @NonNull Context context, @NonNull ServiceConnection serviceConnection, @NonNull Class<T> clazz, Bundle bundle) {
+        Intent intent = new Intent(context, clazz);
+        intent.putExtras(bundle);
+        context.bindService(intent, serviceConnection, BIND_AUTO_CREATE);
     }
 
     default <T extends Service> void stopService(@NonNull Context context, @NonNull Class<T> clazz) {
