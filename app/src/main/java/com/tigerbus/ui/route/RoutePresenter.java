@@ -5,6 +5,7 @@ import android.os.Bundle;
 import com.tigerbus.BuildConfig;
 import com.tigerbus.base.BasePresenter;
 import com.tigerbus.connection.RetrofitModel;
+import com.tigerbus.data.CityBusInterface;
 import com.tigerbus.data.CityBusService;
 import com.tigerbus.data.autovalue.BusA1DataListAutoValue;
 import com.tigerbus.data.autovalue.BusA2DataListAutoValue;
@@ -20,12 +21,11 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
 
-public final class RoutePresenter extends BasePresenter<RouteView> {
+public final class RoutePresenter extends BasePresenter<RouteView> implements CityBusInterface {
 
     private PublishSubject<ArrayList<BusEstimateTime>> publishSubject;
     private PublishSubject<Bundle> busA1Data;
     private PublishSubject<Bundle> busA2Data;
-    private CityBusService cityBusService = RetrofitModel.getInstance().create(CityBusService.class);
     private String cityNameEn, routeUID;
 
     public RoutePresenter(PublishSubject<ArrayList<BusEstimateTime>> publishSubject) {
@@ -41,17 +41,17 @@ public final class RoutePresenter extends BasePresenter<RouteView> {
 
     private void initData(BusRoute busRoute) {
         cityNameEn = busRoute.getCityName().getEn();
-        routeUID = CityBusService.getRoureUIDQuery(busRoute.getRouteUID());
+        routeUID = getRoureUIDQuery(busRoute.getRouteUID());
         Observable.zip(
                 cityBusService.getBusStopOfRoute(cityNameEn, routeUID),
                 cityBusService.getBusEstimateTime(cityNameEn, routeUID),
                 cityBusService.getShape(cityNameEn,routeUID),
                 (busStopOfRoutes, busEstimateTimes,busShapes) -> {
                     Bundle bundle = new Bundle();
-                    bundle.putParcelable(cityBusService.BUS_ROUTE, busRoute);
-                    bundle.putParcelableArrayList(cityBusService.BUS_STOP_OF_ROUTE, busStopOfRoutes);
-                    bundle.putParcelableArrayList(cityBusService.BUS_ESTIMATE_TIME, busEstimateTimes);
-                    bundle.putParcelableArrayList(cityBusService.BUS_SHAPE,busShapes);
+                    bundle.putParcelable(BUS_ROUTE, busRoute);
+                    bundle.putParcelableArrayList(BUS_STOP_OF_ROUTE, busStopOfRoutes);
+                    bundle.putParcelableArrayList(BUS_ESTIMATE_TIME, busEstimateTimes);
+                    bundle.putParcelableArrayList(BUS_SHAPE,busShapes);
                     return bundle;
                 })
                 .subscribeOn(Schedulers.io())

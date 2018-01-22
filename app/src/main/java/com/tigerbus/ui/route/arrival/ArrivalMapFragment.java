@@ -13,6 +13,7 @@ import com.tigerbus.base.BaseFragment;
 import com.tigerbus.base.ViewStateRender;
 import com.tigerbus.base.annotation.FragmentView;
 import com.tigerbus.base.annotation.ViewInject;
+import com.tigerbus.data.CityBusInterface;
 import com.tigerbus.data.CityBusService;
 import com.tigerbus.data.bus.BusEstimateTime;
 import com.tigerbus.data.bus.BusRoute;
@@ -77,8 +78,8 @@ public final class ArrivalMapFragment extends BaseFragment<ArrivalView, ArrivalM
     @Override
     public void renderSuccess(Bundle bundle) {
         ArrayList<MapObj> objects = new ArrayList<>();
-        HashMap<String, BusStopOfRoute> busStopOfRouteMap = (HashMap<String, BusStopOfRoute>) bundle.getSerializable(CityBusService.BUS_STOP_OF_ROUTE);
-        BusRoute route = bundle.getParcelable(CityBusService.BUS_ROUTE);
+        HashMap<String, BusStopOfRoute> busStopOfRouteMap = (HashMap<String, BusStopOfRoute>) bundle.getSerializable(CityBusInterface.BUS_STOP_OF_ROUTE);
+        BusRoute route = bundle.getParcelable(CityBusInterface.BUS_ROUTE);
 
         for (BusSubRoute subRoute : route.getSubRoutes()) {
             BusStopOfRoute busStopOfRoute = busStopOfRouteMap.get(getKey(subRoute));
@@ -88,7 +89,7 @@ public final class ArrivalMapFragment extends BaseFragment<ArrivalView, ArrivalM
             presenter.addDisposable(arrivalMapAdapter.getDiaposables());
         }
 
-        estimateSubject.onNext(bundle.getParcelableArrayList(CityBusService.BUS_ESTIMATE_TIME));
+        estimateSubject.onNext(bundle.getParcelableArrayList(CityBusInterface.BUS_ESTIMATE_TIME));
         initView(viewPager, tabLayout, new ArrivalPagerMapAdapter(getFragmentManager(), tabLayout, objects));
     }
 

@@ -11,6 +11,7 @@ import com.tigerbus.base.BaseActivity;
 import com.tigerbus.base.ViewStateRender;
 import com.tigerbus.base.annotation.ActivityView;
 import com.tigerbus.base.annotation.ViewInject;
+import com.tigerbus.data.CityBusInterface;
 import com.tigerbus.data.CityBusService;
 import com.tigerbus.data.bus.BusEstimateTime;
 import com.tigerbus.data.bus.BusRoute;
@@ -58,7 +59,7 @@ public final class RouteActivity extends BaseActivity<RouteView, RoutePresenter>
     }
 
     protected void initItem() {
-        busRoute = getIntent().getParcelableExtra(CityBusService.BUS_ROUTE);
+        busRoute = getIntent().getParcelableExtra(CityBusInterface.BUS_ROUTE);
     }
 
     protected void initView() {

@@ -13,6 +13,7 @@ import com.tigerbus.base.BaseActivity;
 import com.tigerbus.base.ViewStateRender;
 import com.tigerbus.base.annotation.ActivityView;
 import com.tigerbus.base.annotation.ViewInject;
+import com.tigerbus.data.CityBusInterface;
 import com.tigerbus.data.bus.BusRoute;
 import com.tigerbus.data.CityBusService;
 import com.tigerbus.ui.route.RouteActivity;
@@ -58,7 +59,7 @@ public final class SearchRouteActivity extends BaseActivity<SearchRouteView, Sea
         recyclerView.setAdapter(adapter);
         presenter.addDisposable(adapter.getPublishSubject().subscribe(busRoute -> {
             Bundle bundle = new Bundle();
-            bundle.putParcelable(CityBusService.BUS_ROUTE, busRoute);
+            bundle.putParcelable(CityBusInterface.BUS_ROUTE, busRoute);
             startActivity(RouteActivity.class, bundle);
         }));
     }

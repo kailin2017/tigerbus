@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.tigerbus.base.BasePresenter;
+import com.tigerbus.data.CityBusInterface;
 import com.tigerbus.data.CityBusService;
 import com.tigerbus.data.bus.BusEstimateTime;
 import com.tigerbus.data.bus.BusRoute;
@@ -15,7 +16,7 @@ import java.util.HashMap;
 
 import io.reactivex.Observable;
 
-public class ArrivalPresenter<V extends ArrivalView> extends BasePresenter<V> {
+public class ArrivalPresenter<V extends ArrivalView> extends BasePresenter<V> implements CityBusInterface{
 
     @Override
     public void bindIntent() {
@@ -32,9 +33,9 @@ public class ArrivalPresenter<V extends ArrivalView> extends BasePresenter<V> {
 
 
     protected void initData(Bundle defaultBundle) {
-        BusRoute busRoute = defaultBundle.getParcelable(CityBusService.BUS_ROUTE);
-        ArrayList<BusStopOfRoute> busStopOfRoutesTemp = defaultBundle.getParcelableArrayList(CityBusService.BUS_STOP_OF_ROUTE);
-        ArrayList<BusEstimateTime> busEstimateTimesTemp = defaultBundle.getParcelableArrayList(CityBusService.BUS_ESTIMATE_TIME);
+        BusRoute busRoute = defaultBundle.getParcelable(BUS_ROUTE);
+        ArrayList<BusStopOfRoute> busStopOfRoutesTemp = defaultBundle.getParcelableArrayList(BUS_STOP_OF_ROUTE);
+        ArrayList<BusEstimateTime> busEstimateTimesTemp = defaultBundle.getParcelableArrayList(BUS_ESTIMATE_TIME);
         ArrayList<BusStopOfRoute> busStopOfRoutes = filterBusRoute(busStopOfRoutesTemp, busRoute);
         ArrayList<BusEstimateTime> busEstimateTimes = filterBusRoute(busEstimateTimesTemp, busRoute);
 
@@ -43,9 +44,9 @@ public class ArrivalPresenter<V extends ArrivalView> extends BasePresenter<V> {
             busStopOfRouteMap.put(getView().getKey(busStopOfRoute), busStopOfRoute);
 
         Bundle nextBundle = new Bundle();
-        nextBundle.putParcelable(CityBusService.BUS_ROUTE, busRoute);
-        nextBundle.putSerializable(CityBusService.BUS_STOP_OF_ROUTE, busStopOfRouteMap);
-        nextBundle.putParcelableArrayList(CityBusService.BUS_ESTIMATE_TIME, busEstimateTimes);
+        nextBundle.putParcelable(BUS_ROUTE, busRoute);
+        nextBundle.putSerializable(BUS_STOP_OF_ROUTE, busStopOfRouteMap);
+        nextBundle.putParcelableArrayList(BUS_ESTIMATE_TIME, busEstimateTimes);
 
         render(ArrivalViewState.Success.create(nextBundle));
     }

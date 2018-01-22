@@ -6,13 +6,14 @@ import android.content.Context;
 import com.google.gson.Gson;
 import com.tigerbus.base.log.Tlog;
 import com.tigerbus.base.log.TlogType;
-import com.tigerbus.data.CityBusService;
+import com.tigerbus.data.CityBusInterface;
 import com.tigerbus.data.bus.BusRoute;
 import com.tigerbus.data.bus.RouteStop;
 import com.tigerbus.util.TigerPreferences;
 
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -83,14 +84,14 @@ public final class TigerApplication extends Application {
 
     public static synchronized HashSet<RouteStop> getRouteStopHashSet() {
         if (commodStop == null)
-            commodStop = new SoftReference<>(getStringSet(RouteStop.class, CityBusService.BUS_STOP_OF_ROUTE));
+            commodStop = new SoftReference<>(getStringSet(RouteStop.class, CityBusInterface.BUS_STOP_OF_ROUTE));
         return commodStop.get();
     }
 
     public static synchronized void commodStopAdd(RouteStop stop) {
         HashSet<RouteStop> hashSet = getRouteStopHashSet();
         hashSet.add(stop);
-        putStringSet(CityBusService.BUS_STOP_OF_ROUTE, hashSet);
+        putStringSet(CityBusInterface.BUS_STOP_OF_ROUTE, hashSet);
     }
 
     public static <T> void putStringSet(String key, Set<T> tSet) {

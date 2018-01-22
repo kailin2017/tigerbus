@@ -16,7 +16,7 @@ import org.robolectric.shadows.ShadowLog;
 @Config(constants = BuildConfig.class, sdk = 27)
 public final class DefaultServiceTest {
 
-    private final DefaultService serviceSuccess = RetrofitModel.createInstance().create(DefaultService.class);
+    private final CityConfigService serviceSuccess = RetrofitModel.createInstance().create(CityConfigService.class);
 
     @Before
     public void setUp() {

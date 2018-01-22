@@ -5,8 +5,10 @@ import android.os.Bundle;
 import com.tigerbus.TigerApplication;
 import com.tigerbus.base.BasePresenter;
 import com.tigerbus.connection.RetrofitModel;
+import com.tigerbus.data.CityBusInterface;
 import com.tigerbus.data.CityBusService;
-import com.tigerbus.data.DefaultService;
+import com.tigerbus.data.CityConfigInterface;
+import com.tigerbus.data.CityConfigService;
 import com.tigerbus.data.bus.BusRoute;
 import com.tigerbus.data.bus.BusVersion;
 import com.tigerbus.data.detail.City;
@@ -17,14 +19,14 @@ import java.util.WeakHashMap;
 
 import io.reactivex.Observable;
 
-public final class MainPresenter extends BasePresenter<MainView> {
+public final class MainPresenter extends BasePresenter<MainView> implements CityBusInterface, CityConfigInterface {
 
-    private final static String KEY_CITY = DefaultService.CITYS;
-    private final static String KEY_BUS_VERSION = CityBusService.BUS_VERSION;
-    private final static String KEY_BUS_ROUTE = CityBusService.BUS_ROUTE;
+    private final static String KEY_CITY = CityConfigService.CITYS;
+    private final static String KEY_BUS_VERSION = BUS_VERSION;
+    private final static String KEY_BUS_ROUTE = BUS_ROUTE;
     private final static WeakHashMap<String, ArrayList<BusRoute>> weakHashMap = new WeakHashMap<>();
     private CityBusService cityBusService = RetrofitModel.getInstance().create(CityBusService.class);
-    private DefaultService defaultService = RetrofitModel.getInstance().create(DefaultService.class);
+    private CityConfigService defaultService = RetrofitModel.getInstance().create(CityConfigService.class);
 
     @Override
     public void bindIntent() {

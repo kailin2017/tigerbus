@@ -12,9 +12,7 @@ public final class HomeFragment extends BaseFragment<HomeView, HomePresenter>
         implements HomeView<ViewStateRender>, ViewStateRender {
 
     public static HomeFragment newInstance() {
-
         Bundle args = new Bundle();
-
         HomeFragment fragment = new HomeFragment();
         fragment.setArguments(args);
         return fragment;

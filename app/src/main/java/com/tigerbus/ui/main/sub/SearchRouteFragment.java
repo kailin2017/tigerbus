@@ -11,6 +11,7 @@ import com.tigerbus.base.BaseFragment;
 import com.tigerbus.base.ViewStateRender;
 import com.tigerbus.base.annotation.FragmentView;
 import com.tigerbus.base.annotation.ViewInject;
+import com.tigerbus.data.CityBusInterface;
 import com.tigerbus.data.CityBusService;
 import com.tigerbus.data.bus.BusRoute;
 import com.tigerbus.ui.route.RouteActivity;
@@ -56,7 +57,7 @@ public final class SearchRouteFragment extends BaseFragment<SearchRouteView, Sea
         recyclerView.setAdapter(adapter);
         presenter.addDisposable(adapter.getPublishSubject().subscribe(busRoute -> {
             Bundle bundle = new Bundle();
-            bundle.putParcelable(CityBusService.BUS_ROUTE, busRoute);
+            bundle.putParcelable(CityBusInterface.BUS_ROUTE, busRoute);
             startActivity(getActivity(), RouteActivity.class, bundle);
         }));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {

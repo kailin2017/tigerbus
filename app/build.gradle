@@ -1,4 +1,6 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.squareup.sqldelight'
+
 //apply plugin: 'com.google.gms.google-services'
 
 android {
@@ -88,6 +90,8 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxjava:${rootProject.rxjavaVersion}"
     implementation "io.reactivex.rxjava2:rxandroid:${rootProject.rxandroidVersion}"
     implementation "com.jakewharton.rxbinding2:rxbinding:${rootProject.rxbindingVersion}"
+    // sqlbrite
+    implementation "com.squareup.sqlbrite3:sqlbrite:${rootProject.sqlbriteVersion}"
     // autoValue
     annotationProcessor "com.google.auto.value:auto-value:$rootProject.autoValueVersion"
     provided "com.google.auto.value:auto-value:$rootProject.autoValueVersion"

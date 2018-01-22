@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import io.reactivex.Observable;
 import retrofit2.http.GET;
 
-public interface DefaultService {
+public interface CityConfigService {
 
     String CITYS = "CITYS";
 

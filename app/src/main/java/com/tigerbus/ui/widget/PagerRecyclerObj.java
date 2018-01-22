@@ -11,7 +11,7 @@ public final class PagerRecyclerObj {
     private RecyclerView recyclerView;
     private String pagerTitle;
 
-    public PagerRecyclerObj(String pagerTitle, ArrivalRecyclerAdapter adapter, Context context){
+    public PagerRecyclerObj(String pagerTitle, RecyclerView.Adapter adapter, Context context){
         setPagerTitle(pagerTitle);
         recyclerView = new RecyclerView(context);
         recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
