@@ -16,13 +16,14 @@ import com.tigerbus.base.ViewStateRender;
 import com.tigerbus.base.annotation.FragmentView;
 import com.tigerbus.base.annotation.ViewInject;
 import com.tigerbus.data.CityBusInterface;
-import com.tigerbus.data.CityBusService;
+
 import com.tigerbus.data.bus.BusEstimateTime;
 import com.tigerbus.data.bus.BusRoute;
 import com.tigerbus.data.bus.BusStopOfRoute;
 import com.tigerbus.data.bus.BusSubRoute;
-import com.tigerbus.data.bus.RouteStop;
 import com.tigerbus.service.RemindService;
+import com.tigerbus.sqlite.BriteSQL;
+import com.tigerbus.sqlite.data.CommodStop;
 import com.tigerbus.ui.route.adapter.ArrivalRecyclerAdapter;
 import com.tigerbus.ui.widget.PagerRecyclerAdapter;
 import com.tigerbus.ui.widget.PagerRecyclerObj;
@@ -38,7 +39,7 @@ public final class ArrivalMainFragment extends BaseFragment<ArrivalMainView, Arr
         implements ArrivalMainView, ViewStateRender<Bundle> {
 
     private PublishSubject<ArrayList<BusEstimateTime>> publishSubject = PublishSubject.create();
-    private PublishSubject<RouteStop> stopSubject = PublishSubject.create();
+    private PublishSubject<CommodStop> stopSubject = PublishSubject.create();
     private BottomSheetBehavior bottomSheetBehavior;
     private BusRoute busRoute;
 
@@ -79,7 +80,7 @@ public final class ArrivalMainFragment extends BaseFragment<ArrivalMainView, Arr
 
     @Override
     public ArrivalMainPresenter createPresenter() {
-        return new ArrivalMainPresenter();
+        return new ArrivalMainPresenter(BriteSQL.getInstance(application));
     }
 
     @Override
@@ -113,14 +114,14 @@ public final class ArrivalMainFragment extends BaseFragment<ArrivalMainView, Arr
     }
 
     @Override
-    public Observable<RouteStop> bindSaveStation() {
+    public Observable<CommodStop> bindSaveStation() {
         return stopSubject;
     }
 
     @Override
-    public void bindService(RouteStop routeStop) {
+    public void bindService(CommodStop commodStop) {
         Bundle bundle = new Bundle();
-        bundle.putParcelable(RouteStop.class.getSimpleName(), routeStop);
+        bundle.putSerializable(CityBusInterface.BUS_ROUTESTOP, commodStop);
         startService(context, RemindService.class, bundle);
     }
 
@@ -169,9 +170,9 @@ public final class ArrivalMainFragment extends BaseFragment<ArrivalMainView, Arr
             ArrivalRecyclerAdapter arrivalRecyclerAdapter = new ArrivalRecyclerAdapter(route, subRoute, busStopOfRoute, publishSubject);
             objects.add(new PagerRecyclerObj(getTitle(context, route, subRoute), arrivalRecyclerAdapter, context));
             presenter.addDisposable(arrivalRecyclerAdapter.getDiaposable());
-            presenter.addDisposable(arrivalRecyclerAdapter.getClickSubject().subscribe(stop -> {
+            presenter.addDisposable(arrivalRecyclerAdapter.getClickSubject().subscribe(commodStop -> {
                 hiddenSheet();
-                stopSubject.onNext(stop);
+                stopSubject.onNext(commodStop);
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
             }));
         }

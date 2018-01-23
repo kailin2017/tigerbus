@@ -18,7 +18,8 @@ android {
             }
         }
         buildConfigField "String", "MainService", "\"http://ptx.transportdata.tw\""
-        buildConfigField "Integer","updateTime","10";
+        buildConfigField "String", "LocalDBName", "\"tiger.db\""
+        buildConfigField "Integer", "updateTime", "10"
     }
     testOptions {
         unitTests {
@@ -29,14 +30,14 @@ android {
         sourceCompatibility rootProject.javaVersion
         targetCompatibility rootProject.javaVersion
     }
-    signingConfigs {
-        config {
-            keyAlias 'key0'
-            keyPassword '963852'
-            storePassword '963852'
-            storeFile file('C:/Users/Kailin/Documents/tiger.jks')
-        }
-    }
+//    signingConfigs {
+//        config {
+//            keyAlias 'key0'
+//            keyPassword '963852'
+//            storePassword '963852'
+//            storeFile file('C:/Users/Kailin/Documents/tiger.jks')
+//        }
+//    }
 //    productFlavors {
 //        Taiwan {}
 //        Taipei {}
@@ -49,10 +50,10 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.config
+//            signingConfig signingConfigs.config
         }
         debug {
-            signingConfig signingConfigs.config
+//            signingConfig signingConfigs.config
         }
     }
     externalNativeBuild {
@@ -92,9 +93,11 @@ dependencies {
     implementation "com.jakewharton.rxbinding2:rxbinding:${rootProject.rxbindingVersion}"
     // sqlbrite
     implementation "com.squareup.sqlbrite3:sqlbrite:${rootProject.sqlbriteVersion}"
+    // arch
+    implementation "android.arch.persistence:db-framework:${rootProject.archVersion}"
     // autoValue
-    annotationProcessor "com.google.auto.value:auto-value:$rootProject.autoValueVersion"
     provided "com.google.auto.value:auto-value:$rootProject.autoValueVersion"
+    annotationProcessor "com.google.auto.value:auto-value:$rootProject.autoValueVersion"
     // test
     testImplementation "junit:junit:${rootProject.junitVersion}"
     testImplementation "org.robolectric:robolectric:${rootProject.robolectricVersion}"

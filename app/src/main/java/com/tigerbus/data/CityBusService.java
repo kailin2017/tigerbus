@@ -1,13 +1,12 @@
 package com.tigerbus.data;
 
-import com.tigerbus.data.bus.BusA2Data;
 import com.tigerbus.data.bus.BusA1Data;
+import com.tigerbus.data.bus.BusA2Data;
 import com.tigerbus.data.bus.BusEstimateTime;
 import com.tigerbus.data.bus.BusRoute;
 import com.tigerbus.data.bus.BusShape;
 import com.tigerbus.data.bus.BusStopOfRoute;
 import com.tigerbus.data.bus.BusVersion;
-import com.tigerbus.data.bus.RouteStop;
 
 import java.util.ArrayList;
 

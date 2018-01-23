@@ -5,6 +5,7 @@ buildscript {
     }
     dependencies {
         classpath "com.android.tools.build:gradle:3.0.+"
+        classpath 'com.squareup.sqldelight:gradle-plugin:0.6.+'
 //        classpath "com.google.gms:google-services:3.1.0"
     }
 }
@@ -34,6 +35,8 @@ ext {
     rxbindingVersion = '2.0.0'
     leakcanaryVersion = '1.+'
     autoValueVersion = '1.+'
+    sqlbriteVersion = '3.+'
+    archVersion = '1.+'
 
     junitVersion = '4.12'
     runnerVersion = '1.+'

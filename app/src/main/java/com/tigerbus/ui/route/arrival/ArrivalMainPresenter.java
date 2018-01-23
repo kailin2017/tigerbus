@@ -1,13 +1,19 @@
 package com.tigerbus.ui.route.arrival;
 
-import com.tigerbus.TigerApplication;
-import com.tigerbus.data.bus.RouteStop;
-import com.tigerbus.data.bus.BusRoute;
-import com.tigerbus.data.detail.Stop;
+import android.content.ContentValues;
+import android.database.sqlite.SQLiteDatabase;
+
+import com.squareup.sqlbrite3.BriteDatabase;
+import com.tigerbus.sqlite.data.CommodStop;
 
 public final class ArrivalMainPresenter extends ArrivalPresenter<ArrivalMainView> {
 
-    private RouteStop routeStop;
+    private CommodStop commodStop;
+    private BriteDatabase briteDatabase;
+
+    public ArrivalMainPresenter(BriteDatabase briteDatabase) {
+        this.briteDatabase = briteDatabase;
+    }
 
     @Override
     public void bindIntent() {
@@ -21,11 +27,12 @@ public final class ArrivalMainPresenter extends ArrivalPresenter<ArrivalMainView
     }
 
     private void bindClickRemind(Object o) {
-        getView().bindService(routeStop);
+        getView().bindService(commodStop);
     }
 
     private void bindClickStationSave(Object o) {
-        TigerApplication.commodStopAdd(routeStop);
+        ContentValues contentValues = new CommodStop.SqlBuilder().init(commodStop).type("").build();
+        insert(CommodStop.TABLE, contentValues);
     }
 
     private void bindClickSataionAllBus(Object o) {
@@ -37,8 +44,12 @@ public final class ArrivalMainPresenter extends ArrivalPresenter<ArrivalMainView
     private void bindClickStationView(Object o) {
     }
 
-    private void bindSaveStation(RouteStop routeStop) {
-        this.routeStop = routeStop;
+    private void bindSaveStation(CommodStop commodStop) {
+        this.commodStop = commodStop;
+    }
+
+    private void insert(String tableName, ContentValues contentValues) {
+        briteDatabase.insert(tableName, SQLiteDatabase.CONFLICT_NONE, contentValues);
     }
 
 }

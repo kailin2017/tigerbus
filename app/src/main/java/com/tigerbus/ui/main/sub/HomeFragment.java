@@ -6,6 +6,7 @@ import com.tigerbus.R;
 import com.tigerbus.base.BaseFragment;
 import com.tigerbus.base.ViewStateRender;
 import com.tigerbus.base.annotation.FragmentView;
+import com.tigerbus.sqlite.BriteSQL;
 
 @FragmentView(layout = R.layout.default_recycler)
 public final class HomeFragment extends BaseFragment<HomeView, HomePresenter>
@@ -20,7 +21,7 @@ public final class HomeFragment extends BaseFragment<HomeView, HomePresenter>
 
     @Override
     public HomePresenter createPresenter() {
-        return new HomePresenter();
+        return new HomePresenter(BriteSQL.getInstance(application));
     }
 
     @Override

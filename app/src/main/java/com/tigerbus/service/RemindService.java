@@ -11,7 +11,7 @@ import com.tigerbus.TigerApplication;
 import com.tigerbus.base.log.TlogType;
 import com.tigerbus.data.CityBusInterface;
 import com.tigerbus.data.bus.BusEstimateTime;
-import com.tigerbus.data.bus.RouteStop;
+import com.tigerbus.sqlite.data.CommodStop;
 
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
@@ -22,7 +22,7 @@ import io.reactivex.schedulers.Schedulers;
 public final class RemindService extends Service implements CityBusInterface {
 
     private final static String TAG = RemindService.class.getSimpleName();
-    private final HashMap<String, RouteStop> routeStops = new HashMap<>();
+    private final HashMap<String, CommodStop> routeStops = new HashMap<>();
     private final RemindBinder remindBinder = new RemindBinder();
 
     @Override
@@ -39,14 +39,14 @@ public final class RemindService extends Service implements CityBusInterface {
     private void initData() {
         Observable.interval(BuildConfig.updateTime, TimeUnit.SECONDS, Schedulers.io())
                 .flatMap(aLong -> Observable.fromIterable(routeStops.values()))
-                .flatMap(routeStop -> Observable.zip(
+                .flatMap(commodStop -> Observable.zip(
                         cityBusService.getBusEstimateTime(
-                                routeStop.getBusRoute().getCityName().getEn(), getRemindQuery(routeStop)),
-                        Observable.just(routeStop),
-                        (busEstimateTimes, routeStopZ) -> {
+                                commodStop.busRoute().getCityName().getEn(), getRemindQuery(commodStop)),
+                        Observable.just(commodStop),
+                        (busEstimateTimes, commodStopS) -> {
                             Bundle bundle = new Bundle();
                             bundle.putParcelable(BUS_ESTIMATE_TIME, busEstimateTimes.get(0));
-                            bundle.putParcelable(BUS_ROUTESTOP, routeStopZ);
+                            bundle.putSerializable(BUS_ROUTESTOP, commodStopS);
                             return bundle;
                         })
                 )
@@ -55,19 +55,12 @@ public final class RemindService extends Service implements CityBusInterface {
                     return busEstimateTime.getEstimateTime() < 180;
                 })
                 .subscribe(bundle -> {
-                    RouteStop routeStop = bundle.getParcelable(BUS_ROUTESTOP);
-                    routeStops.remove(getKey(routeStop));
+                    CommodStop commodStop = (CommodStop) bundle.getSerializable(BUS_ROUTESTOP);
+                    routeStops.remove(CommodStop.getKey(commodStop));
                     sendNotification();
                 }, throwable -> TigerApplication.printLog(TlogType.error, TAG, throwable.toString()));
     }
 
-    private String getKey(RouteStop routeStop) {
-        StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append(routeStop.getBusRoute().getRouteUID());
-        stringBuffer.append(routeStop.getBusSubRoute().getSubRouteUID());
-        stringBuffer.append(routeStop.getStop().getStopUID());
-        return stringBuffer.toString();
-    }
 
     private void sendNotification() {
 
@@ -77,9 +70,9 @@ public final class RemindService extends Service implements CityBusInterface {
     public int onStartCommand(Intent intent, int flags, int startId) {
         TigerApplication.printLog(TlogType.debug, TAG, "onStartCommand");
         if (intent.hasExtra(BUS_ROUTESTOP)) {
-            RouteStop routeStop = intent.getParcelableExtra(BUS_ROUTESTOP);
-            routeStops.put(getKey(routeStop), routeStop);
-            TigerApplication.printLog(TlogType.debug, TAG, TigerApplication.object2String(routeStop));
+            CommodStop commodStop = (CommodStop) intent.getSerializableExtra(BUS_ROUTESTOP);
+            routeStops.put(CommodStop.getKey(commodStop), commodStop);
+            TigerApplication.printLog(TlogType.debug, TAG, TigerApplication.object2String(commodStop));
         }
         return super.onStartCommand(intent, flags, startId);
     }

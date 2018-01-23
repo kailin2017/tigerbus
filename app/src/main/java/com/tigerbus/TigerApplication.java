@@ -8,12 +8,11 @@ import com.tigerbus.base.log.Tlog;
 import com.tigerbus.base.log.TlogType;
 import com.tigerbus.data.CityBusInterface;
 import com.tigerbus.data.bus.BusRoute;
-import com.tigerbus.data.bus.RouteStop;
+import com.tigerbus.sqlite.data.CommodStop;
 import com.tigerbus.util.TigerPreferences;
 
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,7 +22,7 @@ public final class TigerApplication extends Application {
     private static Context context;
     private static TigerPreferences tigerPreferences;
     private static SoftReference<ArrayList<BusRoute>> busRouteData;
-    private static SoftReference<HashSet<RouteStop>> commodStop;
+    private static SoftReference<HashSet<CommodStop>> commodStop;
     private static Gson gson = new Gson();
 
     public static void printLog(TlogType tlogType, String tag, String message) {
@@ -82,15 +81,15 @@ public final class TigerApplication extends Application {
         return tigerPreferences.getEncrypt(key);
     }
 
-    public static synchronized HashSet<RouteStop> getRouteStopHashSet() {
+    public static synchronized HashSet<CommodStop> getRouteStopHashSet() {
         if (commodStop == null)
-            commodStop = new SoftReference<>(getStringSet(RouteStop.class, CityBusInterface.BUS_STOP_OF_ROUTE));
+            commodStop = new SoftReference<>(getStringSet(CommodStop.class, CityBusInterface.BUS_STOP_OF_ROUTE));
         return commodStop.get();
     }
 
-    public static synchronized void commodStopAdd(RouteStop stop) {
-        HashSet<RouteStop> hashSet = getRouteStopHashSet();
-        hashSet.add(stop);
+    public static synchronized void commodStopAdd(CommodStop commodStop) {
+        HashSet<CommodStop> hashSet = getRouteStopHashSet();
+        hashSet.add(commodStop);
         putStringSet(CityBusInterface.BUS_STOP_OF_ROUTE, hashSet);
     }
 

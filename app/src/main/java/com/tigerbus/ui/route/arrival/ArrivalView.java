@@ -9,7 +9,6 @@ import android.support.v4.view.ViewPager;
 
 import com.tigerbus.R;
 import com.tigerbus.base.BaseView;
-import com.tigerbus.data.bus.RouteStop;
 import com.tigerbus.data.bus.BusEstimateTime;
 import com.tigerbus.data.bus.BusRoute;
 import com.tigerbus.data.bus.BusRouteInterface;
