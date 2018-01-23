@@ -37,7 +37,7 @@ public final class RemindService extends Service implements CityBusInterface {
     }
 
     private void initData() {
-        Observable.interval(BuildConfig.updateTime, TimeUnit.SECONDS, Schedulers.io())
+        Observable.interval(0, BuildConfig.updateTime, TimeUnit.SECONDS, Schedulers.io())
                 .flatMap(aLong -> Observable.fromIterable(routeStops.values()))
                 .flatMap(commodStop -> Observable.zip(
                         cityBusService.getBusEstimateTime(

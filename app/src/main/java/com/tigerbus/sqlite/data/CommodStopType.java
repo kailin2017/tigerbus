@@ -18,13 +18,11 @@ public abstract class CommodStopType implements Serializable {
     public static final CommodStopType mapper(Cursor cursor) {
         long id = BriteApi.getInt(cursor, ID);
         String typeName = BriteApi.getString(cursor, TYPENAME);
-        cursor.close();
         return CommodStopType.create(id, typeName);
     }
 
     public static final CommodStopType create(long id, String type) {
         return new AutoValue_CommodStopType(id, type);
-
     }
 
     public abstract long id();

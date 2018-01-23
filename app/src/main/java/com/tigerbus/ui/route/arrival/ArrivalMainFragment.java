@@ -1,5 +1,6 @@
 package com.tigerbus.ui.route.arrival;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.tigerbus.R;
+import com.tigerbus.TigerApplication;
 import com.tigerbus.base.BaseFragment;
 import com.tigerbus.base.ViewStateRender;
 import com.tigerbus.base.annotation.FragmentView;
@@ -24,12 +26,14 @@ import com.tigerbus.data.bus.BusSubRoute;
 import com.tigerbus.service.RemindService;
 import com.tigerbus.sqlite.BriteSQL;
 import com.tigerbus.sqlite.data.CommodStop;
+import com.tigerbus.sqlite.data.CommodStopType;
 import com.tigerbus.ui.route.adapter.ArrivalRecyclerAdapter;
 import com.tigerbus.ui.widget.PagerRecyclerAdapter;
 import com.tigerbus.ui.widget.PagerRecyclerObj;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
@@ -40,6 +44,7 @@ public final class ArrivalMainFragment extends BaseFragment<ArrivalMainView, Arr
 
     private PublishSubject<ArrayList<BusEstimateTime>> publishSubject = PublishSubject.create();
     private PublishSubject<CommodStop> stopSubject = PublishSubject.create();
+    private PublishSubject<Integer> typelistSubject = PublishSubject.create();
     private BottomSheetBehavior bottomSheetBehavior;
     private BusRoute busRoute;
 
@@ -119,11 +124,33 @@ public final class ArrivalMainFragment extends BaseFragment<ArrivalMainView, Arr
     }
 
     @Override
+    public Observable<Integer> bindTypeList() {
+        return typelistSubject;
+    }
+
+    @Override
     public void bindService(CommodStop commodStop) {
         Bundle bundle = new Bundle();
         bundle.putSerializable(CityBusInterface.BUS_ROUTESTOP, commodStop);
         startService(context, RemindService.class, bundle);
     }
+
+    @Override
+    public void showTypeList(){
+        HashMap<Long, CommodStopType> commodStopTypeList = TigerApplication.getCommodStopTypes();
+        List<String> item = new ArrayList<>();
+        for (Long l : commodStopTypeList.keySet()) {
+            item.add(commodStopTypeList.get(l).type());
+        }
+        item.add(getString(R.string.dialog_add));
+        showListAlert(item.toArray(new String[]{}), this::typeListOnSelection);
+    }
+
+    private void typeListOnSelection(DialogInterface dialogInterface, int i){
+        typelistSubject.onNext(i);
+        dialogInterface.dismiss();
+    }
+
 
     @Override
     public void hiddenSheet() {

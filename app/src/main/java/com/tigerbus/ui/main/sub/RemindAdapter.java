@@ -4,11 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
-/**
- * Created by Kailin on 2018/1/20.
- */
-
-public class RemindAdapter extends RecyclerView.Adapter<RemindAdapter.ViewHolder> {
+public final class RemindAdapter extends RecyclerView.Adapter<RemindAdapter.ViewHolder> {
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

@@ -1,8 +1,11 @@
-package com.tigerbus.sqlite.data;
+package com.tigerbus.sqlite.api;
 
 import com.tigerbus.TigerApplication;
 
-public interface DataUtil {
+public interface SqlDataUtil {
+
+    String COMMODSTOP = "COMMODSTOP";
+    String COMMODSTOPTYPE = "COMMODSTOPTYPE";
 
     static <T> String object2String(T t) {
         return TigerApplication.object2String(t);

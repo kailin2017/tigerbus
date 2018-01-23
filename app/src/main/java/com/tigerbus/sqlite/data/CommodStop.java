@@ -8,6 +8,7 @@ import com.tigerbus.data.bus.BusRoute;
 import com.tigerbus.data.bus.BusSubRoute;
 import com.tigerbus.data.detail.Stop;
 import com.tigerbus.sqlite.BriteApi;
+import com.tigerbus.sqlite.api.SqlDataUtil;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -26,11 +27,8 @@ public abstract class CommodStop implements Serializable {
     public static final String TYPE = "TYPE";
 
     public static final String QUERY = ""
-            + "SELECT *"
-            + " FROM " + CommodStop.TABLE
-            + " INNER JOIN " + CommodStopType.TABLE
-            + " ON " + CommodStop.TABLE + "." + CommodStop.TYPE + " = "
-            + CommodStopType.TABLE + "." + CommodStopType.ID;
+            + "SELECT * FROM " + CommodStop.TABLE + " INNER JOIN " + CommodStopType.TABLE
+            + " ON " + CommodStopType.TABLE + "." + CommodStopType.ID + " = " + CommodStop.TABLE + "." + CommodStop.TYPE;
 
     public static final CommodStop mapper(Cursor cursor) {
         String id = BriteApi.getString(cursor, ID);
@@ -39,11 +37,10 @@ public abstract class CommodStop implements Serializable {
         String subRouteString = BriteApi.getString(cursor, ROUTESUB);
         String typeName = BriteApi.getString(cursor, CommodStopType.TYPENAME);
 
-        Stop stop = DataUtil.string2Object(Stop.class, stopString);
-        BusRoute busRoute = DataUtil.string2Object(BusRoute.class, routeString);
-        BusSubRoute busSubRoute = DataUtil.string2Object(BusSubRoute.class, subRouteString);
+        Stop stop = SqlDataUtil.string2Object(Stop.class, stopString);
+        BusRoute busRoute = SqlDataUtil.string2Object(BusRoute.class, routeString);
+        BusSubRoute busSubRoute = SqlDataUtil.string2Object(BusSubRoute.class, subRouteString);
 
-        cursor.close();
         return create(id, stop, busRoute, busSubRoute, typeName);
     }
 
@@ -75,9 +72,9 @@ public abstract class CommodStop implements Serializable {
 
         public SqlBuilder init(CommodStop commodStop) {
             contentValues.put(ID, getKey(commodStop));
-            contentValues.put(STOP, DataUtil.object2String(commodStop.stop()));
-            contentValues.put(ROUTE, DataUtil.object2String(commodStop.busRoute()));
-            contentValues.put(ROUTESUB, DataUtil.object2String(commodStop.busSubRoute()));
+            contentValues.put(STOP, SqlDataUtil.object2String(commodStop.stop()));
+            contentValues.put(ROUTE, SqlDataUtil.object2String(commodStop.busRoute()));
+            contentValues.put(ROUTESUB, SqlDataUtil.object2String(commodStop.busSubRoute()));
             return this;
         }
 

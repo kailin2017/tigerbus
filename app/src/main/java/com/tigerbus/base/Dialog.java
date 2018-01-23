@@ -1,9 +1,9 @@
 package com.tigerbus.base;
 
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
 
-interface DialogInterface {
+import android.content.DialogInterface;
+
+interface Dialog {
 
     interface Message{
         void initMessageDialog();
@@ -11,8 +11,6 @@ interface DialogInterface {
         void showMessage(String msg);
 
         void dimessMessage();
-
-        AlertDialog getMessageDialog();
     }
 
     interface Progress{
@@ -21,7 +19,11 @@ interface DialogInterface {
         void showProgress();
 
         void dimessProgress();
+    }
 
-        ProgressDialog getProgressDialog();
+    interface ListAlert{
+        void showListAlert(CharSequence[] items,  DialogInterface.OnClickListener listener);
+
+        void dimessListAlert();
     }
 }

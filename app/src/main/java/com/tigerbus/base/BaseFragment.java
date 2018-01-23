@@ -3,6 +3,7 @@ package com.tigerbus.base;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,6 +17,7 @@ public abstract class BaseFragment<V extends BaseView, P extends BasePresenter<V
     public TigerApplication application;
     public ProgressDialog progressDialog;
     public AlertDialog messageDialog;
+    public AlertDialog listDialog;
     public Context context;
 
     @Override
@@ -30,14 +32,9 @@ public abstract class BaseFragment<V extends BaseView, P extends BasePresenter<V
     public void onStop() {
         if (presenter != null)
             presenter.clearUiDisposable();
-        super.onStop();
-    }
-
-    @Override
-    public void onDestroyView() {
         if (presenter != null)
             presenter.clearDisposable();
-        super.onDestroyView();
+        super.onStop();
     }
 
     @Override
@@ -47,7 +44,7 @@ public abstract class BaseFragment<V extends BaseView, P extends BasePresenter<V
     }
 
     @Override
-    public void showProgress() {
+    public synchronized void showProgress() {
         synchronized (ProgressDialog.class) {
             if (progressDialog == null)
                 initProgress();
@@ -64,22 +61,17 @@ public abstract class BaseFragment<V extends BaseView, P extends BasePresenter<V
     }
 
     @Override
-    public ProgressDialog getProgressDialog() {
-        return progressDialog;
-    }
-
-    @Override
     public void initMessageDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-//        builder.setNegativeButton(getString(R.string.dialog_ok), (d, i) -> {
-//        });
-//        builder.setPositiveButton(getString(R.string.dialog_cancel), (d, i) -> {
-//        });
+        builder.setNegativeButton(getString(R.string.dialog_ok), (d, i) -> {
+        });
+        builder.setPositiveButton(getString(R.string.dialog_cancel), (d, i) -> {
+        });
         messageDialog = builder.create();
     }
 
     @Override
-    public void showMessage(String msg) {
+    public synchronized void showMessage(String msg) {
         synchronized (AlertDialog.class) {
             if (messageDialog == null)
                 initMessageDialog();
@@ -97,15 +89,17 @@ public abstract class BaseFragment<V extends BaseView, P extends BasePresenter<V
     }
 
     @Override
-    public AlertDialog getMessageDialog() {
-        return messageDialog;
+    public void showListAlert(CharSequence[] items, DialogInterface.OnClickListener listener) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setItems(items, listener);
+        builder.setCancelable(false);
+        listDialog = builder.create();
     }
 
-    protected void startActivity(@NonNull Class clazz) {
-        startActivity(context, clazz);
-    }
-
-    protected void startActivity(@NonNull Class clazz, @NonNull Bundle bundle) {
-        startActivity(context, clazz, bundle);
+    @Override
+    public void dimessListAlert() {
+        if (listDialog != null)
+            if (listDialog.isShowing())
+                listDialog.dismiss();
     }
 }

@@ -18,7 +18,8 @@ final class BriteDBCallback extends SupportSQLiteOpenHelper.Callback {
             + CommodStop.ID + " TEXT NOT NULL PRIMARY KEY,"
             + CommodStop.STOP + " TEXT NOT NULL,"
             + CommodStop.ROUTE + " TEXT NOT NULL,"
-            + CommodStop.ROUTESUB + " TEXT NOT NULL"
+            + CommodStop.ROUTESUB + " TEXT NOT NULL,"
+            + CommodStop.TYPE + " TEXT NOT NULL"
             + ")";
     private static final String CREATE_COMMOD_STOP_TYPE_TABLE = ""
             + "CREATE TABLE " + CommodStopType.TABLE + "("
@@ -42,11 +43,6 @@ final class BriteDBCallback extends SupportSQLiteOpenHelper.Callback {
                 new CommodStopType.SqlBuilder().type("工作").build());
         db.insert(CommodStopType.TABLE, CONFLICT_FAIL,
                 new CommodStopType.SqlBuilder().type("七桃").build());
-        try {
-            db.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override

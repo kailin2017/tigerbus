@@ -4,11 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
-/**
- * Created by Kailin on 2018/1/20.
- */
-
-public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
+public final class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

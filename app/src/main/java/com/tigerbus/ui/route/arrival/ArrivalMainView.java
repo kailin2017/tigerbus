@@ -19,7 +19,11 @@ public interface ArrivalMainView extends ArrivalView {
 
     Observable<CommodStop> bindSaveStation();
 
+    Observable<Integer> bindTypeList();
+
     void bindService(CommodStop commodStop);
 
     void hiddenSheet();
+
+    void showTypeList();
 }

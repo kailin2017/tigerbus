@@ -1,11 +1,11 @@
 package com.tigerbus.sqlite;
 
 import android.app.Application;
-import android.arch.persistence.db.BuildConfig;
 import android.arch.persistence.db.SupportSQLiteOpenHelper;
 import android.arch.persistence.db.framework.FrameworkSQLiteOpenHelperFactory;
 
 import com.squareup.sqlbrite3.BriteDatabase;
+import com.tigerbus.BuildConfig;
 
 import io.reactivex.schedulers.Schedulers;
 

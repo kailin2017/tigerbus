@@ -4,7 +4,7 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -25,6 +25,7 @@ public abstract class BaseActivity<V extends BaseView, P extends BasePresenter<V
     public TigerApplication application;
     public ProgressDialog progressDialog;
     public AlertDialog messageDialog;
+    public AlertDialog listDialog;
     public Context context;
 
     @Override
@@ -117,17 +118,12 @@ public abstract class BaseActivity<V extends BaseView, P extends BasePresenter<V
     }
 
     @Override
-    public ProgressDialog getProgressDialog() {
-        return progressDialog;
-    }
-
-    @Override
     public void initMessageDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-//        builder.setNegativeButton(getString(R.string.dialog_ok), (d, i) -> {
-//        });
-//        builder.setPositiveButton(getString(R.string.dialog_cancel), (d, i) -> {
-//        });
+        builder.setNegativeButton(getString(R.string.dialog_ok), (d, i) -> {
+        });
+        builder.setPositiveButton(getString(R.string.dialog_cancel), (d, i) -> {
+        });
         messageDialog = builder.create();
     }
 
@@ -150,10 +146,19 @@ public abstract class BaseActivity<V extends BaseView, P extends BasePresenter<V
     }
 
     @Override
-    public AlertDialog getMessageDialog() {
-        return messageDialog;
+    public void showListAlert(CharSequence[] items, DialogInterface.OnClickListener listener) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setItems(items, listener);
+        builder.setCancelable(false);
+        listDialog = builder.create();
     }
 
+    @Override
+    public void dimessListAlert() {
+        if (listDialog != null)
+            if (listDialog.isShowing())
+                listDialog.dismiss();
+    }
 
     protected void startActivity(@NonNull Class clazz) {
         startActivity(context, clazz);

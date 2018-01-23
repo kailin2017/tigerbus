@@ -13,7 +13,7 @@ import static android.content.Context.BIND_AUTO_CREATE;
  * Created by Kailin on 2018/1/20.
  */
 
-public interface BaseUIInterface extends DialogInterface.Progress, DialogInterface.Message {
+public interface BaseUIInterface extends Dialog.Progress, Dialog.Message, Dialog.ListAlert {
 
     default void startActivity(@NonNull Context context, @NonNull Class clazz) {
         context.startActivity(new Intent(context, clazz));

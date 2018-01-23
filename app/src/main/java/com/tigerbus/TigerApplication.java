@@ -6,14 +6,17 @@ import android.content.Context;
 import com.google.gson.Gson;
 import com.tigerbus.base.log.Tlog;
 import com.tigerbus.base.log.TlogType;
-import com.tigerbus.data.CityBusInterface;
 import com.tigerbus.data.bus.BusRoute;
-import com.tigerbus.sqlite.data.CommodStop;
+import com.tigerbus.sqlite.data.CommodStopType;
+import com.tigerbus.sqlite.api.SqlDataUtil;
+import com.tigerbus.ui.main.sub.HomeView;
 import com.tigerbus.util.TigerPreferences;
 
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public final class TigerApplication extends Application {
@@ -22,7 +25,7 @@ public final class TigerApplication extends Application {
     private static Context context;
     private static TigerPreferences tigerPreferences;
     private static SoftReference<ArrayList<BusRoute>> busRouteData;
-    private static SoftReference<HashSet<CommodStop>> commodStop;
+    private static SoftReference<HashMap<Long, CommodStopType>> coomdStopType;
     private static Gson gson = new Gson();
 
     public static void printLog(TlogType tlogType, String tag, String message) {
@@ -81,16 +84,15 @@ public final class TigerApplication extends Application {
         return tigerPreferences.getEncrypt(key);
     }
 
-    public static synchronized HashSet<CommodStop> getRouteStopHashSet() {
-        if (commodStop == null)
-            commodStop = new SoftReference<>(getStringSet(CommodStop.class, CityBusInterface.BUS_STOP_OF_ROUTE));
-        return commodStop.get();
+    public static synchronized HashMap<Long, CommodStopType> getCommodStopTypes() {
+        return coomdStopType.get();
     }
 
-    public static synchronized void commodStopAdd(CommodStop commodStop) {
-        HashSet<CommodStop> hashSet = getRouteStopHashSet();
-        hashSet.add(commodStop);
-        putStringSet(CityBusInterface.BUS_STOP_OF_ROUTE, hashSet);
+    public static synchronized void setCommodStopTypes(List<CommodStopType> commodStopTypes) {
+        HashMap<Long, CommodStopType> hashMap = new HashMap<>();
+        for (CommodStopType commodStopType : commodStopTypes)
+            hashMap.put(commodStopType.id(), commodStopType);
+        coomdStopType = new SoftReference<>(hashMap);
     }
 
     public static <T> void putStringSet(String key, Set<T> tSet) {
