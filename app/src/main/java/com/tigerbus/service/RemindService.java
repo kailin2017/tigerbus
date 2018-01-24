@@ -11,7 +11,7 @@ import com.tigerbus.TigerApplication;
 import com.tigerbus.base.log.TlogType;
 import com.tigerbus.data.CityBusInterface;
 import com.tigerbus.data.bus.BusEstimateTime;
-import com.tigerbus.sqlite.data.CommodStop;
+import com.tigerbus.sqlite.data.CommonStop;
 
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
@@ -22,7 +22,7 @@ import io.reactivex.schedulers.Schedulers;
 public final class RemindService extends Service implements CityBusInterface {
 
     private final static String TAG = RemindService.class.getSimpleName();
-    private final HashMap<String, CommodStop> routeStops = new HashMap<>();
+    private final HashMap<String, CommonStop> routeStops = new HashMap<>();
     private final RemindBinder remindBinder = new RemindBinder();
 
     @Override
@@ -46,7 +46,7 @@ public final class RemindService extends Service implements CityBusInterface {
                         (busEstimateTimes, commodStopS) -> {
                             Bundle bundle = new Bundle();
                             bundle.putParcelable(BUS_ESTIMATE_TIME, busEstimateTimes.get(0));
-                            bundle.putSerializable(BUS_ROUTESTOP, commodStopS);
+                            bundle.putParcelable(BUS_ROUTESTOP, commodStopS);
                             return bundle;
                         })
                 )
@@ -55,8 +55,8 @@ public final class RemindService extends Service implements CityBusInterface {
                     return busEstimateTime.getEstimateTime() < 180;
                 })
                 .subscribe(bundle -> {
-                    CommodStop commodStop = (CommodStop) bundle.getSerializable(BUS_ROUTESTOP);
-                    routeStops.remove(CommodStop.getKey(commodStop));
+                    CommonStop commonStop = bundle.getParcelable(BUS_ROUTESTOP);
+                    routeStops.remove(CommonStop.getKey(commonStop));
                     sendNotification();
                 }, throwable -> TigerApplication.printLog(TlogType.error, TAG, throwable.toString()));
     }
@@ -70,9 +70,9 @@ public final class RemindService extends Service implements CityBusInterface {
     public int onStartCommand(Intent intent, int flags, int startId) {
         TigerApplication.printLog(TlogType.debug, TAG, "onStartCommand");
         if (intent.hasExtra(BUS_ROUTESTOP)) {
-            CommodStop commodStop = (CommodStop) intent.getSerializableExtra(BUS_ROUTESTOP);
-            routeStops.put(CommodStop.getKey(commodStop), commodStop);
-            TigerApplication.printLog(TlogType.debug, TAG, TigerApplication.object2String(commodStop));
+            CommonStop commonStop = intent.getParcelableExtra(BUS_ROUTESTOP);
+            routeStops.put(CommonStop.getKey(commonStop), commonStop);
+            TigerApplication.printLog(TlogType.debug, TAG, TigerApplication.object2String(commonStop));
         }
         return super.onStartCommand(intent, flags, startId);
     }

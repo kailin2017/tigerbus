@@ -20,7 +20,7 @@ public final class BriteDB {
 
     private static void createInstance() {
         sqlBrite = new SqlBrite.Builder().logger(message ->
-                TigerApplication.printLog(TlogType.error, TAG, message)).build();
+                TigerApplication.printLog(TlogType.debug, TAG, message)).build();
     }
 
 }

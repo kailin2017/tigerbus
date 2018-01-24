@@ -11,7 +11,6 @@ import io.reactivex.schedulers.Schedulers;
 public abstract class BasePresenter<V extends BaseView> extends MvpPresenterImpl<V> {
 
     private CompositeDisposable disposables = new CompositeDisposable(), uiDisposables = new CompositeDisposable();
-    protected Consumer<Throwable> throwableConsumer = throwable -> render(ViewState.Exception.create(throwable.toString()));
     protected Consumer<Disposable> defaultDisposableConsumer = disposable -> addDisposable(disposable);
     protected Consumer<Disposable> renderDisposableConsumer = disposable -> {
         addDisposable(disposable);
@@ -39,6 +38,9 @@ public abstract class BasePresenter<V extends BaseView> extends MvpPresenterImpl
         uiDisposables.clear();
     }
 
+    protected void throwable(Throwable throwable){
+        render(ViewState.Exception.create(throwable.toString()));
+    }
 
     protected void render(ViewState viewState) {
         getView().render(viewState, (ViewStateRender) getView());

@@ -56,7 +56,7 @@ public final class RoutePresenter extends BasePresenter<RouteView> implements Ci
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(bundle -> render(RouteViewState.Success.create(bundle)), throwableConsumer);
+                .subscribe(bundle -> render(RouteViewState.Success.create(bundle)), this::throwable);
     }
 
     private void initEstimateTime() {

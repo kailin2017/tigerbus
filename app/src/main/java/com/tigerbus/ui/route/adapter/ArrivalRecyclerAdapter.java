@@ -13,7 +13,7 @@ import com.tigerbus.data.bus.BusRoute;
 import com.tigerbus.data.bus.BusStopOfRoute;
 import com.tigerbus.data.bus.BusSubRoute;
 import com.tigerbus.data.detail.Stop;
-import com.tigerbus.sqlite.data.CommodStop;
+import com.tigerbus.sqlite.data.CommonStop;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,7 +27,7 @@ public final class ArrivalRecyclerAdapter extends RecyclerView.Adapter<ArrivalRe
 
     private BusStopOfRoute busStopOfRoute;
     private Map<String, BusEstimateTime> busEstimateTimeMap = new HashMap<>();
-    private PublishSubject<CommodStop> publishSubject = PublishSubject.create();
+    private PublishSubject<CommonStop> publishSubject = PublishSubject.create();
     private Disposable disposable;
     private BusRoute busRoute;
     private BusSubRoute busSubRoute;
@@ -58,7 +58,7 @@ public final class ArrivalRecyclerAdapter extends RecyclerView.Adapter<ArrivalRe
         return disposable;
     }
 
-    public PublishSubject<CommodStop> getClickSubject() {
+    public PublishSubject<CommonStop> getClickSubject() {
         return publishSubject;
     }
 
@@ -70,7 +70,7 @@ public final class ArrivalRecyclerAdapter extends RecyclerView.Adapter<ArrivalRe
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Stop stop = busStopOfRoute.getStops().get(position);
-        holder.itemLayout.setTag(CommodStop.create("", stop, busRoute, busSubRoute, ""));
+        holder.itemLayout.setTag(CommonStop.create("", stop, busRoute, busSubRoute, 0, ""));
         holder.stopName.setText(stop.getStopName().getZh_tw());
         BusEstimateTime busEstimateTime = busEstimateTimeMap.get(stop.getStopUID());
         if (busEstimateTime != null) {
@@ -93,7 +93,7 @@ public final class ArrivalRecyclerAdapter extends RecyclerView.Adapter<ArrivalRe
             stopName = view.findViewById(R.id.stopname);
             estimateTime = view.findViewById(R.id.estimatetime);
             itemLayout = view.findViewById(R.id.item);
-            itemLayout.setOnClickListener(v -> publishSubject.onNext((CommodStop) v.getTag()));
+            itemLayout.setOnClickListener(v -> publishSubject.onNext((CommonStop) v.getTag()));
         }
     }
 }

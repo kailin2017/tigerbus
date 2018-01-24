@@ -35,6 +35,7 @@ ext {
     rxbindingVersion = '2.0.0'
     leakcanaryVersion = '1.+'
     autoValueVersion = '1.+'
+    autoValueParcelVersion = '0.2.+'
     sqlbriteVersion = '3.+'
     archVersion = '1.+'
 

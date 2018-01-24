@@ -18,6 +18,7 @@ android {
         buildConfigField "String", "MainService", "\"http://ptx.transportdata.tw\""
         buildConfigField "String", "LocalDBName", "\"tiger.db\""
         buildConfigField "Integer", "updateTime", "10"
+        buildConfigField "Integer", "firstTime", "2"
     }
     testOptions {
         unitTests {
@@ -94,8 +95,9 @@ dependencies {
     // arch
     implementation "android.arch.persistence:db-framework:${rootProject.archVersion}"
     // autoValue
-    provided "com.google.auto.value:auto-value:$rootProject.autoValueVersion"
+    compileOnly "com.google.auto.value:auto-value:$rootProject.autoValueVersion"
     annotationProcessor "com.google.auto.value:auto-value:$rootProject.autoValueVersion"
+    annotationProcessor "com.ryanharter.auto.value:auto-value-parcel:$rootProject.autoValueParcelVersion"
     // test
     testImplementation "junit:junit:${rootProject.junitVersion}"
     testImplementation "org.robolectric:robolectric:${rootProject.robolectricVersion}"

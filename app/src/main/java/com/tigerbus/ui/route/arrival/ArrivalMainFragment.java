@@ -8,6 +8,7 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
@@ -25,8 +26,8 @@ import com.tigerbus.data.bus.BusStopOfRoute;
 import com.tigerbus.data.bus.BusSubRoute;
 import com.tigerbus.service.RemindService;
 import com.tigerbus.sqlite.BriteSQL;
-import com.tigerbus.sqlite.data.CommodStop;
-import com.tigerbus.sqlite.data.CommodStopType;
+import com.tigerbus.sqlite.data.CommonStop;
+import com.tigerbus.sqlite.data.CommonStopType;
 import com.tigerbus.ui.route.adapter.ArrivalRecyclerAdapter;
 import com.tigerbus.ui.widget.PagerRecyclerAdapter;
 import com.tigerbus.ui.widget.PagerRecyclerObj;
@@ -43,7 +44,7 @@ public final class ArrivalMainFragment extends BaseFragment<ArrivalMainView, Arr
         implements ArrivalMainView, ViewStateRender<Bundle> {
 
     private PublishSubject<ArrayList<BusEstimateTime>> publishSubject = PublishSubject.create();
-    private PublishSubject<CommodStop> stopSubject = PublishSubject.create();
+    private PublishSubject<CommonStop> stopSubject = PublishSubject.create();
     private PublishSubject<Integer> typelistSubject = PublishSubject.create();
     private BottomSheetBehavior bottomSheetBehavior;
     private BusRoute busRoute;
@@ -119,7 +120,12 @@ public final class ArrivalMainFragment extends BaseFragment<ArrivalMainView, Arr
     }
 
     @Override
-    public Observable<CommodStop> bindSaveStation() {
+    public Observable<MotionEvent> bindTouchPager() {
+        return rxTouch(viewPager);
+    }
+
+    @Override
+    public Observable<CommonStop> bindSaveStation() {
         return stopSubject;
     }
 
@@ -129,25 +135,25 @@ public final class ArrivalMainFragment extends BaseFragment<ArrivalMainView, Arr
     }
 
     @Override
-    public void bindService(CommodStop commodStop) {
+    public void bindService(CommonStop commonStop) {
         Bundle bundle = new Bundle();
-        bundle.putSerializable(CityBusInterface.BUS_ROUTESTOP, commodStop);
+        bundle.putParcelable(CityBusInterface.BUS_ROUTESTOP, commonStop);
         startService(context, RemindService.class, bundle);
     }
 
     @Override
-    public void showTypeList(){
-        HashMap<Long, CommodStopType> commodStopTypeList = TigerApplication.getCommodStopTypes();
+    public void showTypeList() {
+        HashMap<Integer, CommonStopType> commodStopTypeList = TigerApplication.getCommodStopTypes();
         List<String> item = new ArrayList<>();
-        for (Long l : commodStopTypeList.keySet()) {
-            item.add(commodStopTypeList.get(l).type());
+        for (int i : commodStopTypeList.keySet()) {
+            item.add(commodStopTypeList.get(i).type());
         }
         item.add(getString(R.string.dialog_add));
         showListAlert(item.toArray(new String[]{}), this::typeListOnSelection);
     }
 
-    private void typeListOnSelection(DialogInterface dialogInterface, int i){
-        typelistSubject.onNext(i);
+    private void typeListOnSelection(DialogInterface dialogInterface, int i) {
+        typelistSubject.onNext(i + 1);
         dialogInterface.dismiss();
     }
 

@@ -1,15 +1,21 @@
 package com.tigerbus.ui.main.sub;
 
+import android.os.Bundle;
+
 import com.squareup.sqlbrite3.BriteDatabase;
 import com.tigerbus.BuildConfig;
 import com.tigerbus.TigerApplication;
 import com.tigerbus.base.BasePresenter;
+import com.tigerbus.base.ViewState;
 import com.tigerbus.base.log.TlogType;
 import com.tigerbus.data.CityBusInterface;
-import com.tigerbus.sqlite.api.CommodStopTypeApi;
-import com.tigerbus.sqlite.data.CommodStop;
-import com.tigerbus.sqlite.data.CommodStopType;
+import com.tigerbus.data.bus.BusEstimateTime;
+import com.tigerbus.sqlite.data.CommodStopQueryResult;
+import com.tigerbus.sqlite.data.CommonStopTypeApi;
+import com.tigerbus.sqlite.data.CommonStop;
+import com.tigerbus.sqlite.data.CommonStopType;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -17,10 +23,11 @@ import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
 
 public final class HomePresenter extends BasePresenter<HomeView>
-        implements CityBusInterface, CommodStopTypeApi {
+        implements CityBusInterface, CommonStopTypeApi {
 
     private final static String TAG = HomePresenter.class.getSimpleName();
     private BriteDatabase briteDatabase;
+    private ArrayList<CommodStopQueryResult> commodStopQueryResults = new ArrayList<>();
 
     public HomePresenter(BriteDatabase briteDatabase) {
         this.briteDatabase = briteDatabase;
@@ -34,19 +41,50 @@ public final class HomePresenter extends BasePresenter<HomeView>
     }
 
     private void initCommodStop() {
-        Observable.interval(0, BuildConfig.updateTime, TimeUnit.SECONDS, Schedulers.io())
+        Observable.interval(BuildConfig.firstTime, BuildConfig.updateTime, TimeUnit.SECONDS, Schedulers.io())
                 .doOnSubscribe(this::addDisposable)
-                .flatMap(aLong -> briteDatabase.createQuery(CommodStop.QUERY_TABLES, CommodStop.QUERY).mapToList(CommodStop::mapper))
-                .flatMap(commodStops -> Observable.fromIterable(commodStops))
-                .flatMap(commodStop -> cityBusService.getBusEstimateTime(
-                        commodStop.busRoute().getCityName().getEn(), getRemindQuery(commodStop)))
-                .subscribe(busEstimateTimes -> {
-                }, throwableConsumer);
+                .flatMap(this::flatMap1)
+                .flatMap(this::flatMap2)
+                .flatMap(this::flatMap3)
+                .subscribe(bundle -> {
+                    BusEstimateTime busEstimateTime = bundle.getParcelable(BUS_ESTIMATE_TIME);
+                    CommonStop commonStop = bundle.getParcelable(BUS_ROUTESTOP);
+                    commodStopQueryResults.add(CommodStopQueryResult.create(commonStop, busEstimateTime));
+                }, this::throwable);
     }
 
+    private Observable<List<CommonStop>> flatMap1(long aLong) {
+        return briteDatabase.createQuery(CommonStop.QUERY_TABLES, CommonStop.QUERY).mapToList(CommonStop::mapper);
+
+    }
+
+    private Observable<CommonStop> flatMap2(List<CommonStop> commonStops) {
+        return Observable.fromIterable(commonStops)
+                .doOnSubscribe(disposable -> commodStopQueryResults.clear())
+                .doOnComplete(() -> {
+
+                });
+
+    }
+
+    private Observable<Bundle> flatMap3(CommonStop commonStop) {
+        return Observable.zip(
+                cityBusService.getBusEstimateTime(
+                        commonStop.busRoute().getCityName().getEn(), getRemindQuery(commonStop)),
+                Observable.just(commonStop),
+                (busEstimateTimes, commonStop1) -> {
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelable(BUS_ESTIMATE_TIME, busEstimateTimes.get(0));
+                    bundle.putParcelable(BUS_ROUTESTOP, commonStop1);
+                    return bundle;
+                });
+    }
+
+
     @Override
-    public void initCommodStopTypes(List<CommodStopType> commodStopTypes) {
-        TigerApplication.setCommodStopTypes(commodStopTypes);
+    public void initCommodStopTypes(List<CommonStopType> commonStopTypes) {
+        TigerApplication.setCommodStopTypes(commonStopTypes);
+
     }
 
     @Override

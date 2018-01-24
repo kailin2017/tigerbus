@@ -18,14 +18,13 @@ import io.reactivex.schedulers.Schedulers;
 public final class SearchRoutePresenter extends BasePresenter<SearchRouteView> {
 
     private final ArrayList<BusRoute> searchData = TigerApplication.getBusRouteData();
-    private Consumer<Throwable> throwableConsumer = throwable -> render(SearchRouteViewState.Exception.create(throwable.toString()));
 
     @Override
     public void bindIntent() {
         Observable<String> stringObservable = getView().bindSearch();
         stringObservable
                 .doOnSubscribe(defaultDisposableConsumer)
-                .subscribe(s -> searchData(s), throwableConsumer);
+                .subscribe(s -> searchData(s), this::throwable);
     }
 
     private void searchData(String searchRoute) {

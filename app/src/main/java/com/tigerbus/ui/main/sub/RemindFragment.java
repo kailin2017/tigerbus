@@ -9,7 +9,7 @@ import com.tigerbus.base.MvpPresenter;
 import com.tigerbus.base.annotation.FragmentView;
 import com.tigerbus.base.annotation.ViewInject;
 
-@FragmentView(mvp = false, layout = R.layout.remind_fragment)
+@FragmentView(mvp = false, layout = R.layout.home_fragment)
 public final class RemindFragment extends BaseFragment {
 
     @ViewInject(R.id.viewpager)

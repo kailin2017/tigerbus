@@ -7,9 +7,7 @@ import com.google.gson.Gson;
 import com.tigerbus.base.log.Tlog;
 import com.tigerbus.base.log.TlogType;
 import com.tigerbus.data.bus.BusRoute;
-import com.tigerbus.sqlite.data.CommodStopType;
-import com.tigerbus.sqlite.api.SqlDataUtil;
-import com.tigerbus.ui.main.sub.HomeView;
+import com.tigerbus.sqlite.data.CommonStopType;
 import com.tigerbus.util.TigerPreferences;
 
 import java.lang.ref.SoftReference;
@@ -25,7 +23,7 @@ public final class TigerApplication extends Application {
     private static Context context;
     private static TigerPreferences tigerPreferences;
     private static SoftReference<ArrayList<BusRoute>> busRouteData;
-    private static SoftReference<HashMap<Long, CommodStopType>> coomdStopType;
+    private static SoftReference<HashMap<Integer, CommonStopType>> coomdStopType;
     private static Gson gson = new Gson();
 
     public static void printLog(TlogType tlogType, String tag, String message) {
@@ -84,14 +82,14 @@ public final class TigerApplication extends Application {
         return tigerPreferences.getEncrypt(key);
     }
 
-    public static synchronized HashMap<Long, CommodStopType> getCommodStopTypes() {
+    public static synchronized HashMap<Integer, CommonStopType> getCommodStopTypes() {
         return coomdStopType.get();
     }
 
-    public static synchronized void setCommodStopTypes(List<CommodStopType> commodStopTypes) {
-        HashMap<Long, CommodStopType> hashMap = new HashMap<>();
-        for (CommodStopType commodStopType : commodStopTypes)
-            hashMap.put(commodStopType.id(), commodStopType);
+    public static synchronized void setCommodStopTypes(List<CommonStopType> commonStopTypes) {
+        HashMap<Integer, CommonStopType> hashMap = new HashMap<>();
+        for (CommonStopType commonStopType : commonStopTypes)
+            hashMap.put(commonStopType.id(), commonStopType);
         coomdStopType = new SoftReference<>(hashMap);
     }
 
