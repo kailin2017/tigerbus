@@ -9,17 +9,18 @@ import com.tigerbus.base.BaseFragment;
 import com.tigerbus.base.ViewStateRender;
 import com.tigerbus.base.annotation.FragmentView;
 import com.tigerbus.base.annotation.ViewInject;
+import com.tigerbus.data.autovalue.HomePresenterAutoValue;
 import com.tigerbus.sqlite.BriteSQL;
 import com.tigerbus.sqlite.data.CommonStopType;
 import com.tigerbus.ui.widget.PagerRecyclerAdapter;
 import com.tigerbus.ui.widget.PagerRecyclerObj;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 @FragmentView(layout = R.layout.home_fragment)
 public final class HomeFragment extends BaseFragment<HomeView, HomePresenter>
-        implements HomeView<ViewStateRender>, ViewStateRender<List<CommonStopType>> {
+        implements HomeView<ViewStateRender>, ViewStateRender<HashMap<CommonStopType, HomePresenterAutoValue>> {
 
     @ViewInject(R.id.tablayout)
     private TabLayout tabLayout;
@@ -44,12 +45,30 @@ public final class HomeFragment extends BaseFragment<HomeView, HomePresenter>
     }
 
     @Override
-    public void renderSuccess(List<CommonStopType> result) {
+    public void renderSuccess(HashMap<CommonStopType, HomePresenterAutoValue> result) {
         ArrayList<PagerRecyclerObj> pagerRecyclerObjs = new ArrayList<>();
-        for (CommonStopType commonStopType : result) {
-            pagerRecyclerObjs.add(new PagerRecyclerObj(commonStopType.type(), new HomeAdapter(), context));
+        for (HomePresenterAutoValue homePresenterAutoValue : result.values()) {
+            HomeAdapter homeAdapter = new HomeAdapter(homePresenterAutoValue.publishSubject());
+            pagerRecyclerObjs.add(new PagerRecyclerObj(homePresenterAutoValue.commonStopType().type(), homeAdapter, context));
         }
         viewPager.setAdapter(new PagerRecyclerAdapter(tabLayout, pagerRecyclerObjs));
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
     }
 
     @Override

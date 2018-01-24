@@ -47,7 +47,6 @@ public final class ArrivalMainFragment extends BaseFragment<ArrivalMainView, Arr
     private PublishSubject<CommonStop> stopSubject = PublishSubject.create();
     private PublishSubject<Integer> typelistSubject = PublishSubject.create();
     private BottomSheetBehavior bottomSheetBehavior;
-    private BusRoute busRoute;
 
     @ViewInject(R.id.tablayout)
     private TabLayout tabLayout;
@@ -67,7 +66,7 @@ public final class ArrivalMainFragment extends BaseFragment<ArrivalMainView, Arr
     @ViewInject(R.id.sheetitem_station_view)
     private TextView stationViewSheetItem;
 
-    public static ArrivalMainFragment newInstance(@NonNull Bundle bundle) {
+    public static ArrivalMainFragment newInstance(Bundle bundle) {
         ArrivalMainFragment arrivalMainFragment = new ArrivalMainFragment();
         arrivalMainFragment.setArguments(bundle);
         return arrivalMainFragment;
@@ -76,12 +75,6 @@ public final class ArrivalMainFragment extends BaseFragment<ArrivalMainView, Arr
     @Override
     public void setEstimateSubject(@NonNull PublishSubject<ArrayList<BusEstimateTime>> estimateSubject) {
         this.publishSubject = estimateSubject;
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        busRoute = getArguments().getParcelable(CityBusInterface.BUS_ROUTE);
-        super.onViewCreated(view, savedInstanceState);
     }
 
     @Override

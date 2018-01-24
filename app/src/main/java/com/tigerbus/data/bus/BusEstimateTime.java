@@ -84,6 +84,8 @@ public final class BusEstimateTime implements Parcelable, BusRouteInterface {
     private String SrcUpdateTime;
     private String UpdateTime;
 
+    public BusEstimateTime(){}
+
     protected BusEstimateTime(Parcel in) {
         PlateNumb = in.readString();
         StopUID = in.readString();

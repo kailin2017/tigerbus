@@ -14,6 +14,7 @@ import com.tigerbus.data.bus.BusStopOfRoute;
 import com.tigerbus.data.bus.BusSubRoute;
 import com.tigerbus.data.detail.Stop;
 import com.tigerbus.sqlite.data.CommonStop;
+import com.tigerbus.sqlite.data.CommonStopType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -70,7 +71,7 @@ public final class ArrivalRecyclerAdapter extends RecyclerView.Adapter<ArrivalRe
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Stop stop = busStopOfRoute.getStops().get(position);
-        holder.itemLayout.setTag(CommonStop.create("", stop, busRoute, busSubRoute, 0, ""));
+        holder.itemLayout.setTag(CommonStop.create("", stop, busRoute, busSubRoute, CommonStopType.create(0,"")));
         holder.stopName.setText(stop.getStopName().getZh_tw());
         BusEstimateTime busEstimateTime = busEstimateTimeMap.get(stop.getStopUID());
         if (busEstimateTime != null) {

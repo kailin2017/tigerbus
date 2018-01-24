@@ -18,16 +18,14 @@ import io.reactivex.annotations.NonNull;
 
 @AutoValue
 public abstract class CommonStop implements Parcelable {
-    public static final String TABLE = "COMMOD_STOP";
-    public static final Collection<String> QUERY_TABLES =
-            Arrays.asList(CommonStop.TABLE, CommonStopType.TABLE);
 
+    public static final Collection<String> QUERY_TABLES = Arrays.asList(CommonStop.TABLE, CommonStopType.TABLE);
+    public static final String TABLE = "COMMOD_STOP";
     public static final String ID = "ID";
     public static final String STOP = "STOP";
     public static final String ROUTE = "ROUTE";
     public static final String ROUTESUB = "ROUTESUB";
     public static final String TYPE = "TYPE";
-
     public static final String QUERY = ""
             + "SELECT * FROM " + CommonStop.TABLE + " INNER JOIN " + CommonStopType.TABLE
             + " ON " + CommonStopType.TABLE + "." + CommonStopType.ID + " = " + CommonStop.TABLE + "." + CommonStop.TYPE;
@@ -37,14 +35,16 @@ public abstract class CommonStop implements Parcelable {
         String stopString = BriteApi.getString(cursor, STOP);
         String routeString = BriteApi.getString(cursor, ROUTE);
         String subRouteString = BriteApi.getString(cursor, ROUTESUB);
-        int type = BriteApi.getInt(cursor, CommonStop.TYPE);
-        String typeNeme = BriteApi.getString(cursor, CommonStopType.TYPENAME);
 
         Stop stop = TigerApplication.string2Object(Stop.class, stopString);
         BusRoute busRoute = TigerApplication.string2Object(BusRoute.class, routeString);
         BusSubRoute busSubRoute = TigerApplication.string2Object(BusSubRoute.class, subRouteString);
 
-        return create(id, stop, busRoute, busSubRoute, type, typeNeme);
+        int type = BriteApi.getInt(cursor, CommonStop.TYPE);
+        String typeNeme = BriteApi.getString(cursor, CommonStopType.TYPENAME);
+        CommonStopType commonStopType = CommonStopType.create(type,typeNeme);
+
+        return create(id, stop, busRoute, busSubRoute, commonStopType);
     }
 
     public static final String getKey(CommonStop commonStop) {
@@ -58,8 +58,8 @@ public abstract class CommonStop implements Parcelable {
 
     public static final CommonStop create(
             @NonNull String id, @NonNull Stop stop, @NonNull BusRoute busRoute,
-            @NonNull BusSubRoute busSubRoute, @NonNull int type, @NonNull String typeName) {
-        return new AutoValue_CommonStop(id, stop, busRoute, busSubRoute, type, typeName);
+            @NonNull BusSubRoute busSubRoute, @NonNull CommonStopType commonStopType) {
+        return new AutoValue_CommonStop(id, stop, busRoute, busSubRoute, commonStopType);
     }
 
     public abstract String id();
@@ -70,9 +70,7 @@ public abstract class CommonStop implements Parcelable {
 
     public abstract BusSubRoute busSubRoute();
 
-    public abstract int type();
-
-    public abstract String typeName();
+    public abstract CommonStopType commonStopType();
 
     public static final class SqlBuilder {
         private final ContentValues contentValues = new ContentValues();
