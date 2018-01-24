@@ -1,5 +1,6 @@
 package com.tigerbus.base;
 
+import android.view.MotionEvent;
 import android.view.View;
 
 import com.jakewharton.rxbinding2.view.RxView;
@@ -27,5 +28,9 @@ public interface BaseView<VR extends ViewStateRender> extends MvpView {
 
     default Observable<Object> rxClick(View view){
         return RxView.clicks(view);
+    }
+
+    default Observable<MotionEvent> rxTouch(View view){
+        return RxView.touches(view);
     }
 }

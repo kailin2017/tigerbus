@@ -2,15 +2,16 @@ package com.tigerbus.ui.route.arrival;
 
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
+import android.view.MotionEvent;
 
 import com.squareup.sqlbrite3.BriteDatabase;
 import com.tigerbus.TigerApplication;
-import com.tigerbus.sqlite.data.CommodStop;
-import com.tigerbus.sqlite.data.CommodStopType;
+import com.tigerbus.sqlite.data.CommonStop;
+import com.tigerbus.sqlite.data.CommonStopType;
 
 public final class ArrivalMainPresenter extends ArrivalPresenter<ArrivalMainView> {
 
-    private CommodStop commodStop;
+    private CommonStop commonStop;
     private BriteDatabase briteDatabase;
 
     public ArrivalMainPresenter(BriteDatabase briteDatabase) {
@@ -25,18 +26,18 @@ public final class ArrivalMainPresenter extends ArrivalPresenter<ArrivalMainView
         getView().bindClickSataionAllBus().doOnSubscribe(this::addDisposable).subscribe(this::bindClickSataionAllBus);
         getView().bindClickStationLocation().doOnSubscribe(this::addDisposable).subscribe(this::bindClickStationLocation);
         getView().bindClickStationView().doOnSubscribe(this::addDisposable).subscribe(this::bindClickStationView);
+        getView().bindTouchPager().doOnSubscribe(this::addDisposable).subscribe(this::bindTouchPager);
         getView().bindSaveStation().doOnSubscribe(this::addDisposable).subscribe(this::bindSaveStation);
         getView().bindTypeList().doOnSubscribe(this::addDisposable).subscribe(this::bindTypeList);
     }
 
     private void bindClickRemind(Object o) {
-        getView().bindService(commodStop);
-        getView().showTypeList();
+        getView().bindService(commonStop);
         getView().hiddenSheet();
     }
 
     private void bindClickStationSave(Object o) {
-
+        getView().showTypeList();
         getView().hiddenSheet();
     }
 
@@ -52,18 +53,26 @@ public final class ArrivalMainPresenter extends ArrivalPresenter<ArrivalMainView
         getView().hiddenSheet();
     }
 
-    private void bindSaveStation(CommodStop commodStop) {
-        this.commodStop = commodStop;
+    private void bindTouchPager(MotionEvent motionEvent) {
+        getView().hiddenSheet();
+    }
+
+    private void bindSaveStation(CommonStop commonStop) {
+        this.commonStop = commonStop;
     }
 
     private void bindTypeList(int i) {
-        CommodStopType commodStopType = TigerApplication.getCommodStopTypes().get(i);
-        ContentValues contentValues = new CommodStop.SqlBuilder().init(commodStop).type(commodStopType.type()).build();
-        insert(CommodStop.TABLE, contentValues);
+        CommonStopType commonStopType = TigerApplication.getCommodStopTypes().get(i);
+        if (commonStopType == null) {
+
+        } else {
+            ContentValues contentValues = new CommonStop.SqlBuilder().init(commonStop).type(commonStopType.id()).build();
+            insert(CommonStop.TABLE, contentValues);
+        }
     }
 
     private void insert(String tableName, ContentValues contentValues) {
-        briteDatabase.insert(tableName, SQLiteDatabase.CONFLICT_NONE, contentValues);
+        briteDatabase.insert(tableName, SQLiteDatabase.CONFLICT_FAIL, contentValues);
     }
 
 }

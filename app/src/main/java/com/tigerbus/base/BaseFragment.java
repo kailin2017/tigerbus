@@ -63,10 +63,10 @@ public abstract class BaseFragment<V extends BaseView, P extends BasePresenter<V
     @Override
     public void initMessageDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setNegativeButton(getString(R.string.dialog_ok), (d, i) -> {
-        });
-        builder.setPositiveButton(getString(R.string.dialog_cancel), (d, i) -> {
-        });
+//        builder.setNegativeButton(getString(R.string.dialog_ok), (d, i) -> {
+//        });
+//        builder.setPositiveButton(getString(R.string.dialog_cancel), (d, i) -> {
+//        });
         messageDialog = builder.create();
     }
 
@@ -93,7 +93,7 @@ public abstract class BaseFragment<V extends BaseView, P extends BasePresenter<V
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setItems(items, listener);
         builder.setCancelable(false);
-        listDialog = builder.create();
+        listDialog = builder.show();
     }
 
     @Override

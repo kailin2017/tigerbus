@@ -93,7 +93,7 @@ public final class MainPresenter extends BasePresenter<MainView> implements City
                             weakHashMap.put(city.getEn(), busVersion);
                             render(MainViewState.LogInfo.create(city.getZh_tw() + "onNext"));
                         },
-                        throwableConsumer,
+                        this::throwable,
                         () -> {
                             ArrayList<BusRoute> busRoutes = new ArrayList<>();
                             for (ArrayList<BusRoute> bus : weakHashMap.values())
