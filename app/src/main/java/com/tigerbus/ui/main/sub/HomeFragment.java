@@ -10,18 +10,22 @@ import com.tigerbus.base.ViewStateRender;
 import com.tigerbus.base.annotation.FragmentView;
 import com.tigerbus.base.annotation.ViewInject;
 import com.tigerbus.data.autovalue.HomePresenterAutoValue;
-import com.tigerbus.sqlite.BriteSQL;
+import com.tigerbus.sqlite.BriteDB;
 import com.tigerbus.sqlite.data.CommonStopType;
 import com.tigerbus.ui.widget.PagerRecyclerAdapter;
 import com.tigerbus.ui.widget.PagerRecyclerObj;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.TreeMap;
+
+import io.reactivex.Observable;
+import io.reactivex.subjects.PublishSubject;
 
 @FragmentView(layout = R.layout.home_fragment)
 public final class HomeFragment extends BaseFragment<HomeView, HomePresenter>
-        implements HomeView<ViewStateRender>, ViewStateRender<HashMap<CommonStopType, HomePresenterAutoValue>> {
+        implements HomeView<ViewStateRender>, ViewStateRender<TreeMap<CommonStopType, HomePresenterAutoValue>> {
 
+    private PublishSubject<Boolean> initDataSubject = PublishSubject.create();
     @ViewInject(R.id.tablayout)
     private TabLayout tabLayout;
     @ViewInject(R.id.viewpager)
@@ -36,43 +40,28 @@ public final class HomeFragment extends BaseFragment<HomeView, HomePresenter>
 
     @Override
     public HomePresenter createPresenter() {
-        return new HomePresenter(BriteSQL.getInstance(application));
+        return new HomePresenter(BriteDB.getInstance(application));
     }
 
     @Override
-    public void renderLoading() {
-
+    public Observable<Boolean> bindInitData() {
+        return initDataSubject;
     }
 
     @Override
-    public void renderSuccess(HashMap<CommonStopType, HomePresenterAutoValue> result) {
+    public void onStart() {
+        super.onStart();
+        initDataSubject.onNext(true);
+    }
+
+    @Override
+    public void renderSuccess(TreeMap<CommonStopType, HomePresenterAutoValue> result) {
         ArrayList<PagerRecyclerObj> pagerRecyclerObjs = new ArrayList<>();
-        for (HomePresenterAutoValue homePresenterAutoValue : result.values()) {
+        for (CommonStopType commonStopType : result.keySet()) {
+            HomePresenterAutoValue homePresenterAutoValue = result.get(commonStopType);
             HomeAdapter homeAdapter = new HomeAdapter(homePresenterAutoValue.publishSubject());
             pagerRecyclerObjs.add(new PagerRecyclerObj(homePresenterAutoValue.commonStopType().type(), homeAdapter, context));
         }
-        viewPager.setAdapter(new PagerRecyclerAdapter(tabLayout, pagerRecyclerObjs));
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
-    }
-
-    @Override
-    public void renderFinish() {
-
+        initTabPager(viewPager,tabLayout,new PagerRecyclerAdapter(tabLayout, pagerRecyclerObjs));
     }
 }

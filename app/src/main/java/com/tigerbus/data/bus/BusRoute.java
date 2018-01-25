@@ -149,8 +149,7 @@ public final class BusRoute implements Parcelable, Comparable<BusRoute>, BusRout
 
     @Override
     public int compareTo(@NonNull BusRoute busRoute) {
-        int compareAge = busRoute.getSearchSocre();
-        return this.getSearchSocre() - compareAge;
+        return this.getSearchSocre() - busRoute.getSearchSocre();
     }
 
     @Override

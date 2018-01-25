@@ -149,7 +149,6 @@ public abstract class BaseActivity<V extends BaseView, P extends BasePresenter<V
     public void showListAlert(CharSequence[] items, DialogInterface.OnClickListener listener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setItems(items, listener);
-        builder.setCancelable(false);
         listDialog = builder.create();
     }
 

@@ -1,7 +1,5 @@
 package com.tigerbus.data.autovalue;
 
-import android.os.Parcelable;
-
 import com.google.auto.value.AutoValue;
 import com.tigerbus.sqlite.data.CommodStopQueryResult;
 import com.tigerbus.sqlite.data.CommonStopType;
@@ -12,7 +10,7 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.subjects.PublishSubject;
 
 @AutoValue
-public abstract class HomePresenterAutoValue{
+public abstract class HomePresenterAutoValue {
 
     public abstract CommonStopType commonStopType();
 

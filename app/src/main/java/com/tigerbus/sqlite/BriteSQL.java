@@ -1,34 +1,26 @@
 package com.tigerbus.sqlite;
 
-import android.app.Application;
-import android.arch.persistence.db.SupportSQLiteOpenHelper;
-import android.arch.persistence.db.framework.FrameworkSQLiteOpenHelperFactory;
-
-import com.squareup.sqlbrite3.BriteDatabase;
-import com.tigerbus.BuildConfig;
-
-import io.reactivex.schedulers.Schedulers;
+import com.squareup.sqlbrite3.SqlBrite;
+import com.tigerbus.TigerApplication;
+import com.tigerbus.base.log.TlogType;
 
 public final class BriteSQL {
 
-    private static BriteDatabase briteDatabase;
+    private static final String TAG = BriteSQL.class.getSimpleName();
+    private static SqlBrite sqlBrite;
 
-    public synchronized static BriteDatabase getInstance(Application application) {
-        synchronized (BriteDatabase.class) {
-            if (briteDatabase == null) {
-                createInstance(application);
+    public synchronized static SqlBrite getInstance() {
+        synchronized (SqlBrite.class) {
+            if (sqlBrite == null) {
+                createInstance();
             }
-            return briteDatabase;
+            return sqlBrite;
         }
     }
 
-    private static void createInstance(Application application){
-        SupportSQLiteOpenHelper.Configuration configuration =
-                SupportSQLiteOpenHelper.Configuration.builder(application)
-                .name(BuildConfig.LocalDBName).callback(new BriteDBCallback()).build();
-        SupportSQLiteOpenHelper helper = new FrameworkSQLiteOpenHelperFactory().create(configuration);
-        briteDatabase = BriteDB.getInstance().wrapDatabaseHelper(helper, Schedulers.io());
-        briteDatabase.setLoggingEnabled(true);
+    private static void createInstance() {
+        sqlBrite = new SqlBrite.Builder().logger(message ->
+                TigerApplication.printLog(TlogType.debug, TAG, message)).build();
     }
 
 }

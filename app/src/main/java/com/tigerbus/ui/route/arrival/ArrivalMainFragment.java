@@ -3,7 +3,6 @@ package com.tigerbus.ui.route.arrival;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -25,7 +24,7 @@ import com.tigerbus.data.bus.BusRoute;
 import com.tigerbus.data.bus.BusStopOfRoute;
 import com.tigerbus.data.bus.BusSubRoute;
 import com.tigerbus.service.RemindService;
-import com.tigerbus.sqlite.BriteSQL;
+import com.tigerbus.sqlite.BriteDB;
 import com.tigerbus.sqlite.data.CommonStop;
 import com.tigerbus.sqlite.data.CommonStopType;
 import com.tigerbus.ui.route.adapter.ArrivalRecyclerAdapter;
@@ -79,7 +78,7 @@ public final class ArrivalMainFragment extends BaseFragment<ArrivalMainView, Arr
 
     @Override
     public ArrivalMainPresenter createPresenter() {
-        return new ArrivalMainPresenter(BriteSQL.getInstance(application));
+        return new ArrivalMainPresenter(BriteDB.getInstance(application));
     }
 
     @Override
@@ -204,7 +203,7 @@ public final class ArrivalMainFragment extends BaseFragment<ArrivalMainView, Arr
         }
 
         publishSubject.onNext(bundle.getParcelableArrayList(CityBusInterface.BUS_ESTIMATE_TIME));
-        initView(viewPager, tabLayout, new PagerRecyclerAdapter(tabLayout, objects));
+        initTabPager(viewPager, tabLayout, new PagerRecyclerAdapter(tabLayout, objects));
     }
 
     @Override

@@ -15,7 +15,6 @@ import com.tigerbus.base.annotation.ActivityView;
 import com.tigerbus.base.annotation.ViewInject;
 import com.tigerbus.data.CityBusInterface;
 import com.tigerbus.data.bus.BusRoute;
-import com.tigerbus.data.CityBusService;
 import com.tigerbus.ui.route.RouteActivity;
 
 import java.util.ArrayList;
@@ -92,15 +91,7 @@ public final class SearchRouteActivity extends BaseActivity<SearchRouteView, Sea
     }
 
     @Override
-    public void renderLoading() {
-    }
-
-    @Override
     public void renderSuccess(ArrayList<BusRoute> searchResult) {
         adapterSubject.onNext(searchResult);
-    }
-
-    @Override
-    public void renderFinish() {
     }
 }

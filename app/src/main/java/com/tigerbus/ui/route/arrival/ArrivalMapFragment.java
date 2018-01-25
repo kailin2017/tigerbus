@@ -14,7 +14,6 @@ import com.tigerbus.base.ViewStateRender;
 import com.tigerbus.base.annotation.FragmentView;
 import com.tigerbus.base.annotation.ViewInject;
 import com.tigerbus.data.CityBusInterface;
-import com.tigerbus.data.CityBusService;
 import com.tigerbus.data.bus.BusEstimateTime;
 import com.tigerbus.data.bus.BusRoute;
 import com.tigerbus.data.bus.BusStopOfRoute;
@@ -90,7 +89,7 @@ public final class ArrivalMapFragment extends BaseFragment<ArrivalView, ArrivalM
         }
 
         estimateSubject.onNext(bundle.getParcelableArrayList(CityBusInterface.BUS_ESTIMATE_TIME));
-        initView(viewPager, tabLayout, new ArrivalPagerMapAdapter(getFragmentManager(), tabLayout, objects));
+        initTabPager(viewPager, tabLayout, new ArrivalPagerMapAdapter(getFragmentManager(), tabLayout, objects));
     }
 
     @Override

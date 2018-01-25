@@ -4,7 +4,7 @@ import com.tigerbus.TigerApplication;
 import com.tigerbus.base.log.TlogType;
 
 public interface ViewStateRender<T> {
-    void renderLoading();
+    default void renderLoading(){}
 
     default void renderLogInfo(String logMessage) {
         TigerApplication.printLog(TlogType.debug, "renderLogInfo", logMessage);
@@ -17,5 +17,5 @@ public interface ViewStateRender<T> {
 
     void renderSuccess(T result);
 
-    void renderFinish();
+    default void renderFinish(){}
 }

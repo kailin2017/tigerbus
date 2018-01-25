@@ -1,11 +1,7 @@
 package com.tigerbus.ui.route.arrival;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 
 import com.tigerbus.R;
 import com.tigerbus.base.BaseView;
@@ -13,40 +9,22 @@ import com.tigerbus.data.bus.BusEstimateTime;
 import com.tigerbus.data.bus.BusRoute;
 import com.tigerbus.data.bus.BusRouteInterface;
 import com.tigerbus.data.bus.BusSubRoute;
+import com.tigerbus.ui.widget.TabPager;
 
 import java.util.ArrayList;
 
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
 
-public interface ArrivalView extends BaseView {
+import android.content.Context;
+
+public interface ArrivalView extends BaseView, TabPager {
 
     Observable<Bundle> bindInitData();
 
     void setEstimateSubject(@NonNull PublishSubject<ArrayList<BusEstimateTime>> estimateSubject);
 
-    default void initView(ViewPager viewPager, TabLayout tabLayout, PagerAdapter adapter) {
-        viewPager.setAdapter(adapter);
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
-    }
-
-    default Observable<Bundle> bundle2Obserable(Bundle bundle){
+    default Observable<Bundle> bundle2Obserable(Bundle bundle) {
         return Observable.just(bundle);
     }
 

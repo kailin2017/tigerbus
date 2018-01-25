@@ -3,18 +3,17 @@ package com.tigerbus.sqlite.data;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import com.google.auto.value.AutoValue;
 import com.tigerbus.sqlite.BriteApi;
 
-import io.reactivex.annotations.NonNull;
-
 @AutoValue
-public abstract class CommonStopType implements Parcelable {
+public abstract class CommonStopType implements Comparable<CommonStopType>, Parcelable {
     public static final String TABLE = "COMMOD_STOP_TYPE";
     public static final String ID = "ID";
     public static final String TYPENAME = "TYPENAME";
-    public static final String QUERY = "SELECT * FROM " + TABLE;
+    public static final String QUERY = BriteApi.SELECT_FROM + TABLE;
 
     public static final CommonStopType mapper(Cursor cursor) {
         int id = BriteApi.getInt(cursor, ID);
@@ -29,6 +28,11 @@ public abstract class CommonStopType implements Parcelable {
     public abstract int id();
 
     public abstract String type();
+
+    @Override
+    public int compareTo(@NonNull CommonStopType commonStopType) {
+        return this.id() - commonStopType.id();
+    }
 
     public static final class SqlBuilder {
         private final ContentValues contentValues = new ContentValues();

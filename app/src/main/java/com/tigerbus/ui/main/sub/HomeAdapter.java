@@ -11,10 +11,7 @@ import com.tigerbus.R;
 import com.tigerbus.data.bus.BusEstimateTime;
 import com.tigerbus.data.bus.BusRoute;
 import com.tigerbus.data.bus.BusSubRoute;
-import com.tigerbus.data.detail.Stop;
 import com.tigerbus.sqlite.data.CommodStopQueryResult;
-import com.tigerbus.sqlite.data.CommonStop;
-import com.tigerbus.ui.route.adapter.ArrivalRecyclerAdapter;
 
 import java.util.ArrayList;
 
