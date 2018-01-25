@@ -1,5 +1,6 @@
 package com.tigerbus.sqlite.data;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -10,6 +11,8 @@ import com.tigerbus.data.bus.BusRoute;
 import com.tigerbus.data.bus.BusSubRoute;
 import com.tigerbus.data.detail.Stop;
 import com.tigerbus.sqlite.BriteApi;
+
+import java.util.UUID;
 
 @AutoValue
 public abstract class RouteStop implements Parcelable {
@@ -34,6 +37,11 @@ public abstract class RouteStop implements Parcelable {
     }
 
     public static final RouteStop create(
+            @NonNull Stop stop, @NonNull BusRoute busRoute, @NonNull BusSubRoute busSubRoute) {
+        return create(UUID.randomUUID().toString(), stop, busRoute, busSubRoute);
+    }
+
+    public static final RouteStop create(
             @NonNull String id, @NonNull Stop stop, @NonNull BusRoute busRoute, @NonNull BusSubRoute busSubRoute) {
         return new AutoValue_RouteStop(id, stop, busRoute, busSubRoute);
     }
@@ -46,4 +54,40 @@ public abstract class RouteStop implements Parcelable {
 
     public abstract BusSubRoute busSubRoute();
 
+    public static final class SqlBuilder {
+        private ContentValues contentValues = new ContentValues();
+
+        public SqlBuilder id(String string) {
+            contentValues.put(ID, string);
+            return this;
+        }
+
+        public SqlBuilder stop(Stop stop) {
+            contentValues.put(STOP, BriteApi.object2String(stop));
+            return this;
+        }
+
+        public SqlBuilder busRoute(BusRoute busRoute) {
+            contentValues.put(ROUTE, BriteApi.object2String(busRoute));
+            return this;
+        }
+
+
+        public SqlBuilder busSubRoute(BusSubRoute busSubRoute) {
+            contentValues.put(ROUTESUB, BriteApi.object2String(busSubRoute));
+            return this;
+        }
+
+        public SqlBuilder routeStop(RouteStop routeStop) {
+            id(routeStop.id());
+            stop(routeStop.stop());
+            busRoute(routeStop.busRoute());
+            busSubRoute(routeStop.busSubRoute());
+            return this;
+        }
+
+        public ContentValues Build() {
+            return contentValues;
+        }
+    }
 }

@@ -11,12 +11,11 @@ import com.tigerbus.data.CityBusInterface;
 import com.tigerbus.data.autovalue.HomePresenterAutoValue;
 import com.tigerbus.data.bus.BusEstimateTime;
 import com.tigerbus.sqlite.data.CommodStopQueryResult;
-import com.tigerbus.sqlite.data.CommonStop;
 import com.tigerbus.sqlite.data.CommonStopType;
 import com.tigerbus.sqlite.data.CommonStopTypeApi;
+import com.tigerbus.sqlite.data.CommonStops;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
@@ -52,11 +51,11 @@ public final class HomePresenter extends BasePresenter<HomeView>
                 .subscribe(this::onNext, this::throwable);
     }
 
-    private Observable<List<CommonStop>> flatMap1(long aLong) {
-        return briteDatabase.createQuery(CommonStop.QUERY_TABLES, CommonStop.QUERY).mapToList(CommonStop::mapper);
+    private Observable<List<CommonStops>> flatMap1(long aLong) {
+        return briteDatabase.createQuery(CommonStops.QUERY_TABLES, CommonStops.QUERY).mapToList(CommonStops::mapper);
     }
 
-    private Observable<CommonStop> flatMap2(List<CommonStop> commonStops) {
+    private Observable<CommonStops> flatMap2(List<CommonStops> commonStops) {
         return Observable.fromIterable(commonStops)
                 .doOnSubscribe(this::flatMap2Subcribe).doOnComplete(this::flatMap2Complete);
     }
@@ -75,9 +74,11 @@ public final class HomePresenter extends BasePresenter<HomeView>
         });
     }
 
-    private Observable<Bundle> flatMap3(CommonStop commonStop) {
+    private Observable<Bundle> flatMap3(CommonStops commonStop) {
         return Observable.zip(
-                cityBusService.getBusEstimateTime(commonStop.busRoute().getCityName().getEn(), getRemindQuery(commonStop)),
+                cityBusService.getBusEstimateTime(
+                        commonStop.routeStop().busRoute().getCityName().getEn(),
+                        getRemindQuery(commonStop.routeStop())),
                 Observable.just(commonStop),
                 (busEstimateTimes, commonStop1) -> {
                     Bundle bundle = new Bundle();
@@ -92,7 +93,7 @@ public final class HomePresenter extends BasePresenter<HomeView>
         BusEstimateTime busEstimateTime = bundle.getParcelable(BUS_ESTIMATE_TIME);
         if (busEstimateTime == null)
             busEstimateTime = new BusEstimateTime();
-        CommonStop commonStop = bundle.getParcelable(BUS_ROUTESTOP);
+        CommonStops commonStop = bundle.getParcelable(BUS_ROUTESTOP);
         homePresenterAutoValueHashMap.get(commonStop.commonStopType())
                 .commodStopQueryResults().add(CommodStopQueryResult.create(commonStop, busEstimateTime));
     }

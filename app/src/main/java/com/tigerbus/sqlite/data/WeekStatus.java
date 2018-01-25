@@ -16,7 +16,7 @@ import java.util.Random;
 import java.util.UUID;
 
 @AutoValue
-public abstract class WeekStatus implements Parcelable ,BriteApi{
+public abstract class WeekStatus implements Parcelable, BriteApi {
     public static final String TABLE = " WEEK_STATUS";
     public static final String ID = "ID";
     public static final String SUN = "SUN";
@@ -62,10 +62,60 @@ public abstract class WeekStatus implements Parcelable ,BriteApi{
 
     public abstract boolean sat();
 
+    public enum Week {
+        SUN(WeekStatus.SUN),
+        MON(WeekStatus.MON),
+        TUE(WeekStatus.TUE),
+        WED(WeekStatus.WED),
+        THU(WeekStatus.THU),
+        FRI(WeekStatus.FRI),
+        SAT(WeekStatus.SAT);
+
+        private String week;
+
+        Week(String week) {
+            this.week = week;
+        }
+
+        public String getWeek() {
+            return week;
+        }
+
+        public static Week int2Week(int w) {
+            Week week;
+            switch (w) {
+                case 1:
+                    week = SUN;
+                    break;
+                case 2:
+                    week = MON;
+                    break;
+                case 3:
+                    week = TUE;
+                    break;
+                case 4:
+                    week = WED;
+                    break;
+                case 5:
+                    week = THU;
+                    break;
+                case 6:
+                    week = FRI;
+                    break;
+                case 7:
+                    week = SAT;
+                    break;
+                default:
+                    week = SUN;
+            }
+            return week;
+        }
+    }
+
     public static final class SqlBuilder {
         private final ContentValues contentValues = new ContentValues();
 
-        public SqlBuilder(){
+        public SqlBuilder() {
             contentValues.put(ID, UUID.randomUUID().toString());
         }
 

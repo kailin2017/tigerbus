@@ -2,6 +2,8 @@ package com.tigerbus.sqlite;
 
 import android.database.Cursor;
 
+import com.tigerbus.TigerApplication;
+
 public interface BriteApi {
     String SELECT_FROM = "SELECT * FROM ";
     String INNER_JOIN = " INNER JOIN ";
@@ -27,5 +29,13 @@ public interface BriteApi {
 
     static int putBoolean(boolean b) {
         return b ? BOOLEAN_TRUE : BOOLEAN_FALSE;
+    }
+
+     static <T> String object2String(T t) {
+        return TigerApplication.object2String(t);
+    }
+
+     static <T> T string2Object(Class<T> clazz, String s) {
+        return TigerApplication.string2Object(clazz,s);
     }
 }

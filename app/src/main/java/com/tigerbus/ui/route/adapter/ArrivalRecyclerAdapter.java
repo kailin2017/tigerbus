@@ -13,8 +13,8 @@ import com.tigerbus.data.bus.BusRoute;
 import com.tigerbus.data.bus.BusStopOfRoute;
 import com.tigerbus.data.bus.BusSubRoute;
 import com.tigerbus.data.detail.Stop;
-import com.tigerbus.sqlite.data.CommonStop;
-import com.tigerbus.sqlite.data.CommonStopType;
+import com.tigerbus.sqlite.data.CommonStops;
+import com.tigerbus.sqlite.data.RouteStop;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,7 +28,7 @@ public final class ArrivalRecyclerAdapter extends RecyclerView.Adapter<ArrivalRe
 
     private BusStopOfRoute busStopOfRoute;
     private Map<String, BusEstimateTime> busEstimateTimeMap = new HashMap<>();
-    private PublishSubject<CommonStop> publishSubject = PublishSubject.create();
+    private PublishSubject<RouteStop> publishSubject = PublishSubject.create();
     private Disposable disposable;
     private BusRoute busRoute;
     private BusSubRoute busSubRoute;
@@ -59,7 +59,7 @@ public final class ArrivalRecyclerAdapter extends RecyclerView.Adapter<ArrivalRe
         return disposable;
     }
 
-    public PublishSubject<CommonStop> getClickSubject() {
+    public PublishSubject<RouteStop> getClickSubject() {
         return publishSubject;
     }
 
@@ -71,7 +71,7 @@ public final class ArrivalRecyclerAdapter extends RecyclerView.Adapter<ArrivalRe
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Stop stop = busStopOfRoute.getStops().get(position);
-        holder.itemLayout.setTag(CommonStop.create("", stop, busRoute, busSubRoute, CommonStopType.create(0,"")));
+        holder.itemLayout.setTag(RouteStop.create(stop, busRoute, busSubRoute));
         holder.stopName.setText(stop.getStopName().getZh_tw());
         BusEstimateTime busEstimateTime = busEstimateTimeMap.get(stop.getStopUID());
         if (busEstimateTime != null) {
@@ -94,7 +94,7 @@ public final class ArrivalRecyclerAdapter extends RecyclerView.Adapter<ArrivalRe
             stopName = view.findViewById(R.id.stopname);
             estimateTime = view.findViewById(R.id.estimatetime);
             itemLayout = view.findViewById(R.id.item);
-            itemLayout.setOnClickListener(v -> publishSubject.onNext((CommonStop) v.getTag()));
+            itemLayout.setOnClickListener(v -> publishSubject.onNext((RouteStop) v.getTag()));
         }
     }
 }

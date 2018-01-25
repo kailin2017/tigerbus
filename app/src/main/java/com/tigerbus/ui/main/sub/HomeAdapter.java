@@ -40,12 +40,14 @@ public final class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHold
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         CommodStopQueryResult commodStopQueryResult = commodStopQueryResults.get(position);
+
         BusEstimateTime busEstimateTime = commodStopQueryResult.busEstimateTime();
-        BusRoute busRoute = commodStopQueryResult.commonStop().busRoute();
-        BusSubRoute busSubRoute = commodStopQueryResult.commonStop().busSubRoute();
+        BusRoute busRoute = commodStopQueryResult.commonStop().routeStop().busRoute();
+        BusSubRoute busSubRoute = commodStopQueryResult.commonStop().routeStop().busSubRoute();
+
         holder.routeName.setText(busRoute.getRouteName().getZh_tw() + " 往" +
                 (busSubRoute.getDirection().equalsIgnoreCase("0")? busRoute.getDestinationStopNameZh():busRoute.getDepartureStopNameZh()));
-        holder.stopName.setText(commodStopQueryResult.commonStop().stop().getStopName().getZh_tw());
+        holder.stopName.setText(commodStopQueryResult.commonStop().routeStop().stop().getStopName().getZh_tw());
         holder.estimateTime.setText(busEstimateTime.getEstimateTime() + "");
     }
 

@@ -6,12 +6,13 @@ import android.view.MotionEvent;
 
 import com.squareup.sqlbrite3.BriteDatabase;
 import com.tigerbus.TigerApplication;
-import com.tigerbus.sqlite.data.CommonStop;
 import com.tigerbus.sqlite.data.CommonStopType;
+import com.tigerbus.sqlite.data.CommonStops;
+import com.tigerbus.sqlite.data.RouteStop;
 
 public final class ArrivalMainPresenter extends ArrivalPresenter<ArrivalMainView> {
 
-    private CommonStop commonStop;
+    private RouteStop routeStop;
     private BriteDatabase briteDatabase;
 
     public ArrivalMainPresenter(BriteDatabase briteDatabase) {
@@ -32,7 +33,7 @@ public final class ArrivalMainPresenter extends ArrivalPresenter<ArrivalMainView
     }
 
     private void bindClickRemind(Object o) {
-        getView().bindService(commonStop);
+        getView().bindService(routeStop);
         getView().hiddenSheet();
     }
 
@@ -57,8 +58,8 @@ public final class ArrivalMainPresenter extends ArrivalPresenter<ArrivalMainView
         getView().hiddenSheet();
     }
 
-    private void bindSaveStation(CommonStop commonStop) {
-        this.commonStop = commonStop;
+    private void bindSaveStation(RouteStop routeStop) {
+        this.routeStop = routeStop;
     }
 
     private void bindTypeList(int i) {
@@ -66,8 +67,13 @@ public final class ArrivalMainPresenter extends ArrivalPresenter<ArrivalMainView
         if (commonStopType == null) {
 
         } else {
-            ContentValues contentValues = new CommonStop.SqlBuilder().init(commonStop).type(commonStopType.id()).build();
-            insert(CommonStop.TABLE, contentValues);
+            ContentValues routeStopContentValues =
+                    new RouteStop.SqlBuilder().routeStop(routeStop).Build();
+            insert(RouteStop.TABLE, routeStopContentValues);
+
+            ContentValues commonsStopContentValues =
+                    new CommonStops.SqlBuilder().routeStop(routeStop.id()).type(commonStopType.id()).build();
+            insert(CommonStops.TABLE, commonsStopContentValues);
         }
     }
 

@@ -1,7 +1,7 @@
 package com.tigerbus.data;
 
 import com.tigerbus.connection.RetrofitModel;
-import com.tigerbus.sqlite.data.CommonStop;
+import com.tigerbus.sqlite.data.RouteStop;
 
 public interface CityBusInterface {
 
@@ -20,18 +20,18 @@ public interface CityBusInterface {
         return "RouteUID eq '" + routeUID + "'";
     }
 
-    default String getRemindQuery(CommonStop commonStop) {
+    default String getRemindQuery(RouteStop routeStop) {
         StringBuffer stringBuffer = new StringBuffer();
         stringBuffer.append("RouteUID eq '");
-        stringBuffer.append(commonStop.busRoute().getRouteUID());
-        if (!commonStop.busRoute().getCityName().getEn().contains("Taipei")) {
+        stringBuffer.append(routeStop.busRoute().getRouteUID());
+        if (!routeStop.busRoute().getCityName().getEn().contains("Taipei")) {
             stringBuffer.append("' and SubRouteUID eq '");
-            stringBuffer.append(commonStop.busSubRoute().getSubRouteUID());
+            stringBuffer.append(routeStop.busSubRoute().getSubRouteUID());
         }
         stringBuffer.append("' and Direction eq '");
-        stringBuffer.append(commonStop.busSubRoute().getDirection());
+        stringBuffer.append(routeStop.busSubRoute().getDirection());
         stringBuffer.append("' and StopUID eq '");
-        stringBuffer.append(commonStop.stop().getStopUID());
+        stringBuffer.append(routeStop.stop().getStopUID());
         stringBuffer.append("'");
         return stringBuffer.toString();
     }

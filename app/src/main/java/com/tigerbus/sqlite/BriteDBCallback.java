@@ -3,8 +3,8 @@ package com.tigerbus.sqlite;
 import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.db.SupportSQLiteOpenHelper;
 
-import com.tigerbus.sqlite.data.CommonStop;
 import com.tigerbus.sqlite.data.CommonStopType;
+import com.tigerbus.sqlite.data.CommonStops;
 import com.tigerbus.sqlite.data.RemindStop;
 import com.tigerbus.sqlite.data.RouteStop;
 import com.tigerbus.sqlite.data.WeekStatus;
@@ -22,13 +22,11 @@ final class BriteDBCallback extends SupportSQLiteOpenHelper.Callback {
     private static final String INTEGER_DEFAULT_0 = " INTEGER DEFAULT 0 ";
     private static final String BIGINT_NOT_NULL = " BIGINT NOT NULL ";
 
-    private static final String CREATE_COMMODSTOP_TABLE = ""
-            + CREATE_TABLE + CommonStop.TABLE + "("
-            + CommonStop.ID + TEXT_NOT_NULL + PRIMARY_KEY + COMMA
-            + CommonStop.STOP + TEXT_NOT_NULL + COMMA
-            + CommonStop.ROUTE + TEXT_NOT_NULL + COMMA
-            + CommonStop.ROUTESUB + TEXT_NOT_NULL + COMMA
-            + CommonStop.TYPE + TEXT_NOT_NULL + ")";
+    private static final String CREATE_COMMOD_STOPS_TABLE = ""
+            + CREATE_TABLE + CommonStops.TABLE + "("
+            + CommonStops.ID + TEXT_NOT_NULL + PRIMARY_KEY + COMMA
+            + CommonStops.ROUTESTOP + TEXT_NOT_NULL + COMMA
+            + CommonStops.TYPE + TEXT_NOT_NULL + ")";
 
     private static final String CREATE_COMMOD_STOP_TYPE_TABLE = ""
             + CREATE_TABLE + CommonStopType.TABLE + "("
@@ -69,8 +67,11 @@ final class BriteDBCallback extends SupportSQLiteOpenHelper.Callback {
 
     @Override
     public void onCreate(SupportSQLiteDatabase db) {
-        db.execSQL(CREATE_COMMODSTOP_TABLE);
         db.execSQL(CREATE_COMMOD_STOP_TYPE_TABLE);
+        db.execSQL(CREATE_COMMOD_STOPS_TABLE);
+        db.execSQL(CREATE_ROUTE_STOP_TABLE);
+        db.execSQL(CREATE_WEEK_STATUS_TABLE);
+        db.execSQL(CREATE_REMIND_STOP_TABLE);
         db.insert(CommonStopType.TABLE, CONFLICT_FAIL,
                 new CommonStopType.SqlBuilder().type("出門").build());
         db.insert(CommonStopType.TABLE, CONFLICT_FAIL,

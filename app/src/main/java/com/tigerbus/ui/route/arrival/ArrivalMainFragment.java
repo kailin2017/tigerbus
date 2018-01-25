@@ -25,8 +25,8 @@ import com.tigerbus.data.bus.BusStopOfRoute;
 import com.tigerbus.data.bus.BusSubRoute;
 import com.tigerbus.service.RemindService;
 import com.tigerbus.sqlite.BriteDB;
-import com.tigerbus.sqlite.data.CommonStop;
 import com.tigerbus.sqlite.data.CommonStopType;
+import com.tigerbus.sqlite.data.RouteStop;
 import com.tigerbus.ui.route.adapter.ArrivalRecyclerAdapter;
 import com.tigerbus.ui.widget.PagerRecyclerAdapter;
 import com.tigerbus.ui.widget.PagerRecyclerObj;
@@ -43,7 +43,7 @@ public final class ArrivalMainFragment extends BaseFragment<ArrivalMainView, Arr
         implements ArrivalMainView, ViewStateRender<Bundle> {
 
     private PublishSubject<ArrayList<BusEstimateTime>> publishSubject = PublishSubject.create();
-    private PublishSubject<CommonStop> stopSubject = PublishSubject.create();
+    private PublishSubject<RouteStop> stopSubject = PublishSubject.create();
     private PublishSubject<Integer> typelistSubject = PublishSubject.create();
     private BottomSheetBehavior bottomSheetBehavior;
 
@@ -117,7 +117,7 @@ public final class ArrivalMainFragment extends BaseFragment<ArrivalMainView, Arr
     }
 
     @Override
-    public Observable<CommonStop> bindSaveStation() {
+    public Observable<RouteStop> bindSaveStation() {
         return stopSubject;
     }
 
@@ -127,9 +127,9 @@ public final class ArrivalMainFragment extends BaseFragment<ArrivalMainView, Arr
     }
 
     @Override
-    public void bindService(CommonStop commonStop) {
+    public void bindService(RouteStop routeStop) {
         Bundle bundle = new Bundle();
-        bundle.putParcelable(CityBusInterface.BUS_ROUTESTOP, commonStop);
+        bundle.putParcelable(CityBusInterface.BUS_ROUTESTOP, routeStop);
         startService(context, RemindService.class, bundle);
     }
 
