@@ -18,59 +18,37 @@ import io.reactivex.schedulers.Schedulers;
 public final class SearchRoutePresenter extends BasePresenter<SearchRouteView> {
 
     private final ArrayList<BusRoute> searchData = TigerApplication.getBusRouteData();
+    private final ArrayList<BusRoute> searchResult = new ArrayList<>();
 
     @Override
     public void bindIntent() {
         Observable<String> stringObservable = getView().bindSearch();
         stringObservable
                 .doOnSubscribe(defaultDisposableConsumer)
-                .subscribe(s -> searchData(s), this::throwable);
+                .flatMap(this::flatMap1)
+                .subscribe(busRoute -> searchResult.add(busRoute), this::throwable);
     }
 
-    private void searchData(String searchRoute) {
-        final ArrayList<BusRoute> searchResult = new ArrayList<>();
-        Observable.fromIterable(searchData)
+    private Observable<BusRoute> flatMap1(String searchRoute){
+        return Observable.fromIterable(searchData)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<BusRoute>() {
-                    Disposable disposable;
-
-                    @Override
-                    public void onSubscribe(Disposable disposable) {
-                        this.disposable = disposable;
-                        addDisposable(disposable);
-                    }
-
-                    @Override
-                    public void onNext(BusRoute busRoute) {
-                        String routeName = busRoute.getRouteName().getZh_tw();
-                        int socre = searchSocre(routeName, searchRoute);
-                        if (socre > 0) {
-                            busRoute.setSearchSocre(socre);
-                            searchResult.add(busRoute);
-                        }
-                        if (searchResult.size() >= 30)
-                            onComplete();
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        render(SearchRouteViewState.Exception.create(e.toString()));
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        removeDisposable(disposable);
-                        Collections.sort(searchResult);
-                        render(SearchRouteViewState.LogInfo.create(
-                                "searchDataSize:" + searchData.size() +
-                                        "\nsearchRoute:" + searchRoute +
-                                        "\nsearchCount:" + searchResult.size() +
-                                        "\nsearchResult:" + TigerApplication.object2String(searchResult)));
-                        render(SearchRouteViewState.Success.create(searchResult));
-                        render(SearchRouteViewState.Finish.create());
-                    }
+                .filter(busRoute -> {
+                    String routeName = busRoute.getRouteName().getZh_tw();
+                    return searchSocre(routeName, searchRoute) > 0 && searchResult.size() <= 40;
+                })
+                .doOnSubscribe(disposable -> searchResult.clear())
+                .doOnComplete(()->{
+                    Collections.sort(searchResult);
+                    StringBuffer log = new StringBuffer();
+                    log.append("searchDataSize:" + searchData.size());
+                    log.append("\nsearchCount:" + searchResult.size());
+                    log.append("\nsearchResult:" + TigerApplication.object2String(searchResult));
+                    render(SearchRouteViewState.LogInfo.create(log.toString()));
+                    render(SearchRouteViewState.Success.create(searchResult));
+                    render(SearchRouteViewState.Finish.create());
                 });
+
     }
 
     private int searchSocre(String string1, String string2) {

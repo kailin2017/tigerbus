@@ -2,7 +2,6 @@ package com.tigerbus.ui.route.arrival;
 
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.annotation.NonNull;
 import android.view.MotionEvent;
 
 import com.squareup.sqlbrite3.BriteDatabase;

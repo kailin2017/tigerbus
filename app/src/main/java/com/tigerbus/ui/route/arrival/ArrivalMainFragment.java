@@ -163,6 +163,12 @@ public final class ArrivalMainFragment extends BaseFragment<ArrivalMainView, Arr
         initView();
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        hiddenSheet();
+    }
+
     public void initView() {
         bottomSheetBehavior = BottomSheetBehavior.from(sheetView);
         bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {

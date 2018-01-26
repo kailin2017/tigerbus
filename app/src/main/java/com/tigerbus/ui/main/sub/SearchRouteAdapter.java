@@ -32,7 +32,7 @@ public final class SearchRouteAdapter extends RecyclerView.Adapter<SearchRouteAd
     }
 
     public void initData(ArrayList<BusRoute> busRoutes){
-        this.busRoutes = new ArrayList<>();
+        this.busRoutes.clear();
         this.busRoutes.addAll(busRoutes);
         this.notifyDataSetChanged();
     }

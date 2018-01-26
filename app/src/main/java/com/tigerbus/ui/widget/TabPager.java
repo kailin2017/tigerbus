@@ -4,10 +4,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 
-/**
- * Created by sinopac on 2018/1/25.
- */
-
 public interface TabPager {
 
     default void initTabPager(ViewPager viewPager, TabLayout tabLayout, PagerAdapter adapter) {

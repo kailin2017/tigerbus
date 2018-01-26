@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 
 import com.tigerbus.base.BasePresenter;
 import com.tigerbus.data.CityBusInterface;
-import com.tigerbus.data.CityBusService;
 import com.tigerbus.data.bus.BusEstimateTime;
 import com.tigerbus.data.bus.BusRoute;
 import com.tigerbus.data.bus.BusRouteInterface;

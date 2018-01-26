@@ -34,9 +34,8 @@ public final class MainPresenter extends BasePresenter<MainView> implements City
     public void bindIntent() {
         Observable<Boolean> observable = getView().getInitDataSubject();
         observable
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(this::renderDisposable)
+                .observeOn(threadMain())
                 .filter(this::filter1)
                 .flatMap(this::faltMap1)
                 .flatMap(this::faltMap2)
@@ -57,11 +56,11 @@ public final class MainPresenter extends BasePresenter<MainView> implements City
 
     private Observable<ArrayList<City>> faltMap1(boolean b){
         // 取得城市列表
-        return defaultService.getCitys();
+        return defaultService.getCitys().subscribeOn(threadIO());
     }
 
     private Observable<City> faltMap2 (ArrayList<City> citys){
-        return Observable.fromIterable(citys);
+        return Observable.fromIterable(citys).subscribeOn(threadIO());
     }
 
     private Observable<Bundle> faltMap3(City city){
@@ -74,7 +73,7 @@ public final class MainPresenter extends BasePresenter<MainView> implements City
                     bundle.putParcelable(KEY_CITY, cityObj);
                     return bundle;
                 });
-        return busVersionObserable;
+        return busVersionObserable.subscribeOn(threadIO());
     }
 
     private Observable<City> faltMap4(Bundle bundle){
@@ -90,7 +89,7 @@ public final class MainPresenter extends BasePresenter<MainView> implements City
             ArrayList<BusRoute> busRoutes = TigerApplication.getObjectArrayList(keyRoute, BusRoute[].class, false);
             weakHashMap.put(city.getEn(), busRoutes);
         }
-        return Observable.just(city);
+        return Observable.just(city).subscribeOn(threadIO());
     }
 
     private Observable<Bundle> faltMap5(City city){
@@ -103,7 +102,7 @@ public final class MainPresenter extends BasePresenter<MainView> implements City
                     bundle.putParcelable(KEY_CITY, cityObj);
                     return bundle;
                 });
-        return busRoutesObservable;
+        return busRoutesObservable.subscribeOn(threadIO());
     }
 
     private void onNext(Bundle bundle){

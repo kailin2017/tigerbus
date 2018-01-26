@@ -18,6 +18,7 @@ import com.tigerbus.base.annotation.ViewInject;
 import com.tigerbus.service.RemindService;
 import com.tigerbus.ui.main.sub.HomeFragment;
 import com.tigerbus.ui.main.sub.RemindFragment;
+import com.tigerbus.ui.main.sub.SearchRouteFragment;
 import com.tigerbus.ui.search.SearchRouteActivity;
 
 import io.reactivex.Observable;

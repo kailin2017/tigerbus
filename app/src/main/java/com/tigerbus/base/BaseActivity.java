@@ -91,7 +91,7 @@ public abstract class BaseActivity<V extends BaseView, P extends BasePresenter<V
     }
 
     protected void nextFragment(@NonNull int viewId, @NonNull Fragment fragment) {
-        getFragmentManager().beginTransaction().replace(viewId, fragment).commit();
+        runOnUiThread(() -> getFragmentManager().beginTransaction().replace(viewId, fragment).commit());
     }
 
     @Override

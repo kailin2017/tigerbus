@@ -1,6 +1,5 @@
 package com.tigerbus.ui.main.sub;
 
-import android.app.Fragment;
 import android.os.Bundle;
 
 import com.squareup.sqlbrite3.BriteDatabase;
@@ -52,11 +51,11 @@ public final class HomePresenter extends BasePresenter<HomeView>
     }
 
     private Observable<List<CommonStops>> flatMap1(long aLong) {
-        return briteDatabase.createQuery(CommonStops.QUERY_TABLES, CommonStops.QUERY).mapToList(CommonStops::mapper);
+        return briteDatabase.createQuery(CommonStops.QUERY_TABLES, CommonStops.QUERY).mapToList(CommonStops::mapper).subscribeOn(threadIO());
     }
 
     private Observable<CommonStops> flatMap2(List<CommonStops> commonStops) {
-        return Observable.fromIterable(commonStops)
+        return Observable.fromIterable(commonStops).subscribeOn(threadIO()).observeOn(threadMain())
                 .doOnSubscribe(this::flatMap2Subcribe).doOnComplete(this::flatMap2Complete);
     }
 
@@ -67,15 +66,15 @@ public final class HomePresenter extends BasePresenter<HomeView>
     }
 
     private void flatMap2Complete() {
-        ((Fragment) getView()).getActivity().runOnUiThread(() -> {
-            for (HomePresenterAutoValue homePresenterAutoValue : homePresenterAutoValueHashMap.values()) {
-                homePresenterAutoValue.publishSubject().onNext(homePresenterAutoValue.commodStopQueryResults());
-            }
-        });
+        for (HomePresenterAutoValue homePresenterAutoValue : homePresenterAutoValueHashMap.values()) {
+            ArrayList<CommodStopQueryResult> commodStopQueryResults = homePresenterAutoValue.commodStopQueryResults();
+            if (commodStopQueryResults.size() > 0)
+                homePresenterAutoValue.publishSubject().onNext(commodStopQueryResults);
+        }
     }
 
     private Observable<Bundle> flatMap3(CommonStops commonStop) {
-        return Observable.zip(
+        return rxSwitchThread(Observable.zip(
                 cityBusService.getBusEstimateTime(
                         commonStop.routeStop().busRoute().getCityName().getEn(),
                         getRemindQuery(commonStop.routeStop())),
@@ -86,7 +85,7 @@ public final class HomePresenter extends BasePresenter<HomeView>
                         bundle.putParcelable(BUS_ESTIMATE_TIME, busEstimateTimes.get(0));
                     bundle.putParcelable(BUS_ROUTESTOP, commonStop1);
                     return bundle;
-                });
+                }));
     }
 
     private void onNext(Bundle bundle) {
@@ -112,6 +111,4 @@ public final class HomePresenter extends BasePresenter<HomeView>
     public void initCommodStopTypes(Throwable throwable) {
         render(HomeViewState.Exception.create(throwable.toString()));
     }
-
-
 }

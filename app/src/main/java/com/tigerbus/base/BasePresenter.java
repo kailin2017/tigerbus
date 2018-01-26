@@ -59,5 +59,4 @@ public abstract class BasePresenter<V extends BaseView> extends MvpPresenterImpl
     protected <T> Observable<T> rxSwitchThread(Observable<T> observable) {
         return observable.subscribeOn(threadIO()).observeOn(threadMain());
     }
-
 }

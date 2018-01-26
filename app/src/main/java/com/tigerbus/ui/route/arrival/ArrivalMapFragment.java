@@ -30,14 +30,14 @@ import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
 
 @FragmentView(layout = R.layout.route_arrival_fragment)
-public final class ArrivalMapFragment extends BaseFragment<ArrivalView, ArrivalMapPresenter>
-        implements ArrivalView, ViewStateRender<Bundle>, LocationUtil.LocationStatusListener {
+public final class ArrivalMapFragment extends BaseFragment<ArrivalMapView, ArrivalMapPresenter>
+        implements ArrivalMapView, ViewStateRender<Bundle>, LocationUtil.LocationStatusListener {
 
     protected PublishSubject<ArrayList<BusEstimateTime>> estimateSubject = PublishSubject.create();
     protected PublishSubject<Location> locationSubject = PublishSubject.create();
     @ViewInject(R.id.tablayout)
     protected TabLayout tabLayout;
-    @ViewInject(R.id.mainview)
+    @ViewInject(R.id.viewpager)
     protected ViewPager viewPager;
 
     public static ArrivalMapFragment newInstance(@NonNull Bundle bundle) {
@@ -89,7 +89,9 @@ public final class ArrivalMapFragment extends BaseFragment<ArrivalView, ArrivalM
         }
 
         estimateSubject.onNext(bundle.getParcelableArrayList(CityBusInterface.BUS_ESTIMATE_TIME));
-        initTabPager(viewPager, tabLayout, new ArrivalPagerMapAdapter(getFragmentManager(), tabLayout, objects));
+
+        ArrivalPagerMapAdapter adapter = new ArrivalPagerMapAdapter(getFragmentManager(), tabLayout, objects);
+        initTabPager(viewPager, tabLayout, adapter);
     }
 
     @Override
