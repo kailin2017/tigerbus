@@ -1,6 +1,7 @@
 package com.tigerbus.base;
 
 import io.reactivex.Observable;
+import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
@@ -12,10 +13,6 @@ public abstract class BasePresenter<V extends BaseView> extends MvpPresenterImpl
 
     private CompositeDisposable disposables = new CompositeDisposable(), uiDisposables = new CompositeDisposable();
     protected Consumer<Disposable> defaultDisposableConsumer = disposable -> addDisposable(disposable);
-    protected Consumer<Disposable> renderDisposableConsumer = disposable -> {
-        addDisposable(disposable);
-        render(ViewState.Loading.create());
-    };
 
     public void removeDisposable(@NonNull Disposable disposabled) {
         disposables.remove(disposabled);
@@ -24,6 +21,11 @@ public abstract class BasePresenter<V extends BaseView> extends MvpPresenterImpl
     public void addDisposable(@NonNull Disposable... disposable) {
         for (Disposable d : disposable)
             disposables.add(d);
+    }
+
+    public void renderDisposable(@NonNull Disposable disposable) {
+        addDisposable(disposable);
+        render(ViewState.Loading.create());
     }
 
     public void addUiDisposable(@NonNull Disposable disposabled) {
@@ -38,7 +40,7 @@ public abstract class BasePresenter<V extends BaseView> extends MvpPresenterImpl
         uiDisposables.clear();
     }
 
-    protected void throwable(Throwable throwable){
+    protected void throwable(Throwable throwable) {
         render(ViewState.Exception.create(throwable.toString()));
     }
 
@@ -46,8 +48,16 @@ public abstract class BasePresenter<V extends BaseView> extends MvpPresenterImpl
         getView().render(viewState, (ViewStateRender) getView());
     }
 
+    protected Scheduler threadIO() {
+        return Schedulers.io();
+    }
+
+    protected Scheduler threadMain() {
+        return AndroidSchedulers.mainThread();
+    }
+
     protected <T> Observable<T> rxSwitchThread(Observable<T> observable) {
-        return observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+        return observable.subscribeOn(threadIO()).observeOn(threadMain());
     }
 
 }

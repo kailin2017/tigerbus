@@ -6,13 +6,8 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import com.google.auto.value.AutoValue;
-import com.squareup.sqlbrite3.SqlBrite;
-import com.tigerbus.TigerApplication;
 import com.tigerbus.sqlite.BriteApi;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Random;
 import java.util.UUID;
 
 @AutoValue
@@ -38,6 +33,10 @@ public abstract class WeekStatus implements Parcelable, BriteApi {
         boolean fri = BriteApi.getBoolean(cursor, FRI);
         boolean sat = BriteApi.getBoolean(cursor, SAT);
         return create(id, sun, mon, tue, wed, thu, fri, sat);
+    }
+
+    public static final WeekStatus create() {
+        return create("", false, false, false, false, false, false, false);
     }
 
     public static final WeekStatus create(
@@ -77,10 +76,6 @@ public abstract class WeekStatus implements Parcelable, BriteApi {
             this.week = week;
         }
 
-        public String getWeek() {
-            return week;
-        }
-
         public static Week int2Week(int w) {
             Week week;
             switch (w) {
@@ -110,6 +105,10 @@ public abstract class WeekStatus implements Parcelable, BriteApi {
             }
             return week;
         }
+
+        public String getWeek() {
+            return week;
+        }
     }
 
     public static final class SqlBuilder {
@@ -119,36 +118,47 @@ public abstract class WeekStatus implements Parcelable, BriteApi {
             contentValues.put(ID, UUID.randomUUID().toString());
         }
 
-        public void sun(boolean b) {
-            put(SUN, b);
+        public SqlBuilder id(String id){
+            contentValues.put(ID, id);
+            return this;
         }
 
-        public void mon(boolean b) {
-            put(MON, b);
+        public SqlBuilder sun(boolean b) {
+            return put(SUN, b);
         }
 
-        public void tue(boolean b) {
-            put(TUE, b);
+        public SqlBuilder mon(boolean b) {
+            return put(MON, b);
         }
 
-        public void wed(boolean b) {
-            put(WED, b);
+        public SqlBuilder tue(boolean b) {
+            return put(TUE, b);
         }
 
-        public void thu(boolean b) {
-            put(THU, b);
+        public SqlBuilder wed(boolean b) {
+            return put(WED, b);
         }
 
-        public void fri(boolean b) {
-            put(FRI, b);
+        public SqlBuilder thu(boolean b) {
+            return put(THU, b);
         }
 
-        public void sat(boolean b) {
-            put(SAT, b);
+        public SqlBuilder fri(boolean b) {
+            return put(FRI, b);
         }
 
-        private void put(String key, boolean b) {
+        public SqlBuilder sat(boolean b) {
+            return put(SAT, b);
+        }
+
+        public SqlBuilder weekStatus(WeekStatus weekStatus) {
+            return sun(weekStatus.sun()).mon(weekStatus.mon()).tue(weekStatus.tue()).wed(weekStatus.wed())
+                    .thu(weekStatus.thu()).fri(weekStatus.fri()).sat(weekStatus.sat());
+        }
+
+        private SqlBuilder put(String key, boolean b) {
             contentValues.put(key, BriteApi.putBoolean(b));
+            return this;
         }
 
         public ContentValues build() {

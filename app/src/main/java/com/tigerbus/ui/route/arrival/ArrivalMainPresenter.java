@@ -2,13 +2,18 @@ package com.tigerbus.ui.route.arrival;
 
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.NonNull;
 import android.view.MotionEvent;
 
 import com.squareup.sqlbrite3.BriteDatabase;
 import com.tigerbus.TigerApplication;
 import com.tigerbus.sqlite.data.CommonStopType;
 import com.tigerbus.sqlite.data.CommonStops;
+import com.tigerbus.sqlite.data.RemindStop;
 import com.tigerbus.sqlite.data.RouteStop;
+import com.tigerbus.sqlite.data.WeekStatus;
+
+import io.reactivex.Observable;
 
 public final class ArrivalMainPresenter extends ArrivalPresenter<ArrivalMainView> {
 
@@ -33,7 +38,7 @@ public final class ArrivalMainPresenter extends ArrivalPresenter<ArrivalMainView
     }
 
     private void bindClickRemind(Object o) {
-        getView().bindService(routeStop);
+        insertRouteStop();
         getView().hiddenSheet();
     }
 
@@ -67,14 +72,50 @@ public final class ArrivalMainPresenter extends ArrivalPresenter<ArrivalMainView
         if (commonStopType == null) {
 
         } else {
-            ContentValues routeStopContentValues =
-                    new RouteStop.SqlBuilder().routeStop(routeStop).Build();
-            insert(RouteStop.TABLE, routeStopContentValues);
-
-            ContentValues commonsStopContentValues =
-                    new CommonStops.SqlBuilder().routeStop(routeStop.id()).type(commonStopType.id()).build();
-            insert(CommonStops.TABLE, commonsStopContentValues);
+            insertCommonStop(commonStopType);
         }
+    }
+
+    private void insertCommonStop(CommonStopType commonStopType) {
+        insertRouteStop();
+        ContentValues contentValues =
+                new CommonStops.SqlBuilder().routeStop(routeStop.id()).type(commonStopType.id()).build();
+        insert(CommonStops.TABLE, contentValues);
+    }
+
+    private void insertCommmonStopType(String typename) {
+        ContentValues contentValues =
+                new CommonStopType.SqlBuilder().type(typename).build();
+        insert(CommonStopType.TABLE, contentValues);
+    }
+
+    private void insertRouteStop() {
+        String query = String.format(RouteStop.QUQRYID, RouteStop.getKey(routeStop));
+        briteDatabase.createQuery(RouteStop.TABLE, query).mapToList(RouteStop::mapper)
+                .subscribeOn(threadIO())
+                .flatMap(routeStops -> Observable.just(routeStops))
+                .filter(routeStops -> routeStops.size() == 0)
+                .subscribe(routeStops -> {
+                    ContentValues contentValues =
+                            new RouteStop.SqlBuilder().routeStop(routeStop).Build();
+                    insert(RouteStop.TABLE, contentValues);
+                });
+    }
+
+    private void insertRemindStop() {
+        insertRouteStop();
+        String weekId = insertWeekStutas();
+        String routeStopId = routeStop.id();
+        ContentValues contentValues = new RemindStop.SqlBuilder().isRun(true).isOne(true)
+                .remindMinute(180).weekStatus(weekId).routeStop(routeStopId).build();
+        insert(RemindStop.TABLE, contentValues);
+    }
+
+    private String insertWeekStutas() {
+        WeekStatus weekStatus = WeekStatus.create();
+        ContentValues contentValues = new WeekStatus.SqlBuilder().weekStatus(weekStatus).build();
+        insert(WeekStatus.TABLE, contentValues);
+        return weekStatus.id();
     }
 
     private void insert(String tableName, ContentValues contentValues) {

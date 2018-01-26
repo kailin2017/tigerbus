@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.WeakHashMap;
 
 import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public final class MainPresenter extends BasePresenter<MainView> implements CityBusInterface, CityConfigInterface {
 
@@ -30,80 +32,96 @@ public final class MainPresenter extends BasePresenter<MainView> implements City
 
     @Override
     public void bindIntent() {
-        initData();
-    }
-
-    private void initData() {
         Observable<Boolean> observable = getView().getInitDataSubject();
         observable
-                .filter(aBoolean -> aBoolean)
-                // 取得城市列表
-                .flatMap(aBoolean -> rxSwitchThread(defaultService.getCitys()))
-                .flatMap(citys -> Observable.fromIterable(citys))
-                .flatMap(city -> {
-                    // 取得版本資訊並與城市資訊封裝
-                    Observable<Bundle> busVersionObserable = Observable.zip(
-                            cityBusService.getBusVersion(city.getEn()), Observable.just(city),
-                            (busVersion, cityObj) -> {
-                                Bundle bundle = new Bundle();
-                                bundle.putParcelable(KEY_BUS_VERSION, busVersion);
-                                bundle.putParcelable(KEY_CITY, cityObj);
-                                return bundle;
-                            });
-                    return rxSwitchThread(busVersionObserable);
-                })
-                .flatMap(bundle -> {
-                    BusVersion busVersion = bundle.getParcelable(KEY_BUS_VERSION);
-                    City city = bundle.getParcelable(KEY_CITY);
-                    String keyVersion = KEY_BUS_VERSION + city.getEn();
-                    String keyRoute = KEY_BUS_ROUTE + city.getEn();
-                    // 判斷local是否已存在路線資料,若有的畫清掉中文城市名稱
-                    if (TigerApplication.getInt(keyVersion) < busVersion.getVersionID()) {
-                        TigerApplication.putInt(keyVersion, busVersion.getVersionID());
-                    } else {
-                        city.setZh_tw("");
-                        ArrayList<BusRoute> busRoutes = TigerApplication.getObjectArrayList(keyRoute, BusRoute[].class, false);
-                        weakHashMap.put(city.getEn(), busRoutes);
-                    }
-                    return Observable.just(city);
-                })
-                .filter(city -> !city.getZh_tw().isEmpty())
-                .flatMap(city -> {
-                    // 取得城市公車路線資料,並與城市資訊封裝
-                    Observable<Bundle> busRoutesObservable = Observable.zip(
-                            cityBusService.getBusRoute(city.getEn()), Observable.just(city),
-                            (busRoutes, cityObj) -> {
-                                Bundle bundle = new Bundle();
-                                bundle.putParcelableArrayList(KEY_BUS_ROUTE, busRoutes);
-                                bundle.putParcelable(KEY_CITY, cityObj);
-                                return bundle;
-                            });
-                    return rxSwitchThread(busRoutesObservable);
-                })
-                .doOnSubscribe(renderDisposableConsumer)
-                .subscribe(
-                        bundle -> {
-                            ArrayList<BusRoute> busVersion = bundle.getParcelableArrayList(KEY_BUS_ROUTE);
-                            City city = bundle.getParcelable(KEY_CITY);
-                            String keyRoute = KEY_BUS_ROUTE + city.getEn();
-                            // 路線資料寫入城市資訊
-                            for (BusRoute busRoute : busVersion)
-                                busRoute.setCityName(new NameType(city.getZh_tw(), city.getEn()));
-                            TigerApplication.putObject(keyRoute, busVersion, false);
-                            weakHashMap.put(city.getEn(), busVersion);
-                            render(MainViewState.LogInfo.create(city.getZh_tw() + "onNext"));
-                        },
-                        this::throwable,
-                        () -> {
-                            ArrayList<BusRoute> busRoutes = new ArrayList<>();
-                            for (ArrayList<BusRoute> bus : weakHashMap.values())
-                                busRoutes.addAll(bus);
-                            TigerApplication.setBusRouteData(busRoutes);
-                            render(MainViewState.LogInfo.create("onComplete"));
-                            render(MainViewState.Finish.create());
-                        }
-                );
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(this::renderDisposable)
+                .filter(this::filter1)
+                .flatMap(this::faltMap1)
+                .flatMap(this::faltMap2)
+                .flatMap(this::faltMap3)
+                .flatMap(this::faltMap4)
+                .filter(this::filter2)
+                .flatMap(this::faltMap5)
+                .subscribe(this::onNext, this::throwable, this::onComplete);
     }
 
+    private boolean filter1(boolean b){
+        return b;
+    }
 
+    private boolean filter2(City city){
+        return !city.getZh_tw().isEmpty();
+    }
+
+    private Observable<ArrayList<City>> faltMap1(boolean b){
+        // 取得城市列表
+        return defaultService.getCitys();
+    }
+
+    private Observable<City> faltMap2 (ArrayList<City> citys){
+        return Observable.fromIterable(citys);
+    }
+
+    private Observable<Bundle> faltMap3(City city){
+        // 取得版本資訊並與城市資訊封裝
+        Observable<Bundle> busVersionObserable = Observable.zip(
+                cityBusService.getBusVersion(city.getEn()), Observable.just(city),
+                (busVersion, cityObj) -> {
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelable(KEY_BUS_VERSION, busVersion);
+                    bundle.putParcelable(KEY_CITY, cityObj);
+                    return bundle;
+                });
+        return busVersionObserable;
+    }
+
+    private Observable<City> faltMap4(Bundle bundle){
+        BusVersion busVersion = bundle.getParcelable(KEY_BUS_VERSION);
+        City city = bundle.getParcelable(KEY_CITY);
+        String keyVersion = KEY_BUS_VERSION + city.getEn();
+        String keyRoute = KEY_BUS_ROUTE + city.getEn();
+        // 判斷local是否已存在路線資料,若有的畫清掉中文城市名稱
+        if (TigerApplication.getInt(keyVersion) < busVersion.getVersionID()) {
+            TigerApplication.putInt(keyVersion, busVersion.getVersionID());
+        } else {
+            city.setZh_tw("");
+            ArrayList<BusRoute> busRoutes = TigerApplication.getObjectArrayList(keyRoute, BusRoute[].class, false);
+            weakHashMap.put(city.getEn(), busRoutes);
+        }
+        return Observable.just(city);
+    }
+
+    private Observable<Bundle> faltMap5(City city){
+        // 取得城市公車路線資料,並與城市資訊封裝
+        Observable<Bundle> busRoutesObservable = Observable.zip(
+                cityBusService.getBusRoute(city.getEn()), Observable.just(city),
+                (busRoutes, cityObj) -> {
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelableArrayList(KEY_BUS_ROUTE, busRoutes);
+                    bundle.putParcelable(KEY_CITY, cityObj);
+                    return bundle;
+                });
+        return busRoutesObservable;
+    }
+
+    private void onNext(Bundle bundle){
+        ArrayList<BusRoute> busVersion = bundle.getParcelableArrayList(KEY_BUS_ROUTE);
+        City city = bundle.getParcelable(KEY_CITY);
+        String keyRoute = KEY_BUS_ROUTE + city.getEn();
+        // 路線資料寫入城市資訊
+        for (BusRoute busRoute : busVersion)
+            busRoute.setCityName(new NameType(city.getZh_tw(), city.getEn()));
+        TigerApplication.putObject(keyRoute, busVersion, false);
+        weakHashMap.put(city.getEn(), busVersion);
+    }
+
+    private void onComplete(){
+        ArrayList<BusRoute> busRoutes = new ArrayList<>();
+        for (ArrayList<BusRoute> bus : weakHashMap.values())
+            busRoutes.addAll(bus);
+        TigerApplication.setBusRouteData(busRoutes);
+        render(MainViewState.Finish.create());
+    }
 }

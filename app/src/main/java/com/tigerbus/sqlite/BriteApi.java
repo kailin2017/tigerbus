@@ -7,6 +7,9 @@ import com.tigerbus.TigerApplication;
 public interface BriteApi {
     String SELECT_FROM = "SELECT * FROM ";
     String INNER_JOIN = " INNER JOIN ";
+    String AND = " AND ";
+    String OR = " OR ";
+    String WHERE = " WHERE ";
     String DOT = ".";
     int BOOLEAN_FALSE = 0;
     int BOOLEAN_TRUE = 1;

@@ -21,6 +21,7 @@ final class BriteDBCallback extends SupportSQLiteOpenHelper.Callback {
     private static final String INTEGER_NOT_NULL = " INTEGER NOT NULL ";
     private static final String INTEGER_DEFAULT_0 = " INTEGER DEFAULT 0 ";
     private static final String BIGINT_NOT_NULL = " BIGINT NOT NULL ";
+    private static final String BIGINT_DEFAULT_0 = " BIGINT DEFAULT 0 ";
 
     private static final String CREATE_COMMOD_STOPS_TABLE = ""
             + CREATE_TABLE + CommonStops.TABLE + "("
@@ -35,14 +36,14 @@ final class BriteDBCallback extends SupportSQLiteOpenHelper.Callback {
 
     private static final String CREATE_ROUTE_STOP_TABLE = ""
             + CREATE_TABLE + RouteStop.TABLE + "("
-            + RouteStop.ID + INTEGER_NOT_NULL + PRIMARY_KEY  + COMMA
+            + RouteStop.ID + TEXT_NOT_NULL + PRIMARY_KEY  + COMMA
             + RouteStop.STOP + TEXT_NOT_NULL + COMMA
             + RouteStop.ROUTE + TEXT_NOT_NULL + COMMA
             + RouteStop.ROUTESUB + TEXT_NOT_NULL + ")";
 
     private static final String CREATE_WEEK_STATUS_TABLE = ""
             + CREATE_TABLE + WeekStatus.TABLE + "("
-            + WeekStatus.ID + INTEGER_NOT_NULL + PRIMARY_KEY  + COMMA
+            + WeekStatus.ID + TEXT_NOT_NULL + PRIMARY_KEY  + COMMA
             + WeekStatus.SUN + INTEGER_DEFAULT_0 + COMMA
             + WeekStatus.MON + INTEGER_DEFAULT_0 + COMMA
             + WeekStatus.THU + INTEGER_DEFAULT_0 + COMMA
@@ -56,8 +57,8 @@ final class BriteDBCallback extends SupportSQLiteOpenHelper.Callback {
             + RemindStop.ID + INTEGER_NOT_NULL + PRIMARY_KEY + AUTOINCREMENT + COMMA
             + RemindStop.ISONE + INTEGER_DEFAULT_0 + COMMA
             + RemindStop.ISRUN + INTEGER_DEFAULT_0 + COMMA
-            + RemindStop.DURATION_START + BIGINT_NOT_NULL + COMMA
-            + RemindStop.DURATION_END + BIGINT_NOT_NULL + COMMA
+            + RemindStop.DURATION_START + BIGINT_DEFAULT_0 + COMMA
+            + RemindStop.DURATION_END + BIGINT_DEFAULT_0 + COMMA
             + RemindStop.ROUTESTOP + TEXT_NOT_NULL + COMMA
             + RemindStop.RUNWEEK + TEXT_NOT_NULL + ")";
 

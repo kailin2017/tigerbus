@@ -108,6 +108,10 @@ public final class TigerApplication extends Application {
         return result;
     }
 
+    public static void sendNotification() {
+
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();

@@ -1,5 +1,6 @@
 package com.tigerbus.sqlite.data;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -22,16 +23,21 @@ public abstract class RemindStop implements Parcelable {
     public static final String ID = "ID";
     public static final String ISONE = "ISONE";
     public static final String ISRUN = "ISRUN";
+    public static final String REMIND_MINUTE = "REMIND_MINUTE";
     public static final String DURATION_START = "DURATION_START";
     public static final String DURATION_END = "DURATION_END";
     public static final String ROUTESTOP = "ROUTESTOP";
     public static final String RUNWEEK = "RUNWEEK";
-    public static final String QUERY = BriteApi.SELECT_FROM + RemindStop.TABLE
+
+    private static final String QUERY = BriteApi.SELECT_FROM + TABLE
             + BriteApi.INNER_JOIN + RouteStop.TABLE
             + " ON " + RemindStop.TABLE + BriteApi.DOT + RemindStop.ROUTESTOP + "=" + RouteStop.TABLE + BriteApi.DOT + RouteStop.ID
             + BriteApi.INNER_JOIN + WeekStatus.TABLE
             + " ON " + RemindStop.TABLE + BriteApi.DOT + RemindStop.RUNWEEK + "=" + WeekStatus.TABLE + BriteApi.DOT + WeekStatus.ID
-            + " WHERE " + RemindStop.TABLE + BriteApi.DOT + RemindStop.ISRUN + "=" + BriteApi.BOOLEAN_TRUE ;
+            + BriteApi.WHERE + RemindStop.TABLE + BriteApi.DOT + RemindStop.ISRUN + "=" + BriteApi.BOOLEAN_TRUE;
+
+    public static final String QUERY1 = QUERY + BriteApi.AND + ISONE + "=" + BriteApi.BOOLEAN_FALSE;
+    public static final String QUERY2 = QUERY + BriteApi.AND + ISONE + "=" + BriteApi.BOOLEAN_TRUE + BriteApi.AND + " %s = %d ";
 
     public static final RemindStop mapper(Cursor cursor) {
         int id = BriteApi.getInt(cursor, TABLE + BriteApi.DOT + ID);
@@ -39,10 +45,11 @@ public abstract class RemindStop implements Parcelable {
 
         boolean isOne = BriteApi.getBoolean(cursor, ISONE);
         boolean isRun = BriteApi.getBoolean(cursor, ISRUN);
+        int remindMinute = BriteApi.getInt(cursor, REMIND_MINUTE);
         long durationStart = BriteApi.getLong(cursor, DURATION_START);
         long durationEnd = BriteApi.getLong(cursor, DURATION_END);
 
-
+        // RouteStop
         String rId = BriteApi.getString(cursor, RouteStop.ID);
         String rStopStr = BriteApi.getString(cursor, RouteStop.STOP);
         String rRouteStr = BriteApi.getString(cursor, RouteStop.ROUTE);
@@ -51,8 +58,7 @@ public abstract class RemindStop implements Parcelable {
         BusRoute rRoute = TigerApplication.string2Object(BusRoute.class, rRouteStr);
         BusSubRoute rSubRoute = TigerApplication.string2Object(BusSubRoute.class, rSubRouteStr);
         RouteStop routeStop = RouteStop.create(rId, rStop, rRoute, rSubRoute);
-
-
+        // WeekStatus
         String weekId = BriteApi.getString(cursor, WeekStatus.TABLE + BriteApi.DOT + WeekStatus.ID);
         boolean weekSUN = BriteApi.getBoolean(cursor, WeekStatus.SUN);
         boolean weekMON = BriteApi.getBoolean(cursor, WeekStatus.MON);
@@ -63,13 +69,13 @@ public abstract class RemindStop implements Parcelable {
         boolean weekSAT = BriteApi.getBoolean(cursor, WeekStatus.SAT);
         WeekStatus runWeek = WeekStatus.create(weekId, weekSUN, weekMON, weekTUE, weekWED, weekTHU, weekFRI, weekSAT);
 
-        return create(id, isOne, isRun, durationStart, durationEnd, routeStop, runWeek);
+        return create(id, isOne, isRun, remindMinute, durationStart, durationEnd, routeStop, runWeek);
     }
 
     public static final RemindStop create(
-            @NonNull int id, @NonNull boolean isOne, @NonNull boolean isRun, @NonNull long start,
-            @NonNull long end, @NonNull RouteStop routeStop, @NonNull WeekStatus weekStatus) {
-        return new AutoValue_RemindStop(id, isOne, isRun, start, end, routeStop, weekStatus);
+            @NonNull int id, @NonNull boolean isOne, @NonNull boolean isRun, @NonNull int remindMinute,
+            @NonNull long start, @NonNull long end, @NonNull RouteStop routeStop, @NonNull WeekStatus weekStatus) {
+        return new AutoValue_RemindStop(id, isOne, isRun, remindMinute, start, end, routeStop, weekStatus);
     }
 
     public abstract int id();
@@ -78,6 +84,8 @@ public abstract class RemindStop implements Parcelable {
 
     public abstract boolean isRun();
 
+    public abstract int remindMinute();
+
     public abstract long durationStart();
 
     public abstract long durationEnd();
@@ -85,4 +93,47 @@ public abstract class RemindStop implements Parcelable {
     public abstract RouteStop routeStop();
 
     public abstract WeekStatus weekStatus();
+
+    public static final class SqlBuilder{
+        private ContentValues contentValues = new ContentValues();
+
+        public SqlBuilder isOne(boolean isOne){
+            contentValues.put(ISONE,BriteApi.putBoolean(isOne));
+            return this;
+        }
+
+        public SqlBuilder isRun(boolean isRun){
+            contentValues.put(ISRUN,BriteApi.putBoolean(isRun));
+            return this;
+        }
+
+        public SqlBuilder remindMinute(int remindMinute){
+            contentValues.put(REMIND_MINUTE, remindMinute);
+            return this;
+        }
+
+        public SqlBuilder durationStart(long durationStart){
+            contentValues.put(DURATION_START,durationStart);
+            return this;
+        }
+
+        public SqlBuilder durationEnd(long durationEnd){
+            contentValues.put(DURATION_END,durationEnd);
+            return this;
+        }
+
+        public SqlBuilder routeStop(String routeStop){
+            contentValues.put(ROUTESTOP,routeStop);
+            return this;
+        }
+
+        public SqlBuilder weekStatus(String weekStatus){
+            contentValues.put(RUNWEEK,weekStatus);
+            return this;
+        }
+
+        public ContentValues build(){
+            return contentValues;
+        }
+    }
 }

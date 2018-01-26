@@ -12,8 +12,6 @@ import com.tigerbus.data.bus.BusSubRoute;
 import com.tigerbus.data.detail.Stop;
 import com.tigerbus.sqlite.BriteApi;
 
-import java.util.UUID;
-
 @AutoValue
 public abstract class RouteStop implements Parcelable {
 
@@ -23,6 +21,7 @@ public abstract class RouteStop implements Parcelable {
     public static final String ROUTE = "ROUTE";
     public static final String ROUTESUB = "ROUTESUB";
     public static final String QUERY = BriteApi.SELECT_FROM + TABLE;
+    public static final String QUQRYID = QUERY + BriteApi.WHERE + ID + "='%s'";
 
     public static final RouteStop mapper(Cursor cursor) {
         String id = BriteApi.getString(cursor, ID);
@@ -36,9 +35,24 @@ public abstract class RouteStop implements Parcelable {
         return create(id, stop, busRoute, busSubRoute);
     }
 
+    public static final String getKey(@NonNull RouteStop routeStop) {
+        return getKey(routeStop.stop(), routeStop.busRoute(), routeStop.busSubRoute());
+    }
+
+    private static final String getKey(
+            @NonNull Stop stop, @NonNull BusRoute busRoute, @NonNull BusSubRoute busSubRoute) {
+        StringBuffer stringBuffer = new StringBuffer();
+        stringBuffer.append(stop.getStopUID());
+        stringBuffer.append(busRoute.getRouteUID());
+        stringBuffer.append(busSubRoute.getSubRouteUID());
+        stringBuffer.append(busSubRoute.getDirection());
+        return stringBuffer.toString();
+    }
+
     public static final RouteStop create(
             @NonNull Stop stop, @NonNull BusRoute busRoute, @NonNull BusSubRoute busSubRoute) {
-        return create(UUID.randomUUID().toString(), stop, busRoute, busSubRoute);
+        String key = getKey(stop, busRoute, busSubRoute);
+        return create(key, stop, busRoute, busSubRoute);
     }
 
     public static final RouteStop create(
@@ -79,10 +93,10 @@ public abstract class RouteStop implements Parcelable {
         }
 
         public SqlBuilder routeStop(RouteStop routeStop) {
-            id(routeStop.id());
-            stop(routeStop.stop());
-            busRoute(routeStop.busRoute());
-            busSubRoute(routeStop.busSubRoute());
+            contentValues.put(ID, routeStop.id());
+            contentValues.put(STOP, BriteApi.object2String(routeStop.stop()));
+            contentValues.put(ROUTE, BriteApi.object2String(routeStop.busRoute()));
+            contentValues.put(ROUTESUB, BriteApi.object2String(routeStop.busSubRoute()));
             return this;
         }
 

@@ -28,15 +28,14 @@ public abstract class CommonStops implements Parcelable {
     public static final String TYPE = "TYPE";
     public static final String QUERY = BriteApi.SELECT_FROM + CommonStops.TABLE
             + BriteApi.INNER_JOIN + RouteStop.TABLE
-            + " ON " + RouteStop.TABLE + BriteApi.DOT + RouteStop.ID + " = " + CommonStops.TABLE + "." + CommonStops.TYPE
+            + " ON " + RouteStop.TABLE + BriteApi.DOT + RouteStop.ID + " = " + CommonStops.TABLE + "." + CommonStops.ROUTESTOP
             + BriteApi.INNER_JOIN + CommonStopType.TABLE
             + " ON " + CommonStopType.TABLE + BriteApi.DOT + CommonStopType.ID + " = " + CommonStops.TABLE + "." + CommonStops.TYPE;
 
     public static final CommonStops mapper(Cursor cursor) {
-        String id = BriteApi.getString(cursor, TABLE + BriteApi.DOT + ID);
-
+        String id = BriteApi.getString(cursor, ID);
         // RouteStop
-        String rId = BriteApi.getString(cursor, TABLE + BriteApi.DOT + ROUTESTOP);
+        String rId = BriteApi.getString(cursor, ROUTESTOP);
         String rStopStr = BriteApi.getString(cursor, RouteStop.STOP);
         String rRouteStr = BriteApi.getString(cursor, RouteStop.ROUTE);
         String rSubRouteStr = BriteApi.getString(cursor, RouteStop.ROUTESUB);
@@ -44,7 +43,6 @@ public abstract class CommonStops implements Parcelable {
         BusRoute rRoute = TigerApplication.string2Object(BusRoute.class, rRouteStr);
         BusSubRoute rSubRoute = TigerApplication.string2Object(BusSubRoute.class, rSubRouteStr);
         RouteStop routeStop = RouteStop.create(rId, rStop, rRoute, rSubRoute);
-
         // CommonStopType
         int type = BriteApi.getInt(cursor, CommonStops.TYPE);
         String typeNeme = BriteApi.getString(cursor, CommonStopType.TYPENAME);
