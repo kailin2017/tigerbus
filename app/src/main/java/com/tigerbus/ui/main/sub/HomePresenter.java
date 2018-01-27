@@ -55,7 +55,7 @@ public final class HomePresenter extends BasePresenter<HomeView>
     }
 
     private Observable<CommonStops> flatMap2(List<CommonStops> commonStops) {
-        return Observable.fromIterable(commonStops).subscribeOn(threadIO()).observeOn(threadMain())
+        return Observable.fromIterable(commonStops)
                 .doOnSubscribe(this::flatMap2Subcribe).doOnComplete(this::flatMap2Complete);
     }
 
@@ -66,15 +66,16 @@ public final class HomePresenter extends BasePresenter<HomeView>
     }
 
     private void flatMap2Complete() {
-        for (HomePresenterAutoValue homePresenterAutoValue : homePresenterAutoValueHashMap.values()) {
-            ArrayList<CommodStopQueryResult> commodStopQueryResults = homePresenterAutoValue.commodStopQueryResults();
-            if (commodStopQueryResults.size() > 0)
-                homePresenterAutoValue.publishSubject().onNext(commodStopQueryResults);
-        }
+        Observable.fromIterable(homePresenterAutoValueHashMap.values())
+                .filter(homePresenterAutoValue ->
+                        homePresenterAutoValue.commodStopQueryResults().size() > 0)
+                .subscribe(homePresenterAutoValue ->
+                        homePresenterAutoValue.publishSubject()
+                                .onNext(homePresenterAutoValue.commodStopQueryResults()));
     }
 
     private Observable<Bundle> flatMap3(CommonStops commonStop) {
-        return rxSwitchThread(Observable.zip(
+        return Observable.zip(
                 cityBusService.getBusEstimateTime(
                         commonStop.routeStop().busRoute().getCityName().getEn(),
                         getRemindQuery(commonStop.routeStop())),
@@ -85,7 +86,7 @@ public final class HomePresenter extends BasePresenter<HomeView>
                         bundle.putParcelable(BUS_ESTIMATE_TIME, busEstimateTimes.get(0));
                     bundle.putParcelable(BUS_ROUTESTOP, commonStop1);
                     return bundle;
-                }));
+                });
     }
 
     private void onNext(Bundle bundle) {

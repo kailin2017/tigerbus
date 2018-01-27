@@ -1,6 +1,7 @@
 package com.tigerbus.ui.route.adapter;
 
 import android.support.constraint.ConstraintLayout;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,8 +14,8 @@ import com.tigerbus.data.bus.BusRoute;
 import com.tigerbus.data.bus.BusStopOfRoute;
 import com.tigerbus.data.bus.BusSubRoute;
 import com.tigerbus.data.detail.Stop;
-import com.tigerbus.sqlite.data.CommonStops;
 import com.tigerbus.sqlite.data.RouteStop;
+import com.tigerbus.util.DiffListCallBack;
 
 import java.util.ArrayList;
 import java.util.HashMap;

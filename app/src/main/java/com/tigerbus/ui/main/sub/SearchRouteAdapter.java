@@ -1,6 +1,7 @@
 package com.tigerbus.ui.main.sub;
 
 import android.support.constraint.ConstraintLayout;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,9 +12,12 @@ import com.tigerbus.R;
 import com.tigerbus.TigerApplication;
 import com.tigerbus.base.log.TlogType;
 import com.tigerbus.data.bus.BusRoute;
+import com.tigerbus.util.DiffListCallBack;
 
 import java.util.ArrayList;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
 
 public final class SearchRouteAdapter extends RecyclerView.Adapter<SearchRouteAdapter.ViewHolder> {
@@ -28,13 +32,16 @@ public final class SearchRouteAdapter extends RecyclerView.Adapter<SearchRouteAd
     };
 
     public SearchRouteAdapter(PublishSubject<ArrayList<BusRoute>> adapterSubject) {
-        adapterSubject.subscribe(this::initData);
+        adapterSubject.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(this::initData);
     }
 
     public void initData(ArrayList<BusRoute> busRoutes){
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(
+                new DiffListCallBack(this.busRoutes, busRoutes), true);
         this.busRoutes.clear();
         this.busRoutes.addAll(busRoutes);
-        this.notifyDataSetChanged();
+        diffResult.dispatchUpdatesTo(this);
     }
 
     @Override

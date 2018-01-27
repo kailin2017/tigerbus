@@ -50,8 +50,8 @@ public final class RemindService extends Service implements CityBusInterface {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (!disposable.isDisposed())
-            initBind();
+//        if (!disposable.isDisposed())
+//            initBind();
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -62,15 +62,15 @@ public final class RemindService extends Service implements CityBusInterface {
     }
 
     private void initBind() {
-        Observable.interval(BuildConfig.firstTime, BuildConfig.updateTime, TimeUnit.SECONDS, Schedulers.io())
-                .doOnSubscribe(this::doOnSubscribe)
-                .flatMap(this::flatMap1)
-                .flatMap(this::flatMap2)
-                .flatMap(this::flatMap3)
-                .filter(this::filter1)
-                .filter(this::filter2)
-                .filter(this::filter3)
-                .subscribe(this::onNext, this::onError, this::onComplete);
+//        Observable.interval(BuildConfig.firstTime, BuildConfig.updateTime, TimeUnit.SECONDS, Schedulers.io())
+//                .doOnSubscribe(this::doOnSubscribe)
+//                .flatMap(this::flatMap1)
+//                .flatMap(this::flatMap2)
+//                .flatMap(this::flatMap3)
+//                .filter(this::filter1)
+//                .filter(this::filter2)
+//                .filter(this::filter3)
+//                .subscribe(this::onNext, this::onError, this::onComplete);
     }
 
     private void doOnSubscribe(Disposable disposable) {

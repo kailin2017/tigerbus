@@ -1,6 +1,7 @@
 package com.tigerbus.ui.main.sub;
 
 import android.support.constraint.ConstraintLayout;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,10 +13,14 @@ import com.tigerbus.data.bus.BusEstimateTime;
 import com.tigerbus.data.bus.BusRoute;
 import com.tigerbus.data.bus.BusSubRoute;
 import com.tigerbus.sqlite.data.CommodStopQueryResult;
+import com.tigerbus.util.DiffListCallBack;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
+import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
 
 public final class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
@@ -23,13 +28,14 @@ public final class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHold
     private final ArrayList<CommodStopQueryResult> commodStopQueryResults = new ArrayList<>();
 
     public HomeAdapter(@NonNull PublishSubject<ArrayList<CommodStopQueryResult>> publishSubject) {
-        publishSubject.subscribe(this::initData);
+        publishSubject.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(this::initData);
     }
 
     public void initData(ArrayList<CommodStopQueryResult> result) {
-        commodStopQueryResults.clear();
-        commodStopQueryResults.addAll(result);
-        notifyDataSetChanged();
+        this.commodStopQueryResults.clear();
+        this.commodStopQueryResults.addAll((ArrayList<CommodStopQueryResult>) result.clone());
+        this.notifyDataSetChanged();
     }
 
     @Override
@@ -46,7 +52,7 @@ public final class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHold
         BusSubRoute busSubRoute = commodStopQueryResult.commonStop().routeStop().busSubRoute();
 
         holder.routeName.setText(busRoute.getRouteName().getZh_tw() + " 往" +
-                (busSubRoute.getDirection().equalsIgnoreCase("0")? busRoute.getDestinationStopNameZh():busRoute.getDepartureStopNameZh()));
+                (busSubRoute.getDirection().equalsIgnoreCase("0") ? busRoute.getDestinationStopNameZh() : busRoute.getDepartureStopNameZh()));
         holder.stopName.setText(commodStopQueryResult.commonStop().routeStop().stop().getStopName().getZh_tw());
         holder.estimateTime.setText(busEstimateTime.getEstimateTime() + "");
     }
@@ -56,7 +62,7 @@ public final class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHold
         return commodStopQueryResults.size();
     }
 
-    final class ViewHolder extends RecyclerView.ViewHolder {
+    static final class ViewHolder extends RecyclerView.ViewHolder {
 
         public TextView routeName, stopName, estimateTime;
         public ConstraintLayout itemLayout;
