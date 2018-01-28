@@ -1,5 +1,6 @@
 package com.tigerbus.ui.main.sub;
 
+import android.os.Handler;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
@@ -31,17 +32,13 @@ public final class SearchRouteAdapter extends RecyclerView.Adapter<SearchRouteAd
         publishSubject.onNext(busRoute);
     };
 
-    public SearchRouteAdapter(PublishSubject<ArrayList<BusRoute>> adapterSubject) {
-        adapterSubject.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread()).subscribe(this::initData);
+    public ArrayList<BusRoute> getBusRoutes() {
+        return busRoutes;
     }
 
-    public void initData(ArrayList<BusRoute> busRoutes){
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(
-                new DiffListCallBack(this.busRoutes, busRoutes), true);
+    public void setBusRoutes(ArrayList<BusRoute> busRoutes) {
         this.busRoutes.clear();
         this.busRoutes.addAll(busRoutes);
-        diffResult.dispatchUpdatesTo(this);
     }
 
     @Override

@@ -10,9 +10,9 @@ import com.tigerbus.sqlite.BriteApi;
 
 @AutoValue
 public abstract class CommonStopType implements Comparable<CommonStopType>, Parcelable {
-    public static final String TABLE = "COMMOD_STOP_TYPE";
-    public static final String ID = "ID";
-    public static final String TYPENAME = "TYPENAME";
+    public static final String TABLE = "common_type";
+    public static final String ID = TABLE + "_id";
+    public static final String TYPENAME = "typename";
     public static final String QUERY = BriteApi.SELECT_FROM + TABLE;
 
     public static final CommonStopType mapper(Cursor cursor) {

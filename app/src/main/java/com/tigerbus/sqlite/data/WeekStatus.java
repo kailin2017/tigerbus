@@ -12,15 +12,15 @@ import java.util.UUID;
 
 @AutoValue
 public abstract class WeekStatus implements Parcelable, BriteApi {
-    public static final String TABLE = " WEEK_STATUS";
-    public static final String ID = "ID";
-    public static final String SUN = "SUN";
-    public static final String MON = "MON";
-    public static final String TUE = "TUE";
-    public static final String WED = "WED";
-    public static final String THU = "THU";
-    public static final String FRI = "FRI";
-    public static final String SAT = "SAT";
+    public static final String TABLE = "week_status";
+    public static final String ID = TABLE + "_id";
+    public static final String SUN = "sun";
+    public static final String MON = "mon";
+    public static final String TUE = "tue";
+    public static final String WED = "wed";
+    public static final String THU = "thu";
+    public static final String FRI = "fri";
+    public static final String SAT = "sat";
     public static final String QUERY = BriteApi.SELECT_FROM + TABLE;
 
     public static final WeekStatus mapper(Cursor cursor) {
@@ -36,7 +36,7 @@ public abstract class WeekStatus implements Parcelable, BriteApi {
     }
 
     public static final WeekStatus create() {
-        return create("", false, false, false, false, false, false, false);
+        return create(UUID.randomUUID().toString(), false, false, false, false, false, false, false);
     }
 
     public static final WeekStatus create(
@@ -114,11 +114,7 @@ public abstract class WeekStatus implements Parcelable, BriteApi {
     public static final class SqlBuilder {
         private final ContentValues contentValues = new ContentValues();
 
-        public SqlBuilder() {
-            contentValues.put(ID, UUID.randomUUID().toString());
-        }
-
-        public SqlBuilder id(String id){
+        public SqlBuilder id(String id) {
             contentValues.put(ID, id);
             return this;
         }
@@ -152,7 +148,7 @@ public abstract class WeekStatus implements Parcelable, BriteApi {
         }
 
         public SqlBuilder weekStatus(WeekStatus weekStatus) {
-            return sun(weekStatus.sun()).mon(weekStatus.mon()).tue(weekStatus.tue()).wed(weekStatus.wed())
+            return id(weekStatus.id()).sun(weekStatus.sun()).mon(weekStatus.mon()).tue(weekStatus.tue()).wed(weekStatus.wed())
                     .thu(weekStatus.thu()).fri(weekStatus.fri()).sat(weekStatus.sat());
         }
 

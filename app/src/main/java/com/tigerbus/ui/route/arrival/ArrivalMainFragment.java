@@ -128,9 +128,9 @@ public final class ArrivalMainFragment extends BaseFragment<ArrivalMainView, Arr
 
     @Override
     public void bindService(RouteStop routeStop) {
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(CityBusInterface.BUS_ROUTESTOP, routeStop);
-        startService(context, RemindService.class, bundle);
+//        Bundle bundle = new Bundle();
+//        bundle.putParcelable(CityBusInterface.BUS_ROUTESTOP, routeStop);
+//        startService(context, RemindService.class, bundle);
     }
 
     @Override
@@ -155,12 +155,6 @@ public final class ArrivalMainFragment extends BaseFragment<ArrivalMainView, Arr
         if (bottomSheetBehavior.getState() != BottomSheetBehavior.STATE_HIDDEN) {
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        initView();
     }
 
     @Override

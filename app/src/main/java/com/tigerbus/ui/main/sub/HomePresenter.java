@@ -10,10 +10,12 @@ import com.tigerbus.data.CityBusInterface;
 import com.tigerbus.data.autovalue.HomePresenterAutoValue;
 import com.tigerbus.data.bus.BusEstimateTime;
 import com.tigerbus.sqlite.data.CommodStopQueryResult;
+import com.tigerbus.sqlite.data.CommonStop;
+import com.tigerbus.sqlite.data.CommonStopInterface;
 import com.tigerbus.sqlite.data.CommonStopType;
-import com.tigerbus.sqlite.data.CommonStopTypeApi;
-import com.tigerbus.sqlite.data.CommonStops;
+import com.tigerbus.sqlite.data.CommonStopTypeInterface;
 
+import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
@@ -25,10 +27,11 @@ import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
 
 public final class HomePresenter extends BasePresenter<HomeView>
-        implements CityBusInterface, CommonStopTypeApi {
+        implements CityBusInterface, CommonStopInterface, CommonStopTypeInterface {
 
     private BriteDatabase briteDatabase;
     private TreeMap<CommonStopType, HomePresenterAutoValue> homePresenterAutoValueHashMap = new TreeMap<>();
+    private SoftReference<List<CommonStop>> commonStopsReference;
 
     public HomePresenter(BriteDatabase briteDatabase) {
         this.briteDatabase = briteDatabase;
@@ -40,32 +43,39 @@ public final class HomePresenter extends BasePresenter<HomeView>
         observable.doOnSubscribe(this::addDisposable).subscribe(this::initData);
     }
 
-    public void initData(boolean b) {
+    private void initData(boolean b) {
+        initCommonStopDatas();
+        initRefreshData();
+    }
+
+    private void initCommonStopDatas(){
         initCommodStopTypes(briteDatabase);
+        initCommodStops(briteDatabase);
+    }
+
+    private void initRefreshData() {
         Observable.interval(BuildConfig.firstTime, BuildConfig.updateTime, TimeUnit.SECONDS, Schedulers.io())
                 .doOnSubscribe(this::addDisposable)
                 .flatMap(this::flatMap1)
                 .flatMap(this::flatMap2)
-                .flatMap(this::flatMap3)
                 .subscribe(this::onNext, this::throwable);
     }
 
-    private Observable<List<CommonStops>> flatMap1(long aLong) {
-        return briteDatabase.createQuery(CommonStops.QUERY_TABLES, CommonStops.QUERY).mapToList(CommonStops::mapper).subscribeOn(threadIO());
+    private Observable<CommonStop> flatMap1(long aLong) {
+        if (commonStopsReference.get() == null) {
+            initCommonStopDatas();
+        }
+        return Observable.fromIterable(commonStopsReference.get())
+                .doOnSubscribe(this::flatMap1Subcribe).doOnComplete(this::flatMap1Complete);
     }
 
-    private Observable<CommonStops> flatMap2(List<CommonStops> commonStops) {
-        return Observable.fromIterable(commonStops)
-                .doOnSubscribe(this::flatMap2Subcribe).doOnComplete(this::flatMap2Complete);
-    }
-
-    private void flatMap2Subcribe(Disposable disposable) {
+    private void flatMap1Subcribe(Disposable disposable) {
         for (HomePresenterAutoValue homePresenterAutoValue : homePresenterAutoValueHashMap.values()) {
             homePresenterAutoValue.commodStopQueryResults().clear();
         }
     }
 
-    private void flatMap2Complete() {
+    private void flatMap1Complete() {
         Observable.fromIterable(homePresenterAutoValueHashMap.values())
                 .filter(homePresenterAutoValue ->
                         homePresenterAutoValue.commodStopQueryResults().size() > 0)
@@ -74,7 +84,7 @@ public final class HomePresenter extends BasePresenter<HomeView>
                                 .onNext(homePresenterAutoValue.commodStopQueryResults()));
     }
 
-    private Observable<Bundle> flatMap3(CommonStops commonStop) {
+    private Observable<Bundle> flatMap2(CommonStop commonStop) {
         return Observable.zip(
                 cityBusService.getBusEstimateTime(
                         commonStop.routeStop().busRoute().getCityName().getEn(),
@@ -93,7 +103,7 @@ public final class HomePresenter extends BasePresenter<HomeView>
         BusEstimateTime busEstimateTime = bundle.getParcelable(BUS_ESTIMATE_TIME);
         if (busEstimateTime == null)
             busEstimateTime = new BusEstimateTime();
-        CommonStops commonStop = bundle.getParcelable(BUS_ROUTESTOP);
+        CommonStop commonStop = bundle.getParcelable(BUS_ROUTESTOP);
         homePresenterAutoValueHashMap.get(commonStop.commonStopType())
                 .commodStopQueryResults().add(CommodStopQueryResult.create(commonStop, busEstimateTime));
     }
@@ -110,6 +120,16 @@ public final class HomePresenter extends BasePresenter<HomeView>
 
     @Override
     public void initCommodStopTypes(Throwable throwable) {
+        render(HomeViewState.Exception.create(throwable.toString()));
+    }
+
+    @Override
+    public void initCommodStops(List<CommonStop> commonStops) {
+        commonStopsReference = new SoftReference<>(commonStops);
+    }
+
+    @Override
+    public void initCommodStops(Throwable throwable) {
         render(HomeViewState.Exception.create(throwable.toString()));
     }
 }

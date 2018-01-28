@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Binder;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 
 import com.squareup.sqlbrite3.BriteDatabase;
@@ -19,6 +20,7 @@ import com.tigerbus.sqlite.BriteDB;
 import com.tigerbus.sqlite.data.RemindStop;
 import com.tigerbus.sqlite.data.WeekStatus;
 
+import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -26,14 +28,17 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 public final class RemindService extends Service implements CityBusInterface {
 
     private final static String TAG = RemindService.class.getSimpleName();
     private final RemindBinder remindBinder = new RemindBinder();
-    private Disposable disposable;
+    private SoftReference<ArrayList<RemindStop>> remindsReference;
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private BriteDatabase briteDatabase;
 
     @Override
@@ -45,63 +50,53 @@ public final class RemindService extends Service implements CityBusInterface {
     public void onCreate() {
         super.onCreate();
         briteDatabase = BriteDB.getInstance(getApplication());
+        initData();
         initBind();
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-//        if (!disposable.isDisposed())
-//            initBind();
-        return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        disposable.dispose();
+        compositeDisposable.dispose();
     }
 
-    private void initBind() {
-//        Observable.interval(BuildConfig.firstTime, BuildConfig.updateTime, TimeUnit.SECONDS, Schedulers.io())
-//                .doOnSubscribe(this::doOnSubscribe)
-//                .flatMap(this::flatMap1)
-//                .flatMap(this::flatMap2)
-//                .flatMap(this::flatMap3)
-//                .filter(this::filter1)
-//                .filter(this::filter2)
-//                .filter(this::filter3)
-//                .subscribe(this::onNext, this::onError, this::onComplete);
-    }
-
-    private void doOnSubscribe(Disposable disposable) {
-        this.disposable = disposable;
-    }
-
-    private Observable<ArrayList<RemindStop>> flatMap1(long aLong) {
+    private void initData() {
         Calendar calendar = Calendar.getInstance(Locale.TAIWAN);
         WeekStatus.Week week = WeekStatus.Week.int2Week(calendar.get(Calendar.DAY_OF_WEEK));
         String query1 = RemindStop.QUERY1;
         String query2 = String.format(RemindStop.QUERY2, week.getWeek(), BriteApi.BOOLEAN_TRUE);
-        Observable observable = Observable.zip(
-                briteDatabase.createQuery(RemindStop.QUERY_TABLES, query1).mapToList(RemindStop::mapper),
-                briteDatabase.createQuery(RemindStop.QUERY_TABLES, query2).mapToList(RemindStop::mapper),
-                (remindStops1, remindStops2) -> {
-                    List<RemindStop> remindStops = new ArrayList<>();
-                    remindStops.addAll(remindStops1);
-                    remindStops.addAll(remindStops2);
-                    return remindStops1;
-                }
-        );
-        return observable;
+        Observable
+                .zip(
+                        briteDatabase.createQuery(RemindStop.QUERY_TABLES, query1).mapToList(RemindStop::mapper),
+                        briteDatabase.createQuery(RemindStop.QUERY_TABLES, query2).mapToList(RemindStop::mapper),
+                        (remindStops1, remindStops2) -> {
+                            ArrayList<RemindStop> remindStops = new ArrayList<>();
+                            remindStops.addAll(remindStops1);
+                            remindStops.addAll(remindStops2);
+                            TigerApplication.printLog(TlogType.wtf, TAG, TigerApplication.object2String(remindStops));
+                            return remindStops;
+                        }
+                )
+                .doOnSubscribe(compositeDisposable::add)
+                .subscribe(remindStops -> remindsReference = new SoftReference<>(remindStops));
     }
 
-    private Observable<RemindStop> flatMap2(List<RemindStop> remindStops) {
-        if (remindStops.size() == 0)
-            disposable.dispose();
-        return Observable.fromIterable(remindStops);
+    private void initBind() {
+        Observable.interval(BuildConfig.firstTime, BuildConfig.updateTime, TimeUnit.SECONDS, Schedulers.io())
+                .doOnSubscribe(compositeDisposable::add)
+                .flatMap(this::flatMap1).flatMap(this::flatMap2)
+                .filter(this::filter1).filter(this::filter2).filter(this::filter3)
+                .subscribe(this::onNext, this::onError, this::onComplete);
     }
 
-    private Observable<Bundle> flatMap3(RemindStop remindStop) {
+    private Observable<RemindStop> flatMap1(long aLong) {
+        if (remindsReference.get() == null) {
+            initData();
+        }
+        return Observable.fromIterable(remindsReference.get());
+    }
+
+    private Observable<Bundle> flatMap2(RemindStop remindStop) {
         return Observable.zip(
                 cityBusService.getBusEstimateTime(
                         remindStop.routeStop().busRoute().getCityName().getEn(),
@@ -125,7 +120,7 @@ public final class RemindService extends Service implements CityBusInterface {
         boolean result = false;
         BusEstimateTime busEstimateTime = bundle.getParcelable(BUS_ESTIMATE_TIME);
         RemindStop remindStop = bundle.getParcelable(BUS_ROUTESTOP);
-        if (busEstimateTime.getEstimateTime() < remindStop.remindMinute()) {
+        if (busEstimateTime.getEstimateTime() < remindStop.remindMinute() * 60) {
             TigerApplication.sendNotification();
             result = true;
         }
@@ -145,7 +140,7 @@ public final class RemindService extends Service implements CityBusInterface {
         RemindStop remindStop = bundle.getParcelable(BUS_ROUTESTOP);
         ContentValues contentValues = new RemindStop.SqlBuilder().isRun(false).build();
         briteDatabase.update(RemindStop.TABLE, SQLiteDatabase.CONFLICT_FAIL,
-                contentValues, RemindStop.ID + "= ? ", String.valueOf(remindStop.id()));
+                contentValues, RemindStop.ID + "= ? ", remindStop.id());
     }
 
     private void onError(Throwable throwable) {

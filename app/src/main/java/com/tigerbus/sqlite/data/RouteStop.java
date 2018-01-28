@@ -15,11 +15,11 @@ import com.tigerbus.sqlite.BriteApi;
 @AutoValue
 public abstract class RouteStop implements Parcelable {
 
-    public static final String TABLE = "ROUTE_STOP";
-    public static final String ID = "ID";
-    public static final String STOP = "STOP";
-    public static final String ROUTE = "ROUTE";
-    public static final String ROUTESUB = "ROUTESUB";
+    public static final String TABLE = "route_stop";
+    public static final String ID = TABLE + "_id";
+    public static final String STOP = "stop";
+    public static final String ROUTE = "route";
+    public static final String ROUTESUB = "routesub";
     public static final String QUERY = BriteApi.SELECT_FROM + TABLE;
     public static final String QUQRYID = QUERY + BriteApi.WHERE + ID + "='%s'";
 

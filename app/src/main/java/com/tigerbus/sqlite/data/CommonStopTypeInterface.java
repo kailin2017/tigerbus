@@ -7,9 +7,9 @@ import java.util.List;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public interface CommonStopTypeApi {
+public interface CommonStopTypeInterface {
 
-    String TAG = CommonStopTypeApi.class.getSimpleName();
+    String TAG = CommonStopTypeInterface.class.getSimpleName();
 
     default void initCommodStopTypes(BriteDatabase briteDatabase) {
         briteDatabase

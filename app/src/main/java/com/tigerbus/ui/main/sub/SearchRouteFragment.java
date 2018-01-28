@@ -2,6 +2,7 @@ package com.tigerbus.ui.main.sub;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -14,6 +15,7 @@ import com.tigerbus.base.annotation.ViewInject;
 import com.tigerbus.data.CityBusInterface;
 import com.tigerbus.data.bus.BusRoute;
 import com.tigerbus.ui.route.RouteActivity;
+import com.tigerbus.util.DiffListCallBack;
 
 import java.util.ArrayList;
 
@@ -26,7 +28,8 @@ public final class SearchRouteFragment extends BaseFragment<SearchRouteView, Sea
 
     private PublishSubject<String> searchSubject = PublishSubject.create();
     private PublishSubject<ArrayList<BusRoute>> adapterSubject = PublishSubject.create();
-
+    private SearchRouteAdapter searchRouteAdapter = new SearchRouteAdapter();
+    ;
     @ViewInject(R.id.recyclerview)
     private RecyclerView recyclerView;
     @ViewInject(R.id.searchview)
@@ -44,21 +47,10 @@ public final class SearchRouteFragment extends BaseFragment<SearchRouteView, Sea
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        initView();
-    }
-
     protected void initView() {
-        SearchRouteAdapter adapter = new SearchRouteAdapter(adapterSubject);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
-        recyclerView.setAdapter(adapter);
-        presenter.addDisposable(adapter.getPublishSubject().subscribe(busRoute -> {
-            Bundle bundle = new Bundle();
-            bundle.putParcelable(CityBusInterface.BUS_ROUTE, busRoute);
-            startActivity(getActivity(), RouteActivity.class, bundle);
-        }));
+        recyclerView.setAdapter(searchRouteAdapter);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -74,6 +66,26 @@ public final class SearchRouteFragment extends BaseFragment<SearchRouteView, Sea
                 return false;
             }
         });
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        adapterSubject.doOnSubscribe(presenter::addDisposable).subscribe(this::adapterUpdateOnNext);
+        searchRouteAdapter.getPublishSubject().doOnSubscribe(presenter::addDisposable).subscribe(this::adapterClickOnNext);
+    }
+
+    private void adapterUpdateOnNext(ArrayList<BusRoute> busRoutes){
+        DiffUtil.DiffResult diffResult =
+                DiffUtil.calculateDiff(new DiffListCallBack(searchRouteAdapter.getBusRoutes(), busRoutes));
+        searchRouteAdapter.setBusRoutes(busRoutes);
+        diffResult.dispatchUpdatesTo(searchRouteAdapter);
+    }
+
+    private void adapterClickOnNext(BusRoute busRoute){
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(CityBusInterface.BUS_ROUTE, busRoute);
+        startActivity(getActivity(), RouteActivity.class, bundle);
     }
 
     @Override

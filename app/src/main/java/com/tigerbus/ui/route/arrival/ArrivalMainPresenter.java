@@ -6,8 +6,8 @@ import android.view.MotionEvent;
 
 import com.squareup.sqlbrite3.BriteDatabase;
 import com.tigerbus.TigerApplication;
+import com.tigerbus.sqlite.data.CommonStop;
 import com.tigerbus.sqlite.data.CommonStopType;
-import com.tigerbus.sqlite.data.CommonStops;
 import com.tigerbus.sqlite.data.RemindStop;
 import com.tigerbus.sqlite.data.RouteStop;
 import com.tigerbus.sqlite.data.WeekStatus;
@@ -37,7 +37,7 @@ public final class ArrivalMainPresenter extends ArrivalPresenter<ArrivalMainView
     }
 
     private void bindClickRemind(Object o) {
-        insertRouteStop();
+        insertRemindStop();
         getView().hiddenSheet();
     }
 
@@ -78,8 +78,8 @@ public final class ArrivalMainPresenter extends ArrivalPresenter<ArrivalMainView
     private void insertCommonStop(CommonStopType commonStopType) {
         insertRouteStop();
         ContentValues contentValues =
-                new CommonStops.SqlBuilder().routeStop(routeStop.id()).type(commonStopType.id()).build();
-        insert(CommonStops.TABLE, contentValues);
+                new CommonStop.SqlBuilder().routeStop(routeStop.id()).type(commonStopType.id()).build();
+        insert(CommonStop.TABLE, contentValues);
     }
 
     private void insertCommmonStopType(String typename) {
@@ -106,7 +106,7 @@ public final class ArrivalMainPresenter extends ArrivalPresenter<ArrivalMainView
         String weekId = insertWeekStutas();
         String routeStopId = routeStop.id();
         ContentValues contentValues = new RemindStop.SqlBuilder().isRun(true).isOne(true)
-                .remindMinute(180).weekStatus(weekId).routeStop(routeStopId).build();
+                .remindMinute(3).weekStatus(weekId).routeStop(routeStopId).build();
         insert(RemindStop.TABLE, contentValues);
     }
 
