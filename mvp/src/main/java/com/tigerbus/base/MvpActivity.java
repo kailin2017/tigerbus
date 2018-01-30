@@ -23,9 +23,9 @@ public abstract class MvpActivity<V extends MvpView, P extends MvpPresenter<V>>
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        ActivityView activityInjects = getClass().getAnnotation(ActivityView.class);
-        if (activityInjects != null) {
-            isMvpPatten = activityInjects.mvp();
+        ActivityView activityView = getClass().getAnnotation(ActivityView.class);
+        if (activityView != null) {
+            isMvpPatten = activityView.mvp();
             ActivityInjects.inject(getClass(), this);
         }
         super.onCreate(savedInstanceState);

@@ -30,11 +30,11 @@ public final class ActivityInjects {
     }
 
     private static void injectActivityView(Class<? extends MvpActivity> clazz, MvpActivity mvpActivity) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, NoSuchFieldException {
-        ActivityView activityInjects = clazz.getAnnotation(ActivityView.class);
-        if (activityInjects != null) {
+        ActivityView activityView = clazz.getAnnotation(ActivityView.class);
+        if (activityView != null) {
             Method method = clazz.getMethod(METHOD_SET_CONTENTVIEW, int.class);
             method.setAccessible(true);
-            method.invoke(mvpActivity, activityInjects.layout());
+            method.invoke(mvpActivity, activityView.layout());
         }
     }
 
