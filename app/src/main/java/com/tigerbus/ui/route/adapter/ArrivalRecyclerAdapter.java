@@ -1,5 +1,6 @@
 package com.tigerbus.ui.route.adapter;
 
+import android.content.Context;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
@@ -16,6 +17,7 @@ import com.tigerbus.data.bus.BusSubRoute;
 import com.tigerbus.data.detail.Stop;
 import com.tigerbus.sqlite.data.RouteStop;
 import com.tigerbus.util.DiffListCallBack;
+import com.tigerbus.util.Sec2Min;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,7 +27,8 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.subjects.PublishSubject;
 
-public final class ArrivalRecyclerAdapter extends RecyclerView.Adapter<ArrivalRecyclerAdapter.ViewHolder> {
+public final class ArrivalRecyclerAdapter
+        extends RecyclerView.Adapter<ArrivalRecyclerAdapter.ViewHolder> implements Sec2Min {
 
     private BusStopOfRoute busStopOfRoute;
     private Map<String, BusEstimateTime> busEstimateTimeMap = new HashMap<>();
@@ -33,6 +36,7 @@ public final class ArrivalRecyclerAdapter extends RecyclerView.Adapter<ArrivalRe
     private Disposable disposable;
     private BusRoute busRoute;
     private BusSubRoute busSubRoute;
+    private Context context;
 
     public ArrivalRecyclerAdapter(@NonNull BusRoute busRoute,
                                   @NonNull BusSubRoute busSubRoute,
@@ -66,7 +70,8 @@ public final class ArrivalRecyclerAdapter extends RecyclerView.Adapter<ArrivalRe
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.route_arrival_item, parent, false));
+        context = parent.getContext();
+        return new ViewHolder(LayoutInflater.from(context).inflate(R.layout.route_arrival_item, parent, false));
     }
 
     @Override
@@ -76,7 +81,7 @@ public final class ArrivalRecyclerAdapter extends RecyclerView.Adapter<ArrivalRe
         holder.stopName.setText(stop.getStopName().getZh_tw());
         BusEstimateTime busEstimateTime = busEstimateTimeMap.get(stop.getStopUID());
         if (busEstimateTime != null) {
-            holder.estimateTime.setText(busEstimateTime.getEstimateTime() + "");
+            holder.estimateTime.setText(sec2Min(context, busEstimateTime.getEstimateTime()));
         }
     }
 

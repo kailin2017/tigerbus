@@ -95,8 +95,7 @@ public final class ArrivalMainPresenter extends ArrivalPresenter<ArrivalMainView
                 .flatMap(routeStops -> Observable.just(routeStops))
                 .filter(routeStops -> routeStops.size() == 0)
                 .subscribe(routeStops -> {
-                    ContentValues contentValues =
-                            new RouteStop.SqlBuilder().routeStop(routeStop).Build();
+                    ContentValues contentValues = new RouteStop.SqlBuilder().routeStop(routeStop).Build();
                     insert(RouteStop.TABLE, contentValues);
                 });
     }

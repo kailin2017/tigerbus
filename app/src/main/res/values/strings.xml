@@ -21,6 +21,10 @@
 
     <string name="search_hint">搜尋路線</string>
     <string name="route_go">往 </string>
+    
+    <string name="stop_status_min">%d分</string>
+    <string name="stop_status_nobus">尚未發車</string>
+    <string name="stop_status_pit">進站中</string>
 
     <string name="notification_channel_default">一般提醒</string>
     <string name="notification_channel_remind">到站提醒</string>

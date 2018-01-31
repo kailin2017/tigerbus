@@ -1,43 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="5dp">
+    android:layout_margin="@dimen/ui3dp">
 
-    <TextView
-        android:id="@+id/route_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="235"
-        android:textSize="@dimen/text20sp" />
-
-    <TextView
-        android:id="@+id/route_destination"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:text="新莊-中山森林公園"
-        app:layout_constraintTop_toBottomOf="@+id/route_name" />
-
-    <View
-
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/item"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="5dp"
-        android:background="#A9A9A9"
-        app:layout_constraintTop_toBottomOf="@+id/route_destination" />
-
-    <TextView
-        android:id="@+id/route_city"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_marginEnd="5dp"
-        android:text="天龍市"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:padding="@dimen/ui5dp">
 
-</android.support.constraint.ConstraintLayout>
+        <TextView
+            android:id="@+id/route_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="235"
+            android:textSize="@dimen/text20sp" />
+
+        <TextView
+            android:id="@+id/route_destination"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:text="新莊-中山森林公園"
+            app:layout_constraintTop_toBottomOf="@+id/route_name" />
+
+        <TextView
+            android:id="@+id/route_city"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:text="天龍市"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </android.support.constraint.ConstraintLayout>
+</android.support.v7.widget.CardView>

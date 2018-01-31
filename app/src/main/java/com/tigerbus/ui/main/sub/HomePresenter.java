@@ -9,6 +9,7 @@ import com.tigerbus.base.BasePresenter;
 import com.tigerbus.data.CityBusInterface;
 import com.tigerbus.data.autovalue.HomePresenterAutoValue;
 import com.tigerbus.data.bus.BusEstimateTime;
+import com.tigerbus.sqlite.BriteApi;
 import com.tigerbus.sqlite.data.CommodStopQueryResult;
 import com.tigerbus.sqlite.data.CommonStop;
 import com.tigerbus.sqlite.data.CommonStopInterface;
@@ -32,6 +33,7 @@ public final class HomePresenter extends BasePresenter<HomeView>
     private BriteDatabase briteDatabase;
     private TreeMap<CommonStopType, HomePresenterAutoValue> homePresenterAutoValueHashMap = new TreeMap<>();
     private SoftReference<List<CommonStop>> commonStopsReference;
+    private CommonStopType defaultCommonStopType;
 
     public HomePresenter(BriteDatabase briteDatabase) {
         this.briteDatabase = briteDatabase;
@@ -48,7 +50,7 @@ public final class HomePresenter extends BasePresenter<HomeView>
         initRefreshData();
     }
 
-    private void initCommonStopDatas(){
+    private void initCommonStopDatas() {
         initCommodStopTypes(briteDatabase);
         initCommodStops(briteDatabase);
     }
@@ -101,17 +103,27 @@ public final class HomePresenter extends BasePresenter<HomeView>
 
     private void onNext(Bundle bundle) {
         BusEstimateTime busEstimateTime = bundle.getParcelable(BUS_ESTIMATE_TIME);
-        if (busEstimateTime == null)
-            busEstimateTime = new BusEstimateTime();
         CommonStop commonStop = bundle.getParcelable(BUS_ROUTESTOP);
+
+        CommodStopQueryResult commodStopQueryResult = CommodStopQueryResult.create(
+                commonStop, busEstimateTime == null ? new BusEstimateTime() : busEstimateTime);
+
         homePresenterAutoValueHashMap.get(commonStop.commonStopType())
-                .commodStopQueryResults().add(CommodStopQueryResult.create(commonStop, busEstimateTime));
+                .commodStopQueryResults().add(commodStopQueryResult);
+        // 除了全部以外都要再寫入全部一次
+        if (commonStop.commonStopType().id() != 1) {
+            homePresenterAutoValueHashMap.get(defaultCommonStopType)
+                    .commodStopQueryResults().add(commodStopQueryResult);
+        }
     }
 
     @Override
     public void initCommodStopTypes(List<CommonStopType> commonStopTypes) {
         TigerApplication.setCommodStopTypes(commonStopTypes);
         for (CommonStopType commonStopType : commonStopTypes) {
+            // 第一筆為全部 將其存下
+            if (commonStopType.id() == 1)
+                defaultCommonStopType = commonStopType;
             homePresenterAutoValueHashMap.put(commonStopType,
                     HomePresenterAutoValue.create(commonStopType, PublishSubject.create(), new ArrayList<>()));
         }
@@ -132,4 +144,13 @@ public final class HomePresenter extends BasePresenter<HomeView>
     public void initCommodStops(Throwable throwable) {
         render(HomeViewState.Exception.create(throwable.toString()));
     }
+
+    public void removeCommon(CommonStop commonStop) {
+        briteDatabase.delete(CommonStop.TABLE, BriteApi.WHERE + CommonStop.ID + "=?", commonStop.id());
+    }
+
+    public void updateCommonOrder(List<CommonStop> commonStops) {
+
+    }
+
 }
