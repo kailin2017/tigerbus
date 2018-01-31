@@ -70,6 +70,8 @@ final class BriteDBCallback extends SupportSQLiteOpenHelper.Callback {
         db.execSQL(CREATE_WEEK_STATUS_TABLE);
         db.execSQL(CREATE_REMIND_STOP_TABLE);
         db.insert(CommonStopType.TABLE, CONFLICT_FAIL,
+                new CommonStopType.SqlBuilder().type("全部").build());
+        db.insert(CommonStopType.TABLE, CONFLICT_FAIL,
                 new CommonStopType.SqlBuilder().type("出門").build());
         db.insert(CommonStopType.TABLE, CONFLICT_FAIL,
                 new CommonStopType.SqlBuilder().type("回家").build());

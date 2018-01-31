@@ -13,7 +13,7 @@ public interface CommonStopInterface {
 
     default void initCommodStops(BriteDatabase briteDatabase) {
         briteDatabase
-                .createQuery(CommonStop.TABLE, CommonStop.QUERY)
+                .createQuery(CommonStop.QUERY_TABLES, CommonStop.QUERY)
                 .mapToList(CommonStop::mapper)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

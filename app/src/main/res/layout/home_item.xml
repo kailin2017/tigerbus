@@ -1,41 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="5dp">
+    android:layout_margin="@dimen/ui3dp">
 
-    <TextView
-        android:id="@+id/routename"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="235 往中山公園" />
-
-    <TextView
-        android:id="@+id/stopname"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="南新莊"
-        android:textSize="@dimen/text20sp"
-        app:layout_constraintBottom_toBottomOf="@+id/line"
-        app:layout_constraintTop_toBottomOf="@+id/routename" />
-
-    <TextView
-        android:id="@+id/estimatetime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="尚未發車"
-        android:textSize="@dimen/text20sp"
-        app:layout_constraintEnd_toEndOf="@+id/line"
-        app:layout_constraintTop_toBottomOf="@+id/routename" />
-
-    <View
-        android:id="@+id/line"
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/item"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="3dp"
-        android:background="@color/darkgray"
-        app:layout_constraintTop_toBottomOf="@+id/stopname" />
+        android:layout_height="wrap_content"
+        android:padding="@dimen/ui5dp">
 
-</android.support.constraint.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/routename"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="235 往中山公園" />
+
+        <TextView
+            android:id="@+id/stopname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="南新莊"
+            android:textSize="@dimen/text20sp"
+            app:layout_constraintTop_toBottomOf="@+id/routename" />
+
+        <TextView
+            android:id="@+id/estimatetime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="尚未發車"
+            android:textSize="@dimen/text20sp"
+            app:layout_constraintEnd_toEndOf="@+id/item"
+            app:layout_constraintTop_toBottomOf="@+id/routename" />
+
+    </android.support.constraint.ConstraintLayout>
+
+</android.support.v7.widget.CardView>
