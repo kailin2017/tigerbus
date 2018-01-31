@@ -2,19 +2,21 @@ package com.tigerbus.service;
 
 import android.app.Service;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Binder;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
 
 import com.squareup.sqlbrite3.BriteDatabase;
 import com.tigerbus.BuildConfig;
+import com.tigerbus.R;
 import com.tigerbus.TigerApplication;
 import com.tigerbus.base.log.TlogType;
 import com.tigerbus.data.CityBusInterface;
 import com.tigerbus.data.bus.BusEstimateTime;
+import com.tigerbus.notification.NotificationChannelType;
 import com.tigerbus.sqlite.BriteApi;
 import com.tigerbus.sqlite.BriteDB;
 import com.tigerbus.sqlite.data.RemindStop;
@@ -23,14 +25,11 @@ import com.tigerbus.sqlite.data.WeekStatus;
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 public final class RemindService extends Service implements CityBusInterface {
@@ -121,7 +120,11 @@ public final class RemindService extends Service implements CityBusInterface {
         BusEstimateTime busEstimateTime = bundle.getParcelable(BUS_ESTIMATE_TIME);
         RemindStop remindStop = bundle.getParcelable(BUS_ROUTESTOP);
         if (busEstimateTime.getEstimateTime() < remindStop.remindMinute() * 60) {
-            TigerApplication.sendNotification();
+            Context context = getApplicationContext();
+            TigerApplication.sendNotification(context, NotificationChannelType.channel_remind, context.getString(R.string.notification_channel_remind),
+                    String.format(context.getString(R.string.notification_channel_remind_msg),
+                            remindStop.routeStop().busRoute().getRouteName(),
+                            remindStop.routeStop().stop().getStopName().getZh_tw()));
             result = true;
         }
         return result;

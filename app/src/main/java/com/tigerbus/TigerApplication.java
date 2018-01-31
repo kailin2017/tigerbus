@@ -7,6 +7,8 @@ import com.google.gson.Gson;
 import com.tigerbus.base.log.Tlog;
 import com.tigerbus.base.log.TlogType;
 import com.tigerbus.data.bus.BusRoute;
+import com.tigerbus.notification.NotificationChannelType;
+import com.tigerbus.notification.NotificationChannelUtil;
 import com.tigerbus.sqlite.data.CommonStopType;
 import com.tigerbus.util.TigerPreferences;
 
@@ -108,8 +110,8 @@ public final class TigerApplication extends Application {
         return result;
     }
 
-    public static void sendNotification() {
-
+    public static void sendNotification(Context context, NotificationChannelType notificationChannelType, String title, String text) {
+        NotificationChannelUtil.sendNotification(context, notificationChannelType, title, text);
     }
 
     @Override
@@ -117,6 +119,7 @@ public final class TigerApplication extends Application {
         super.onCreate();
         this.context = getApplicationContext();
         this.tigerPreferences = new TigerPreferences(context);
+        NotificationChannelUtil.initNotificationChannel(context);
 //        CrashHandler crashHandler = new CrashHandler();
 //        crashHandler.init(context);
     }

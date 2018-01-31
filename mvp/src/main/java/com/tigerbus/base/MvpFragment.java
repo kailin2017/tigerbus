@@ -103,8 +103,11 @@ public abstract class MvpFragment<V extends MvpView, P extends MvpPresenter<V>>
         } else {
             view = super.onCreateView(inflater, container, savedInstanceState);
         }
+        initView();
         return view;
     }
+
+    protected void initView(){}
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
