@@ -146,7 +146,7 @@ public final class HomePresenter extends BasePresenter<HomeView>
     }
 
     public void removeCommon(CommonStop commonStop) {
-        briteDatabase.delete(CommonStop.TABLE, BriteApi.WHERE + CommonStop.ID + "=?", commonStop.id());
+        briteDatabase.delete(CommonStop.TABLE,  CommonStop.ID + "=?", commonStop.id());
     }
 
     public void updateCommonOrder(List<CommonStop> commonStops) {

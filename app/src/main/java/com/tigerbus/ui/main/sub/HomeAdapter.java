@@ -55,7 +55,7 @@ public final class HomeAdapter
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         CommodStopQueryResult commodStopQueryResult = commodStopQueryResults.get(position);
-        holder.estimateTime.setTag(commodStopQueryResult.commonStop());
+        holder.itemLayout.setTag(commodStopQueryResult.commonStop());
         holder.routeName.setText(getRouteNameString(commodStopQueryResult.commonStop()));
         holder.stopName.setText(commodStopQueryResult.commonStop().routeStop().stop().getStopName().getZh_tw());
         holder.estimateTime.setText(sec2Min(context, commodStopQueryResult.busEstimateTime().getEstimateTime()));
@@ -85,6 +85,9 @@ public final class HomeAdapter
 
     @Override
     public void onItemDelete(int positon) {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(HomeView.COMMONEVENT_DELECT, commodStopQueryResults.get(positon).commonStop());
+        adapterEventSubject.onNext(bundle);
         commodStopQueryResults.remove(positon);
         notifyItemRemoved(positon);
     }

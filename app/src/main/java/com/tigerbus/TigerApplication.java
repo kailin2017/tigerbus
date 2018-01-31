@@ -111,6 +111,7 @@ public final class TigerApplication extends Application {
     }
 
     public static void sendNotification(Context context, NotificationChannelType notificationChannelType, String title, String text) {
+        NotificationChannelUtil.initNotificationChannel(context);
         NotificationChannelUtil.sendNotification(context, notificationChannelType, title, text);
     }
 
@@ -119,7 +120,6 @@ public final class TigerApplication extends Application {
         super.onCreate();
         this.context = getApplicationContext();
         this.tigerPreferences = new TigerPreferences(context);
-        NotificationChannelUtil.initNotificationChannel(context);
 //        CrashHandler crashHandler = new CrashHandler();
 //        crashHandler.init(context);
     }

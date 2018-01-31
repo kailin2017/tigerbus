@@ -7,6 +7,10 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
 
+import com.tigerbus.R;
+
+import java.util.Random;
+
 import io.reactivex.Observable;
 
 public final class NotificationChannelUtil {
@@ -63,6 +67,10 @@ public final class NotificationChannelUtil {
         Notification.Builder builder = new Notification.Builder(context);
         builder.setContentTitle(title);
         builder.setContentText(text);
+        builder.setSmallIcon(R.drawable.cast_ic_notification_small_icon);
+        builder.setNumber(new Random().nextInt(Integer.MAX_VALUE));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+            builder.setChannelId(Integer.toString(notificationChannelType.getTypeId()));
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(notificationChannelType.getTypeId(), builder.build());
     }

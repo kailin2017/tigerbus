@@ -13,7 +13,7 @@ public interface Sec2Min {
         } else if (sec < 120) {
             result = context.getString(R.string.stop_status_pit);
         } else {
-            result = String.format(context.getString(R.string.stop_status_min), sec / 60);
+            result = String.format(context.getString(R.string.stop_status_min), sec / 60, sec % 60);
         }
         return result;
     }

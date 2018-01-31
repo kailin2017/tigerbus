@@ -123,7 +123,7 @@ public final class RemindService extends Service implements CityBusInterface {
             Context context = getApplicationContext();
             TigerApplication.sendNotification(context, NotificationChannelType.channel_remind, context.getString(R.string.notification_channel_remind),
                     String.format(context.getString(R.string.notification_channel_remind_msg),
-                            remindStop.routeStop().busRoute().getRouteName(),
+                            remindStop.routeStop().busRoute().getRouteName().getZh_tw(),
                             remindStop.routeStop().stop().getStopName().getZh_tw()));
             result = true;
         }
