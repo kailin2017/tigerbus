@@ -3,18 +3,13 @@ package com.tigerbus.ui.main.sub;
 import com.tigerbus.TigerApplication;
 import com.tigerbus.base.BasePresenter;
 import com.tigerbus.data.bus.BusRoute;
-import com.tigerbus.ui.search.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
 import io.reactivex.Observable;
-import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
-
 
 public final class SearchRoutePresenter extends BasePresenter<SearchRouteView> {
 
@@ -49,8 +44,8 @@ public final class SearchRoutePresenter extends BasePresenter<SearchRouteView> {
                     render(com.tigerbus.ui.search.SearchRouteViewState.Success.create(searchResult));
                     render(com.tigerbus.ui.search.SearchRouteViewState.Finish.create());
                 });
-
     }
+
     private int searchSocre(String string1, String string2) {
         int socre = 0;
         StringBuffer sb1 = new StringBuffer(string1), sb2 = new StringBuffer(string2);

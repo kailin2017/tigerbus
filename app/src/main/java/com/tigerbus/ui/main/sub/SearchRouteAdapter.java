@@ -1,8 +1,6 @@
 package com.tigerbus.ui.main.sub;
 
-import android.os.Handler;
 import android.support.constraint.ConstraintLayout;
-import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,12 +11,9 @@ import com.tigerbus.R;
 import com.tigerbus.TigerApplication;
 import com.tigerbus.base.log.TlogType;
 import com.tigerbus.data.bus.BusRoute;
-import com.tigerbus.util.DiffListCallBack;
 
 import java.util.ArrayList;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
 
 public final class SearchRouteAdapter extends RecyclerView.Adapter<SearchRouteAdapter.ViewHolder> {
@@ -38,7 +33,9 @@ public final class SearchRouteAdapter extends RecyclerView.Adapter<SearchRouteAd
 
     public void setBusRoutes(ArrayList<BusRoute> busRoutes) {
         this.busRoutes.clear();
-        this.busRoutes.addAll(busRoutes);
+        for(BusRoute busRoute : busRoutes){
+            this.busRoutes.add(busRoute);
+        }
     }
 
     @Override

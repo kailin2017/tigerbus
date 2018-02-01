@@ -27,9 +27,8 @@ public final class SearchRouteFragment extends BaseFragment<SearchRouteView, Sea
         implements SearchRouteView<ViewStateRender>, ViewStateRender<ArrayList<BusRoute>> {
 
     private PublishSubject<String> searchSubject = PublishSubject.create();
-    private PublishSubject<ArrayList<BusRoute>> adapterSubject = PublishSubject.create();
     private SearchRouteAdapter searchRouteAdapter = new SearchRouteAdapter();
-    ;
+
     @ViewInject(R.id.recyclerview)
     private RecyclerView recyclerView;
     @ViewInject(R.id.searchview)
@@ -71,18 +70,12 @@ public final class SearchRouteFragment extends BaseFragment<SearchRouteView, Sea
     @Override
     public void onStart() {
         super.onStart();
-        adapterSubject.doOnSubscribe(presenter::addDisposable).subscribe(this::adapterUpdateOnNext);
-        searchRouteAdapter.getPublishSubject().doOnSubscribe(presenter::addDisposable).subscribe(this::adapterClickOnNext);
+        searchRouteAdapter.getPublishSubject()
+                .doOnSubscribe(presenter::addDisposable)
+                .subscribe(this::adapterClickOnNext);
     }
 
-    private void adapterUpdateOnNext(ArrayList<BusRoute> busRoutes){
-        DiffUtil.DiffResult diffResult =
-                DiffUtil.calculateDiff(new DiffListCallBack(searchRouteAdapter.getBusRoutes(), busRoutes));
-        searchRouteAdapter.setBusRoutes(busRoutes);
-        diffResult.dispatchUpdatesTo(searchRouteAdapter);
-    }
-
-    private void adapterClickOnNext(BusRoute busRoute){
+    public void adapterClickOnNext(BusRoute busRoute) {
         Bundle bundle = new Bundle();
         bundle.putParcelable(CityBusInterface.BUS_ROUTE, busRoute);
         startActivity(getActivity(), RouteActivity.class, bundle);
@@ -95,6 +88,9 @@ public final class SearchRouteFragment extends BaseFragment<SearchRouteView, Sea
 
     @Override
     public void renderSuccess(ArrayList<BusRoute> searchResult) {
-        adapterSubject.onNext(searchResult);
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(
+                new DiffListCallBack(searchRouteAdapter.getBusRoutes(), searchResult));
+        searchRouteAdapter.setBusRoutes(searchResult);
+        diffResult.dispatchUpdatesTo(searchRouteAdapter);
     }
 }
