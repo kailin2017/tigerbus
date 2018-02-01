@@ -9,7 +9,6 @@ import com.tigerbus.base.BasePresenter;
 import com.tigerbus.data.CityBusInterface;
 import com.tigerbus.data.autovalue.HomePresenterAutoValue;
 import com.tigerbus.data.bus.BusEstimateTime;
-import com.tigerbus.sqlite.BriteApi;
 import com.tigerbus.sqlite.data.CommodStopQueryResult;
 import com.tigerbus.sqlite.data.CommonStop;
 import com.tigerbus.sqlite.data.CommonStopInterface;
