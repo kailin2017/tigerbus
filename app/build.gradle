@@ -17,7 +17,7 @@ android {
         buildConfigField "String", "MainService", "\"http://ptx.transportdata.tw\""
         buildConfigField "String", "LocalDBName", "\"tiger.db\""
         buildConfigField "Integer", "updateTime", "10"
-        buildConfigField "Integer", "firstTime", "2"
+        buildConfigField "Integer", "firstTime", "1"
     }
     testOptions {
         unitTests {

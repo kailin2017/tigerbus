@@ -127,13 +127,6 @@ public final class ArrivalMainFragment extends BaseFragment<ArrivalMainView, Arr
     }
 
     @Override
-    public void bindService(RouteStop routeStop) {
-//        Bundle bundle = new Bundle();
-//        bundle.putParcelable(CityBusInterface.BUS_ROUTESTOP, routeStop);
-//        startService(context, RemindService.class, bundle);
-    }
-
-    @Override
     public void showTypeList() {
         HashMap<Integer, CommonStopType> commodStopTypeList = TigerApplication.getCommodStopTypes();
         List<String> item = new ArrayList<>();
@@ -208,7 +201,7 @@ public final class ArrivalMainFragment extends BaseFragment<ArrivalMainView, Arr
 
     @Override
     public void renderFinish() {
-        dimessMessage();
+        dimessProgress();
     }
 
 

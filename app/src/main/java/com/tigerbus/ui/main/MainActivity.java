@@ -86,7 +86,7 @@ public final class MainActivity extends BaseActivity<MainView, MainPresenter>
 
     @Override
     public void goSearch() {
-//        nextFragment(MAINVIEWID, SearchRouteFragment.newInstance());
+        nextFragment(MAINVIEWID, SearchRouteFragment.newInstance());
         startActivity(SearchRouteActivity.class);
     }
 

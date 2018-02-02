@@ -47,9 +47,5 @@ public final class MainActivityTest {
 //        assertTrue(mainActivity.messageDialog.isShowing());
     }
 
-    private void render(MainViewState mainViewState) {
-        mainActivity.render(mainViewState);
-    }
-
 
 }

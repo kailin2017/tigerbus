@@ -37,11 +37,8 @@ public interface ArrivalView extends BaseView, TabPager {
     }
 
     default String getTitle(@NonNull Context context, @NonNull BusRoute route, @NonNull BusSubRoute subRoute) {
-        StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append(route.getSubRoutes().size() > 2 ? subRoute.getSubRouteName().getZh_tw() + "\n" : "");
-        stringBuffer.append(context.getString(R.string.route_go));
-        stringBuffer.append(subRoute.getDirection().equals("0") ?
-                route.getDestinationStopNameZh() : route.getDepartureStopNameZh());
-        return stringBuffer.toString();
+        String routeName = route.getSubRoutes().size() > 2 ? subRoute.getSubRouteName().getZh_tw() + "\n" : "";
+        String direction = subRoute.getDirection().equals("0") ? route.getDestinationStopNameZh() : route.getDepartureStopNameZh();
+        return String.format(context.getString(R.string.route_go1), routeName, direction);
     }
 }

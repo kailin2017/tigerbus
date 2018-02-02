@@ -41,7 +41,7 @@ public final class HomePresenter extends BasePresenter<HomeView>
     @Override
     public void bindIntent() {
         Observable<Boolean> observable = getView().bindInitData();
-        observable.doOnSubscribe(this::addDisposable).subscribe(this::initData);
+        observable.subscribe(this::initData);
     }
 
     private void initData(boolean b) {
@@ -50,8 +50,8 @@ public final class HomePresenter extends BasePresenter<HomeView>
     }
 
     private void initCommonStopDatas() {
-        initCommodStopTypes(briteDatabase);
-        initCommodStops(briteDatabase);
+        addDisposable(initCommodStopTypes(briteDatabase));
+        addDisposable(initCommodStops(briteDatabase));
     }
 
     private void initRefreshData() {

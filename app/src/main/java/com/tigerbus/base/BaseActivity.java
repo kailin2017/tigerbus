@@ -19,14 +19,14 @@ import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 public abstract class BaseActivity<V extends BaseView, P extends BasePresenter<V>>
         extends MvpActivity<V, P> implements BaseUIInterface {
 
-    private final static String[] primissionList = new String[]{ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION};
-    private OnPrimissionListener onPrimissionListener;
     public final static int PRIMISSION_SUCCESS = 0;
+    private final static String[] primissionList = new String[]{ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION};
     public TigerApplication application;
     public ProgressDialog progressDialog;
     public AlertDialog messageDialog;
     public AlertDialog listDialog;
     public Context context;
+    private OnPrimissionListener onPrimissionListener;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

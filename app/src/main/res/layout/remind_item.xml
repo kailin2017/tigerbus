@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/ui3dp">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/ui5dp">
+
+        <TextView
+            android:id="@+id/routename"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="235 往中山公園" />
+
+        <TextView
+            android:id="@+id/stopname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="南新莊"
+            android:textSize="@dimen/text20sp"
+            app:layout_constraintTop_toBottomOf="@+id/routename" />
+
+        <TextView
+            android:id="@+id/remind_time"
+            android:layout_width="@dimen/ui0dp"
+            android:layout_height="wrap_content"
+            android:text="5 分鐘內通知"
+            app:layout_constraintTop_toBottomOf="@+id/stopname"/>
+
+        <TextView
+            android:id="@+id/remind_status"
+            android:layout_width="@dimen/ui0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/ui10dp"
+            android:text="20:00結束通知"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@+id/stopname"
+            app:layout_constraintStart_toEndOf="@+id/remind_time"/>
+
+        <TextView
+            android:id="@+id/remind_week"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="每週 1,2,3,4,5 14:20~15:00 通知"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@+id/remind_time"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+</android.support.v7.widget.CardView>

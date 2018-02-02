@@ -75,6 +75,10 @@ public final class ArrivalMainPresenter extends ArrivalPresenter<ArrivalMainView
         }
     }
 
+    private void insert(String tableName, ContentValues contentValues) {
+        briteDatabase.insert(tableName, SQLiteDatabase.CONFLICT_FAIL, contentValues);
+    }
+
     private void insertCommonStop(CommonStopType commonStopType) {
         insertRouteStop();
         ContentValues contentValues =
@@ -83,8 +87,7 @@ public final class ArrivalMainPresenter extends ArrivalPresenter<ArrivalMainView
     }
 
     private void insertCommmonStopType(String typename) {
-        ContentValues contentValues =
-                new CommonStopType.SqlBuilder().type(typename).build();
+        ContentValues contentValues = new CommonStopType.SqlBuilder().type(typename).build();
         insert(CommonStopType.TABLE, contentValues);
     }
 
@@ -116,8 +119,6 @@ public final class ArrivalMainPresenter extends ArrivalPresenter<ArrivalMainView
         return weekStatus.id();
     }
 
-    private void insert(String tableName, ContentValues contentValues) {
-        briteDatabase.insert(tableName, SQLiteDatabase.CONFLICT_FAIL, contentValues);
-    }
+
 
 }

@@ -77,6 +77,16 @@ public final class HomeFragment extends BaseFragment<HomeView, HomePresenter>
     }
 
     @Override
+    public void renderLoading() {
+        showProgress();
+    }
+
+    @Override
+    public void renderFinish() {
+        dimessProgress();
+    }
+
+    @Override
     public void renderSuccess(TreeMap<CommonStopType, HomePresenterAutoValue> result) {
         ArrayList<PagerRecyclerObj> pagerRecyclerObjs = new ArrayList<>();
         for (CommonStopType commonStopType : result.keySet()) {

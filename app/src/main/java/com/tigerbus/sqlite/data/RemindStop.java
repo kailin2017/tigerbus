@@ -32,11 +32,11 @@ public abstract class RemindStop implements Parcelable {
 
     private static final String QUERY = BriteApi.SELECT_FROM + TABLE
             + BriteApi.INNER_JOIN + RouteStop.TABLE + " ON " + RouteStop.ID + "=" + ROUTESTOP
-            + BriteApi.INNER_JOIN + WeekStatus.TABLE + " ON " + WeekStatus.ID + "=" + RUNWEEK
-            + BriteApi.WHERE + RemindStop.ISRUN + "=" + BriteApi.BOOLEAN_TRUE;
-
-    public static final String QUERY1 = QUERY + BriteApi.AND + ISONE + "=" + BriteApi.BOOLEAN_TRUE;
-    public static final String QUERY2 = QUERY + BriteApi.AND + ISONE + "=" + BriteApi.BOOLEAN_FALSE + BriteApi.AND + " %s=%d ";
+            + BriteApi.INNER_JOIN + WeekStatus.TABLE + " ON " + WeekStatus.ID + "=" + RUNWEEK;
+    public static final String QUERYRUN = QUERY + BriteApi.WHERE + RemindStop.ISRUN + "=" + BriteApi.BOOLEAN_TRUE;
+    public static final String QUERY1 = QUERYRUN + BriteApi.AND + ISONE + "=" + BriteApi.BOOLEAN_TRUE;
+    public static final String QUERY2 = QUERYRUN + BriteApi.AND + ISONE + "=" + BriteApi.BOOLEAN_FALSE + BriteApi.AND + " %s=%d ";
+    public static final String QUERY_ALL = QUERY;
 
     public static final RemindStop mapper(Cursor cursor) {
         String id = BriteApi.getString(cursor, ID);

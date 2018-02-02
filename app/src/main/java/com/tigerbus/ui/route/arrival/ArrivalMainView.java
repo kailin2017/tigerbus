@@ -25,8 +25,6 @@ public interface ArrivalMainView extends ArrivalView {
 
     Observable<Integer> bindTypeList();
 
-    void bindService(RouteStop commonStop);
-
     void hiddenSheet();
 
     void showTypeList();

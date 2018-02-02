@@ -17,26 +17,23 @@ import com.tigerbus.base.log.TlogType;
 import com.tigerbus.data.CityBusInterface;
 import com.tigerbus.data.bus.BusEstimateTime;
 import com.tigerbus.notification.NotificationChannelType;
-import com.tigerbus.sqlite.BriteApi;
 import com.tigerbus.sqlite.BriteDB;
 import com.tigerbus.sqlite.data.RemindStop;
-import com.tigerbus.sqlite.data.WeekStatus;
+import com.tigerbus.sqlite.data.RemindStopInterface;
 
 import java.lang.ref.SoftReference;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Locale;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
-public final class RemindService extends Service implements CityBusInterface {
+public final class RemindService extends Service implements CityBusInterface,RemindStopInterface {
 
     private final static String TAG = RemindService.class.getSimpleName();
     private final RemindBinder remindBinder = new RemindBinder();
-    private SoftReference<ArrayList<RemindStop>> remindsReference;
+    private SoftReference<List<RemindStop>> remindsReference;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private BriteDatabase briteDatabase;
 
@@ -49,7 +46,7 @@ public final class RemindService extends Service implements CityBusInterface {
     public void onCreate() {
         super.onCreate();
         briteDatabase = BriteDB.getInstance(getApplication());
-        initData();
+        compositeDisposable.add(initRemindStopRun(briteDatabase));
         initBind();
     }
 
@@ -57,27 +54,6 @@ public final class RemindService extends Service implements CityBusInterface {
     public void onDestroy() {
         super.onDestroy();
         compositeDisposable.dispose();
-    }
-
-    private void initData() {
-        Calendar calendar = Calendar.getInstance(Locale.TAIWAN);
-        WeekStatus.Week week = WeekStatus.Week.int2Week(calendar.get(Calendar.DAY_OF_WEEK));
-        String query1 = RemindStop.QUERY1;
-        String query2 = String.format(RemindStop.QUERY2, week.getWeek(), BriteApi.BOOLEAN_TRUE);
-        Observable
-                .zip(
-                        briteDatabase.createQuery(RemindStop.QUERY_TABLES, query1).mapToList(RemindStop::mapper),
-                        briteDatabase.createQuery(RemindStop.QUERY_TABLES, query2).mapToList(RemindStop::mapper),
-                        (remindStops1, remindStops2) -> {
-                            ArrayList<RemindStop> remindStops = new ArrayList<>();
-                            remindStops.addAll(remindStops1);
-                            remindStops.addAll(remindStops2);
-                            TigerApplication.printLog(TlogType.wtf, TAG, TigerApplication.object2String(remindStops));
-                            return remindStops;
-                        }
-                )
-                .doOnSubscribe(compositeDisposable::add)
-                .subscribe(remindStops -> remindsReference = new SoftReference<>(remindStops));
     }
 
     private void initBind() {
@@ -90,7 +66,7 @@ public final class RemindService extends Service implements CityBusInterface {
 
     private Observable<RemindStop> flatMap1(long aLong) {
         if (remindsReference.get() == null) {
-            initData();
+            compositeDisposable.add(initRemindStopRun(briteDatabase));
         }
         return Observable.fromIterable(remindsReference.get());
     }
@@ -151,6 +127,16 @@ public final class RemindService extends Service implements CityBusInterface {
     }
 
     private void onComplete() {
+
+    }
+
+    @Override
+    public void initRemindStopResult(List<RemindStop> remindStops) {
+        remindsReference = new SoftReference<>(remindStops);
+    }
+
+    @Override
+    public void initRemindStopError(Throwable throwable) {
 
     }
 

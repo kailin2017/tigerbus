@@ -6,8 +6,7 @@ import com.tigerbus.ui.widget.TabPager;
 
 import io.reactivex.Observable;
 
-public interface HomeView<VR extends ViewStateRender>
-        extends BaseView<VR>, TabPager {
+public interface HomeView<VR extends ViewStateRender> extends BaseView<VR>, TabPager {
 
     String COMMONEVENT_DELECT = "COMMONEVENT_DELECT";
     String COMMONEVENT_MOVE = "COMMONEVENT_MOVE";

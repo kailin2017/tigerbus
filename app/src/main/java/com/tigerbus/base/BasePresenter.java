@@ -14,18 +14,14 @@ public abstract class BasePresenter<V extends BaseView> extends MvpPresenterImpl
     private CompositeDisposable disposables = new CompositeDisposable(), uiDisposables = new CompositeDisposable();
     protected Consumer<Disposable> defaultDisposableConsumer = disposable -> addDisposable(disposable);
 
-    public void removeDisposable(@NonNull Disposable disposabled) {
-        disposables.remove(disposabled);
+    public void renderDisposable(@NonNull Disposable disposable) {
+        addDisposable(disposable);
+        render(ViewState.Loading.create());
     }
 
     public void addDisposable(@NonNull Disposable... disposable) {
         for (Disposable d : disposable)
             disposables.add(d);
-    }
-
-    public void renderDisposable(@NonNull Disposable disposable) {
-        addDisposable(disposable);
-        render(ViewState.Loading.create());
     }
 
     public void addUiDisposable(@NonNull Disposable disposabled) {

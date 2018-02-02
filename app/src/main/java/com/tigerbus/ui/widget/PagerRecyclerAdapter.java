@@ -15,6 +15,7 @@ public final class PagerRecyclerAdapter extends PagerAdapter {
 
     public PagerRecyclerAdapter(TabLayout tabLayout, ArrayList<PagerRecyclerObj> objects) {
         tabLayout.setTabMode(objects.size() > 2 ? TabLayout.MODE_SCROLLABLE : TabLayout.MODE_FIXED);
+        tabLayout.removeAllTabs();
         for (PagerRecyclerObj object : objects) {
             recyclerViews.add(object.getView());
             tabLayout.addTab(tabLayout.newTab().setText(object.getPagerTitle()));
