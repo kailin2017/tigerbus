@@ -27,15 +27,19 @@ public final class SearchRouteAdapter extends RecyclerView.Adapter<SearchRouteAd
         publishSubject.onNext(busRoute);
     };
 
+    public SearchRouteAdapter(){}
+
+    public SearchRouteAdapter(ArrayList<BusRoute> busRoutes){
+        this.busRoutes = busRoutes;
+    }
+
     public ArrayList<BusRoute> getBusRoutes() {
         return busRoutes;
     }
 
     public void setBusRoutes(ArrayList<BusRoute> busRoutes) {
         this.busRoutes.clear();
-        for(BusRoute busRoute : busRoutes){
-            this.busRoutes.add(busRoute);
-        }
+        this.busRoutes.addAll(busRoutes);
     }
 
     @Override

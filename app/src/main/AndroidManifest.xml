@@ -41,10 +41,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.tigerbus.ui.search.SearchRouteActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:configChanges="orientation|keyboardHidden|screenSize"/>
-        <activity
             android:name="com.tigerbus.ui.route.RouteActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:configChanges="orientation|keyboardHidden|screenSize"/>

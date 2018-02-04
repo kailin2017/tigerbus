@@ -70,9 +70,7 @@ public final class SearchRouteFragment extends BaseFragment<SearchRouteView, Sea
     @Override
     public void onStart() {
         super.onStart();
-        searchRouteAdapter.getPublishSubject()
-                .doOnSubscribe(presenter::addDisposable)
-                .subscribe(this::adapterClickOnNext);
+        searchRouteAdapter.getPublishSubject().doOnSubscribe(presenter::addDisposable).subscribe(this::adapterClickOnNext);
     }
 
     public void adapterClickOnNext(BusRoute busRoute) {

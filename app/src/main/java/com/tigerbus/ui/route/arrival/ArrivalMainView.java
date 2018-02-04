@@ -1,9 +1,6 @@
 package com.tigerbus.ui.route.arrival;
 
-
 import android.view.MotionEvent;
-
-import com.tigerbus.sqlite.data.RouteStop;
 
 import io.reactivex.Observable;
 
@@ -21,11 +18,12 @@ public interface ArrivalMainView extends ArrivalView {
 
     Observable<MotionEvent> bindTouchPager();
 
-    Observable<RouteStop> bindSaveStation();
-
     Observable<Integer> bindTypeList();
 
-    void hiddenSheet();
+    void hideBottomSheet();
+
+    void showBootemSheet();
 
     void showTypeList();
+
 }

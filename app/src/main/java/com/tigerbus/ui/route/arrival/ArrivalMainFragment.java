@@ -17,17 +17,10 @@ import com.tigerbus.base.BaseFragment;
 import com.tigerbus.base.ViewStateRender;
 import com.tigerbus.base.annotation.FragmentView;
 import com.tigerbus.base.annotation.ViewInject;
-import com.tigerbus.data.CityBusInterface;
 
-import com.tigerbus.data.bus.BusEstimateTime;
-import com.tigerbus.data.bus.BusRoute;
-import com.tigerbus.data.bus.BusStopOfRoute;
-import com.tigerbus.data.bus.BusSubRoute;
-import com.tigerbus.service.RemindService;
 import com.tigerbus.sqlite.BriteDB;
 import com.tigerbus.sqlite.data.CommonStopType;
 import com.tigerbus.sqlite.data.RouteStop;
-import com.tigerbus.ui.route.adapter.ArrivalRecyclerAdapter;
 import com.tigerbus.ui.widget.PagerRecyclerAdapter;
 import com.tigerbus.ui.widget.PagerRecyclerObj;
 
@@ -40,11 +33,10 @@ import io.reactivex.subjects.PublishSubject;
 
 @FragmentView(layout = R.layout.route_arrival_fragment)
 public final class ArrivalMainFragment extends BaseFragment<ArrivalMainView, ArrivalMainPresenter>
-        implements ArrivalMainView, ViewStateRender<Bundle> {
+        implements ArrivalMainView, ViewStateRender<ArrayList<PagerRecyclerObj>> {
 
-    private PublishSubject<ArrayList<BusEstimateTime>> publishSubject = PublishSubject.create();
-    private PublishSubject<RouteStop> stopSubject = PublishSubject.create();
     private PublishSubject<Integer> typelistSubject = PublishSubject.create();
+    private PublishSubject<Boolean> bindOnTimeSubject = PublishSubject.create();
     private BottomSheetBehavior bottomSheetBehavior;
 
     @ViewInject(R.id.tablayout)
@@ -72,13 +64,8 @@ public final class ArrivalMainFragment extends BaseFragment<ArrivalMainView, Arr
     }
 
     @Override
-    public void setEstimateSubject(@NonNull PublishSubject<ArrayList<BusEstimateTime>> estimateSubject) {
-        this.publishSubject = estimateSubject;
-    }
-
-    @Override
     public ArrivalMainPresenter createPresenter() {
-        return new ArrivalMainPresenter(BriteDB.getInstance(application));
+        return new ArrivalMainPresenter(BriteDB.getInstance(application), context);
     }
 
     @Override
@@ -117,13 +104,13 @@ public final class ArrivalMainFragment extends BaseFragment<ArrivalMainView, Arr
     }
 
     @Override
-    public Observable<RouteStop> bindSaveStation() {
-        return stopSubject;
+    public Observable<Integer> bindTypeList() {
+        return typelistSubject;
     }
 
     @Override
-    public Observable<Integer> bindTypeList() {
-        return typelistSubject;
+    public Observable<Boolean> bindOnTimeData() {
+        return bindOnTimeSubject;
     }
 
     @Override
@@ -144,16 +131,27 @@ public final class ArrivalMainFragment extends BaseFragment<ArrivalMainView, Arr
 
 
     @Override
-    public void hiddenSheet() {
+    public void hideBottomSheet() {
         if (bottomSheetBehavior.getState() != BottomSheetBehavior.STATE_HIDDEN) {
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         }
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-        hiddenSheet();
+    public void showBootemSheet() {
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        bindOnTimeSubject.onNext(true);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        hideBottomSheet();
     }
 
     public void initView() {
@@ -169,7 +167,7 @@ public final class ArrivalMainFragment extends BaseFragment<ArrivalMainView, Arr
 
             }
         });
-        hiddenSheet();
+        hideBottomSheet();
     }
 
     @Override
@@ -178,25 +176,9 @@ public final class ArrivalMainFragment extends BaseFragment<ArrivalMainView, Arr
     }
 
     @Override
-    public void renderSuccess(Bundle bundle) {
-        ArrayList<PagerRecyclerObj> objects = new ArrayList<>();
-        HashMap<String, BusStopOfRoute> busStopOfRouteMap = (HashMap<String, BusStopOfRoute>) bundle.getSerializable(CityBusInterface.BUS_STOP_OF_ROUTE);
-        BusRoute route = bundle.getParcelable(CityBusInterface.BUS_ROUTE);
-
-        for (BusSubRoute subRoute : route.getSubRoutes()) {
-            BusStopOfRoute busStopOfRoute = busStopOfRouteMap.get(getKey(subRoute));
-            ArrivalRecyclerAdapter arrivalRecyclerAdapter = new ArrivalRecyclerAdapter(route, subRoute, busStopOfRoute, publishSubject);
-            objects.add(new PagerRecyclerObj(getTitle(context, route, subRoute), arrivalRecyclerAdapter, context));
-            presenter.addDisposable(arrivalRecyclerAdapter.getDiaposable());
-            presenter.addDisposable(arrivalRecyclerAdapter.getClickSubject().subscribe(commodStop -> {
-                hiddenSheet();
-                stopSubject.onNext(commodStop);
-                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-            }));
-        }
-
-        publishSubject.onNext(bundle.getParcelableArrayList(CityBusInterface.BUS_ESTIMATE_TIME));
-        initTabPager(viewPager, tabLayout, new PagerRecyclerAdapter(tabLayout, objects));
+    public void renderSuccess(ArrayList<PagerRecyclerObj> pagerRecyclerObjs) {
+        PagerRecyclerAdapter pagerRecyclerAdapter = new PagerRecyclerAdapter(tabLayout, pagerRecyclerObjs);
+        initTabPager(viewPager, tabLayout, pagerRecyclerAdapter);
     }
 
     @Override

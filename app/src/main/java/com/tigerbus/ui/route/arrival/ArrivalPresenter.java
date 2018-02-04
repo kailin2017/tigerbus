@@ -1,21 +1,31 @@
 package com.tigerbus.ui.route.arrival;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
+import com.tigerbus.BuildConfig;
+import com.tigerbus.R;
 import com.tigerbus.base.BasePresenter;
 import com.tigerbus.data.CityBusInterface;
-import com.tigerbus.data.bus.BusEstimateTime;
 import com.tigerbus.data.bus.BusRoute;
 import com.tigerbus.data.bus.BusRouteInterface;
+import com.tigerbus.data.bus.BusShape;
 import com.tigerbus.data.bus.BusStopOfRoute;
+import com.tigerbus.data.bus.BusSubRoute;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 
-public class ArrivalPresenter<V extends ArrivalView> extends BasePresenter<V> implements CityBusInterface{
+public abstract class ArrivalPresenter<V extends ArrivalView> extends BasePresenter<V> implements CityBusInterface{
+
+    protected String cityNameEn, routeUID;
+    protected BusRoute busRoute;
+    protected ArrayList<BusShape> busShapes;
+    protected HashMap<String, BusStopOfRoute> busStopOfRouteMap = new HashMap<>();
 
     @Override
     public void bindIntent() {
@@ -32,21 +42,37 @@ public class ArrivalPresenter<V extends ArrivalView> extends BasePresenter<V> im
 
 
     protected void initData(Bundle defaultBundle) {
-        BusRoute busRoute = defaultBundle.getParcelable(BUS_ROUTE);
+        busRoute = defaultBundle.getParcelable(BUS_ROUTE);
+        cityNameEn = busRoute.getCityName().getEn();
+        routeUID = getRoureUIDQuery(busRoute.getRouteUID());
+
+        busShapes = defaultBundle.getParcelableArrayList(BUS_SHAPE);
         ArrayList<BusStopOfRoute> busStopOfRoutesTemp = defaultBundle.getParcelableArrayList(BUS_STOP_OF_ROUTE);
-        ArrayList<BusEstimateTime> busEstimateTimesTemp = defaultBundle.getParcelableArrayList(BUS_ESTIMATE_TIME);
         ArrayList<BusStopOfRoute> busStopOfRoutes = filterBusRoute(busStopOfRoutesTemp, busRoute);
-        ArrayList<BusEstimateTime> busEstimateTimes = filterBusRoute(busEstimateTimesTemp, busRoute);
 
-        HashMap<String, BusStopOfRoute> busStopOfRouteMap = new HashMap<>();
         for (BusStopOfRoute busStopOfRoute : busStopOfRoutes)
-            busStopOfRouteMap.put(getView().getKey(busStopOfRoute), busStopOfRoute);
+            busStopOfRouteMap.put(getKey(busStopOfRoute), busStopOfRoute);
 
-        Bundle nextBundle = new Bundle();
-        nextBundle.putParcelable(BUS_ROUTE, busRoute);
-        nextBundle.putSerializable(BUS_STOP_OF_ROUTE, busStopOfRouteMap);
-        nextBundle.putParcelableArrayList(BUS_ESTIMATE_TIME, busEstimateTimes);
+        initSuccess();
+    }
 
-        render(ArrivalViewState.Success.create(nextBundle));
+    protected abstract void initSuccess();
+
+    protected Observable<Long> startInterval(boolean b) {
+        return Observable.interval(BuildConfig.firstTime, BuildConfig.updateTime, TimeUnit.SECONDS, threadIO()).doOnSubscribe(this::addDisposable);
+    }
+
+    public <T extends BusRouteInterface> String getKey(@NonNull T t) {
+        StringBuffer stringBuffer = new StringBuffer();
+        stringBuffer.append(t.getSubRouteUID());
+        stringBuffer.append("_");
+        stringBuffer.append(t.getDirection());
+        return stringBuffer.toString();
+    }
+
+    public String getTitle(@NonNull Context context, @NonNull BusRoute route, @NonNull BusSubRoute subRoute) {
+        String routeName = route.getSubRoutes().size() > 2 ? subRoute.getSubRouteName().getZh_tw() + "\n" : "";
+        String direction = subRoute.getDirection().equals("0") ? route.getDestinationStopNameZh() : route.getDepartureStopNameZh();
+        return String.format(context.getString(R.string.route_go1), routeName, direction);
     }
 }

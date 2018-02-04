@@ -23,20 +23,12 @@ import io.reactivex.subjects.PublishSubject;
 
 public final class RoutePresenter extends BasePresenter<RouteView> implements CityBusInterface {
 
-    private PublishSubject<ArrayList<BusEstimateTime>> publishSubject;
-    private PublishSubject<Bundle> busA1Data;
-    private PublishSubject<Bundle> busA2Data;
     private String cityNameEn, routeUID;
-
-    public RoutePresenter(PublishSubject<ArrayList<BusEstimateTime>> publishSubject) {
-        this.publishSubject = publishSubject;
-    }
 
     @Override
     public void bindIntent() {
         Observable<BusRoute> stopOfRouteSubject = getView().bindIntent();
-        addUiDisposable(stopOfRouteSubject.subscribe(this::initData));
-        addUiDisposable(Observable.interval(BuildConfig.updateTime, TimeUnit.SECONDS, Schedulers.io()).subscribe(aLong -> initEstimateTime()));
+        stopOfRouteSubject.doOnSubscribe(this::addUiDisposable).subscribe(this::initData);
     }
 
     private void initData(BusRoute busRoute) {
@@ -44,57 +36,16 @@ public final class RoutePresenter extends BasePresenter<RouteView> implements Ci
         routeUID = getRoureUIDQuery(busRoute.getRouteUID());
         Observable.zip(
                 cityBusService.getBusStopOfRoute(cityNameEn, routeUID),
-                cityBusService.getBusEstimateTime(cityNameEn, routeUID),
-                cityBusService.getShape(cityNameEn,routeUID),
-                (busStopOfRoutes, busEstimateTimes,busShapes) -> {
+                cityBusService.getShape(cityNameEn, routeUID),
+                (busStopOfRoutes, busShapes) -> {
                     Bundle bundle = new Bundle();
                     bundle.putParcelable(BUS_ROUTE, busRoute);
                     bundle.putParcelableArrayList(BUS_STOP_OF_ROUTE, busStopOfRoutes);
-                    bundle.putParcelableArrayList(BUS_ESTIMATE_TIME, busEstimateTimes);
-                    bundle.putParcelableArrayList(BUS_SHAPE,busShapes);
+                    bundle.putParcelableArrayList(BUS_SHAPE, busShapes);
                     return bundle;
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(bundle -> render(RouteViewState.Success.create(bundle)), this::throwable);
     }
-
-    private void initEstimateTime() {
-        rxSwitchThread(getEstimateTime()).subscribe(publishSubject::onNext);
-    }
-
-    private void initA1Data(){
-        Observable.zip(
-                getEstimateTime(),
-                cityBusService.getBusA1Data(cityNameEn, routeUID),
-                (busEstimateTimes, busA1Data) -> {
-                    BusA1DataListAutoValue busA1DataAutoValue =
-                            BusA1DataListAutoValue.create(busA1Data,busEstimateTimes);
-                    return Observable.just(busA1DataAutoValue);
-                }
-        );
-    }
-
-    private void initA2Data(){
-        Observable.zip(
-                getEstimateTime(),
-                cityBusService.getBusA2Data(cityNameEn, routeUID),
-                (busEstimateTimes, busA2Data) -> {
-                    BusA2DataListAutoValue busA2DataAutoValue =
-                            BusA2DataListAutoValue.create(busA2Data,busEstimateTimes);
-                    return busA2DataAutoValue;
-                }
-        )
-        .flatMap(busA2DataListAutoValue -> {
-            ArrayList<BusEstimateTime> busEstimateTimes = busA2DataListAutoValue.busEstimateTimes();
-            ArrayList<BusA2Data> busA2Data = busA2DataListAutoValue.busA2Datas();
-            return Observable.just(busA2Data);
-        });
-    }
-
-    private Observable<ArrayList<BusEstimateTime>> getEstimateTime(){
-        return cityBusService.getBusEstimateTime(cityNameEn,routeUID);
-    }
-
-
 }

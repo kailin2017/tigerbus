@@ -14,6 +14,16 @@ public final class PointType implements Parcelable {
     private double PositionLat;
     private double PositionLon;
 
+    public PointType(double positionLat, double positionLon) {
+        PositionLat = positionLat;
+        PositionLon = positionLon;
+    }
+
+    public PointType(String positionLat, String positionLon) {
+        PositionLat = Double.parseDouble(positionLat);
+        PositionLon = Double.parseDouble(positionLon);
+    }
+
     protected PointType(Parcel in) {
         PositionLat = in.readDouble();
         PositionLon = in.readDouble();

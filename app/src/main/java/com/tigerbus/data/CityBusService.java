@@ -40,7 +40,7 @@ public interface CityBusService {
     Observable<ArrayList<BusA1Data>> getBusA1Data(
             @NonNull @Path("City") String city, @NonNull @Query("$filter") String uid);
 
-    @GET("/MOTC/v2/Bus/BusEstimateTime/City/{City}?$format=JSON")
+    @GET("/MOTC/v2/Bus/RealTimeNearStop/City/{City}?$format=JSON")
     Observable<ArrayList<BusA2Data>> getBusA2Data(
             @NonNull @Path("City") String city, @NonNull @Query("$filter") String uid);
 }

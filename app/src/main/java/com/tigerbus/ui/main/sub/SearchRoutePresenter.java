@@ -40,9 +40,9 @@ public final class SearchRoutePresenter extends BasePresenter<SearchRouteView> {
                     log.append("searchDataSize:" + searchData.size());
                     log.append("\nsearchCount:" + searchResult.size());
                     log.append("\nsearchResult:" + TigerApplication.object2String(searchResult));
-                    render(com.tigerbus.ui.search.SearchRouteViewState.LogInfo.create(log.toString()));
-                    render(com.tigerbus.ui.search.SearchRouteViewState.Success.create(searchResult));
-                    render(com.tigerbus.ui.search.SearchRouteViewState.Finish.create());
+                    render(SearchRouteViewState.LogInfo.create(log.toString()));
+                    render(SearchRouteViewState.Success.create(searchResult));
+                    render(SearchRouteViewState.Finish.create());
                 });
     }
 

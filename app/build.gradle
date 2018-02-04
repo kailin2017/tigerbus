@@ -28,14 +28,14 @@ android {
         sourceCompatibility rootProject.javaVersion
         targetCompatibility rootProject.javaVersion
     }
-//    signingConfigs {
-//        config {
-//            keyAlias 'key0'
-//            keyPassword '963852'
-//            storePassword '963852'
-//            storeFile file('C:/Users/Kailin/Documents/tiger.jks')
-//        }
-//    }
+    signingConfigs {
+        config {
+            keyAlias 'key0'
+            keyPassword '963852'
+            storePassword '963852'
+            storeFile file('C:/Users/Kailin/Documents/tiger.jks')
+        }
+    }
 //    productFlavors {
 //        Taiwan {}
 //        Taipei {}
@@ -48,10 +48,10 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-//            signingConfig signingConfigs.config
+            signingConfig signingConfigs.config
         }
         debug {
-//            signingConfig signingConfigs.config
+            signingConfig signingConfigs.config
         }
     }
     externalNativeBuild {

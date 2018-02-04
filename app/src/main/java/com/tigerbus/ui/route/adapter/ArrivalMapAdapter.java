@@ -5,10 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
-import android.location.Location;
 
-import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.MapFragment;
@@ -17,46 +14,50 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolygonOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.tigerbus.R;
 import com.tigerbus.TigerApplication;
 import com.tigerbus.base.log.TlogType;
-import com.tigerbus.data.bus.BusEstimateTime;
+import com.tigerbus.data.bus.BusShape;
 import com.tigerbus.data.bus.BusStopOfRoute;
 import com.tigerbus.data.detail.PointType;
-import com.tigerbus.data.detail.Stop;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subjects.PublishSubject;
 
 public final class ArrivalMapAdapter implements OnMapReadyCallback {
 
-    private Map<String, BusEstimateTime> busEstimateTimeMap = new HashMap<>();
     private Bitmap markerIcon;
     private BusStopOfRoute busStopOfRoute;
+    private ArrayList<PointType> pointTypes;
     private GoogleMap googleMap;
     private MapFragment mapFragment;
-    private Disposable estimateDisposable, locationDisposable;
 
     public ArrivalMapAdapter(
             @NonNull Context context,
-            @NonNull BusStopOfRoute busStopOfRoute,
-            @NonNull PublishSubject<ArrayList<BusEstimateTime>> publishSubject,
-            @NonNull PublishSubject<Location> locationSubject) {
-        this.markerIcon = drawableToBitmap(context.getDrawable(R.drawable.ic_nav_station));
+            @NonNull BusStopOfRoute busStopOfRoute) {
+        this.markerIcon = drawableToBitmap(context.getDrawable(R.drawable.ic_place));
         this.busStopOfRoute = busStopOfRoute;
         this.initMapFragment();
-        this.estimateDisposable = publishSubject.subscribe(this::updateData);
-        this.locationDisposable = locationSubject.subscribe(this::updateMapCamera);
     }
 
+    public void setBusShapePointType(ArrayList<PointType> pointTypes) {
+        this.pointTypes = pointTypes;
+        initBusShapePointType();
+    }
+
+    private void initBusShapePointType(){
+        if (googleMap == null || pointTypes==null)
+            return;
+        final PolylineOptions  polylineOptions = new PolylineOptions ();
+        Observable.fromIterable(pointTypes).subscribe(
+                pointType -> polylineOptions.add(getLatLng(pointType.getPositionLat(), pointType.getPositionLon())),
+                throwable -> {
+                }, () -> googleMap.addPolyline(polylineOptions));
+    }
 
     private void initMapFragment() {
         PointType stopPosition = busStopOfRoute.getStops().get(0).getStopPosition();
@@ -68,21 +69,8 @@ public final class ArrivalMapAdapter implements OnMapReadyCallback {
         mapFragment.getMapAsync(this);
     }
 
-    private void updateData(ArrayList<BusEstimateTime> busEstimateTimes) {
-        Observable.fromIterable(busEstimateTimes)
-                .subscribeOn(Schedulers.io())
-                .filter(busEstimateTime -> busEstimateTime.getDirection().equalsIgnoreCase(busStopOfRoute.getDirection()))
-                .filter(busEstimateTime -> busEstimateTime.getSubRouteUID() != null ?
-                        busEstimateTime.getSubRouteUID().equalsIgnoreCase(busStopOfRoute.getSubRouteUID()) : true)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        busEstimateTime -> busEstimateTimeMap.put(busEstimateTime.getStopUID(), busEstimateTime),
-                        throwable -> TigerApplication.printLog(TlogType.error, "", throwable.toString()),
-                        this::updateMapMarks);
-    }
-
     private void updateMapMarks() {
-        if (googleMap == null || busEstimateTimeMap.size() == 0)
+        if (googleMap == null)
             return;
         Observable.fromIterable(busStopOfRoute.getStops())
                 .doOnSubscribe(disposable -> googleMap.clear())
@@ -104,16 +92,6 @@ public final class ArrivalMapAdapter implements OnMapReadyCallback {
         return bitmap;
     }
 
-    private void updateMapCamera(Location location) {
-        TigerApplication.printLog(TlogType.error, "location", location.getLatitude() + "," + location.getLongitude());
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(getLatLng(location.getLatitude(), location.getLongitude()));
-        googleMap.moveCamera(cameraUpdate);
-    }
-
-    public Disposable[] getDiaposables() {
-        return new Disposable[]{estimateDisposable, locationDisposable};
-    }
-
     public MapFragment getMapFragment() {
         return mapFragment;
     }
@@ -126,5 +104,6 @@ public final class ArrivalMapAdapter implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
         updateMapMarks();
+        initBusShapePointType();
     }
 }

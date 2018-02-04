@@ -1,69 +1,108 @@
 package com.tigerbus.ui.route.arrival;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.view.MotionEvent;
 
 import com.squareup.sqlbrite3.BriteDatabase;
+import com.tigerbus.BuildConfig;
 import com.tigerbus.TigerApplication;
+import com.tigerbus.data.autovalue.BusA2DataListAutoValue;
+import com.tigerbus.data.bus.BusStopOfRoute;
+import com.tigerbus.data.bus.BusSubRoute;
 import com.tigerbus.sqlite.data.CommonStop;
 import com.tigerbus.sqlite.data.CommonStopType;
 import com.tigerbus.sqlite.data.RemindStop;
 import com.tigerbus.sqlite.data.RouteStop;
 import com.tigerbus.sqlite.data.WeekStatus;
+import com.tigerbus.ui.route.adapter.ArrivalRecyclerAdapter;
+import com.tigerbus.ui.widget.PagerRecyclerObj;
+
+import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
+import io.reactivex.subjects.PublishSubject;
 
 public final class ArrivalMainPresenter extends ArrivalPresenter<ArrivalMainView> {
 
+    private PublishSubject<BusA2DataListAutoValue> publishSubject = PublishSubject.create();
     private RouteStop routeStop;
     private BriteDatabase briteDatabase;
+    private Context context;
 
-    public ArrivalMainPresenter(BriteDatabase briteDatabase) {
+    public ArrivalMainPresenter(BriteDatabase briteDatabase, Context context) {
         this.briteDatabase = briteDatabase;
+        this.context = context;
+    }
+
+    @Override
+    protected void initSuccess() {
+        publishSubject.doOnSubscribe(this::addDisposable);
+        ArrayList<PagerRecyclerObj> pagerRecyclerObjs = new ArrayList<>();
+        for (BusSubRoute subRoute : busRoute.getSubRoutes()) {
+            BusStopOfRoute busStopOfRoute = busStopOfRouteMap.get(getKey(subRoute));
+            ArrivalRecyclerAdapter arrivalRecyclerAdapter = new ArrivalRecyclerAdapter(busRoute, subRoute, busStopOfRoute, publishSubject);
+            pagerRecyclerObjs.add(new PagerRecyclerObj(getTitle(context, busRoute, subRoute), arrivalRecyclerAdapter, context));
+            arrivalRecyclerAdapter.getClickSubject().doOnSubscribe(this::addDisposable).subscribe(routeStop -> {
+                ArrivalMainPresenter.this.routeStop = routeStop;
+                getView().showBootemSheet();
+            });
+        }
+        render(ArrivalViewState.Success.create(pagerRecyclerObjs));
     }
 
     @Override
     public void bindIntent() {
         super.bindIntent();
+        getView().bindOnTimeData().flatMap(this::startInterval)
+                .flatMap(this::loadBusA2Datas).subscribe(this::pushBusA2Datas, this::throwable);
         getView().bindClickRemind().doOnSubscribe(this::addDisposable).subscribe(this::bindClickRemind);
         getView().bindClickStationSave().doOnSubscribe(this::addDisposable).subscribe(this::bindClickStationSave);
         getView().bindClickSataionAllBus().doOnSubscribe(this::addDisposable).subscribe(this::bindClickSataionAllBus);
         getView().bindClickStationLocation().doOnSubscribe(this::addDisposable).subscribe(this::bindClickStationLocation);
         getView().bindClickStationView().doOnSubscribe(this::addDisposable).subscribe(this::bindClickStationView);
         getView().bindTouchPager().doOnSubscribe(this::addDisposable).subscribe(this::bindTouchPager);
-        getView().bindSaveStation().doOnSubscribe(this::addDisposable).subscribe(this::bindSaveStation);
         getView().bindTypeList().doOnSubscribe(this::addDisposable).subscribe(this::bindTypeList);
+    }
+
+    private Observable<BusA2DataListAutoValue> loadBusA2Datas(long l) {
+        return rxSwitchThread(Observable.zip(
+                cityBusService.getBusEstimateTime(cityNameEn, routeUID),
+                cityBusService.getBusA2Data(cityNameEn, routeUID),
+                (busEstimateTimes, busA2Data) -> BusA2DataListAutoValue.create(busA2Data, busEstimateTimes)
+        ).doOnSubscribe(this::addDisposable));
+    }
+
+    private void pushBusA2Datas(BusA2DataListAutoValue busA2DataListAutoValue) {
+        publishSubject.onNext(busA2DataListAutoValue);
     }
 
     private void bindClickRemind(Object o) {
         insertRemindStop();
-        getView().hiddenSheet();
+        getView().hideBottomSheet();
     }
 
     private void bindClickStationSave(Object o) {
         getView().showTypeList();
-        getView().hiddenSheet();
+        getView().hideBottomSheet();
     }
 
     private void bindClickSataionAllBus(Object o) {
-        getView().hiddenSheet();
+        getView().hideBottomSheet();
     }
 
     private void bindClickStationLocation(Object o) {
-        getView().hiddenSheet();
+        getView().hideBottomSheet();
     }
 
     private void bindClickStationView(Object o) {
-        getView().hiddenSheet();
+        getView().hideBottomSheet();
     }
 
     private void bindTouchPager(MotionEvent motionEvent) {
-        getView().hiddenSheet();
-    }
-
-    private void bindSaveStation(RouteStop routeStop) {
-        this.routeStop = routeStop;
+        getView().hideBottomSheet();
     }
 
     private void bindTypeList(int i) {
@@ -74,6 +113,7 @@ public final class ArrivalMainPresenter extends ArrivalPresenter<ArrivalMainView
             insertCommonStop(commonStopType);
         }
     }
+
 
     private void insert(String tableName, ContentValues contentValues) {
         briteDatabase.insert(tableName, SQLiteDatabase.CONFLICT_FAIL, contentValues);
@@ -118,7 +158,4 @@ public final class ArrivalMainPresenter extends ArrivalPresenter<ArrivalMainView
         insert(WeekStatus.TABLE, contentValues);
         return weekStatus.id();
     }
-
-
-
 }

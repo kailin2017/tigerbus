@@ -30,9 +30,6 @@ public final class RouteActivity extends BaseActivity<RouteView, RoutePresenter>
 
     private final static int routeViewId = R.id.routeview;
     private final PublishSubject<BusRoute> bindBusRouteSubject = PublishSubject.create();
-    private final PublishSubject<ArrayList<BusEstimateTime>> estimateSubject = PublishSubject.create();
-    private final PublishSubject<Bundle> busA1Data = PublishSubject.create();
-    private final PublishSubject<Bundle> busA2Data = PublishSubject.create();
     private BusRoute busRoute;
     private Bundle initResut;
 
@@ -64,7 +61,7 @@ public final class RouteActivity extends BaseActivity<RouteView, RoutePresenter>
 
     protected void initView() {
         setSupportActionBar(toolbar);
-        toolbar.setTitle(busRoute.getRouteName().getZh_tw());
+        getSupportActionBar().setTitle(busRoute.getRouteName().getZh_tw());
         toolbar.setSubtitle(busRoute.getDepartureStopNameZh() + "-" + busRoute.getDestinationStopNameZh());
         toolbar.setNavigationIcon(R.drawable.ic_break);
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
@@ -103,13 +100,9 @@ public final class RouteActivity extends BaseActivity<RouteView, RoutePresenter>
     @NonNull
     @Override
     public RoutePresenter createPresenter() {
-        return new RoutePresenter(estimateSubject);
+        return new RoutePresenter();
     }
 
-    @Override
-    public void renderLoading() {
-        showProgress();
-    }
 
     @Override
     public void renderSuccess(Bundle bundle) {
@@ -117,14 +110,8 @@ public final class RouteActivity extends BaseActivity<RouteView, RoutePresenter>
         goArrival();
     }
 
-    @Override
-    public void renderFinish() {
-        dimessProgress();
-    }
-
     private void goArrival() {
         ArrivalMainFragment arrivalFragment = ArrivalMainFragment.newInstance(initResut);
-        arrivalFragment.setEstimateSubject(estimateSubject);
         nextFragment(routeViewId, arrivalFragment);
     }
 
@@ -135,10 +122,6 @@ public final class RouteActivity extends BaseActivity<RouteView, RoutePresenter>
 
     private void goArrivalMap() {
         ArrivalMapFragment arrivalMapFragment = ArrivalMapFragment.newInstance(initResut);
-        arrivalMapFragment.setEstimateSubject(estimateSubject);
         nextFragment(routeViewId, arrivalMapFragment);
     }
-
-
-
 }

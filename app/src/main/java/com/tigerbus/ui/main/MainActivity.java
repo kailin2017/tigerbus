@@ -1,7 +1,6 @@
 package com.tigerbus.ui.main;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
@@ -20,7 +19,6 @@ import com.tigerbus.service.RemindService;
 import com.tigerbus.ui.main.sub.HomeFragment;
 import com.tigerbus.ui.main.sub.RemindFragment;
 import com.tigerbus.ui.main.sub.SearchRouteFragment;
-import com.tigerbus.ui.search.SearchRouteActivity;
 
 import io.reactivex.Observable;
 
@@ -87,7 +85,6 @@ public final class MainActivity extends BaseActivity<MainView, MainPresenter>
     @Override
     public void goSearch() {
         nextFragment(MAINVIEWID, SearchRouteFragment.newInstance());
-        startActivity(SearchRouteActivity.class);
     }
 
     @Override
