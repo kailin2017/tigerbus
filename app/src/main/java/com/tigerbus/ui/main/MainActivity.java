@@ -96,6 +96,8 @@ public final class MainActivity extends BaseActivity<MainView, MainPresenter>
     public void onBackPressed() {
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
+        } else if (getFragmentManager().getBackStackEntryCount() > 0) {
+            getFragmentManager().popBackStack();
         } else {
             renderFinish();
             super.onBackPressed();

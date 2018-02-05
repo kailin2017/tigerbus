@@ -28,9 +28,12 @@
 
     <string name="stop_status_min">%1$d分%2$d秒</string>
     <string name="stop_status_nobus">尚未發車</string>
-    <string name="stop_status_pit">進站中</string>
+    <string name="stop_status_pit">即將抵達</string>
 
     <string name="remind_time">到站前 %d 分提醒</string>
+
+    <string name="route_info_startstation">起站 : %s</string>
+    <string name="route_info_endstation">訖站 : %s</string>
 
     <string name="notification_channel_default">一般提醒</string>
     <string name="notification_channel_remind">到站提醒</string>

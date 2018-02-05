@@ -6,9 +6,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.view.MotionEvent;
 
 import com.squareup.sqlbrite3.BriteDatabase;
-import com.tigerbus.BuildConfig;
 import com.tigerbus.TigerApplication;
 import com.tigerbus.data.autovalue.BusA2DataListAutoValue;
+import com.tigerbus.data.bus.BusA2Data;
+import com.tigerbus.data.bus.BusEstimateTime;
 import com.tigerbus.data.bus.BusStopOfRoute;
 import com.tigerbus.data.bus.BusSubRoute;
 import com.tigerbus.sqlite.data.CommonStop;
@@ -20,9 +21,11 @@ import com.tigerbus.ui.route.adapter.ArrivalRecyclerAdapter;
 import com.tigerbus.ui.widget.PagerRecyclerObj;
 
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.functions.BiFunction;
+import io.reactivex.functions.Function;
 import io.reactivex.subjects.PublishSubject;
 
 public final class ArrivalMainPresenter extends ArrivalPresenter<ArrivalMainView> {
@@ -43,11 +46,12 @@ public final class ArrivalMainPresenter extends ArrivalPresenter<ArrivalMainView
         ArrayList<PagerRecyclerObj> pagerRecyclerObjs = new ArrayList<>();
         for (BusSubRoute subRoute : busRoute.getSubRoutes()) {
             BusStopOfRoute busStopOfRoute = busStopOfRouteMap.get(getKey(subRoute));
+
             ArrivalRecyclerAdapter arrivalRecyclerAdapter = new ArrivalRecyclerAdapter(busRoute, subRoute, busStopOfRoute, publishSubject);
             pagerRecyclerObjs.add(new PagerRecyclerObj(getTitle(context, busRoute, subRoute), arrivalRecyclerAdapter, context));
             arrivalRecyclerAdapter.getClickSubject().doOnSubscribe(this::addDisposable).subscribe(routeStop -> {
                 ArrivalMainPresenter.this.routeStop = routeStop;
-                getView().showBootemSheet();
+                getView().showBottomSheet();
             });
         }
         render(ArrivalViewState.Success.create(pagerRecyclerObjs));
@@ -58,9 +62,10 @@ public final class ArrivalMainPresenter extends ArrivalPresenter<ArrivalMainView
         super.bindIntent();
         getView().bindOnTimeData().flatMap(this::startInterval)
                 .flatMap(this::loadBusA2Datas).subscribe(this::pushBusA2Datas, this::throwable);
+
         getView().bindClickRemind().doOnSubscribe(this::addDisposable).subscribe(this::bindClickRemind);
         getView().bindClickStationSave().doOnSubscribe(this::addDisposable).subscribe(this::bindClickStationSave);
-        getView().bindClickSataionAllBus().doOnSubscribe(this::addDisposable).subscribe(this::bindClickSataionAllBus);
+        getView().bindClickStationAllBus().doOnSubscribe(this::addDisposable).subscribe(this::bindClickSataionAllBus);
         getView().bindClickStationLocation().doOnSubscribe(this::addDisposable).subscribe(this::bindClickStationLocation);
         getView().bindClickStationView().doOnSubscribe(this::addDisposable).subscribe(this::bindClickStationView);
         getView().bindTouchPager().doOnSubscribe(this::addDisposable).subscribe(this::bindTouchPager);

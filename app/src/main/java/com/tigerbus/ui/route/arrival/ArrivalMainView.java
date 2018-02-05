@@ -10,7 +10,7 @@ public interface ArrivalMainView extends ArrivalView {
 
     Observable<Object> bindClickStationSave();
 
-    Observable<Object> bindClickSataionAllBus();
+    Observable<Object> bindClickStationAllBus();
 
     Observable<Object> bindClickStationLocation();
 
@@ -22,7 +22,7 @@ public interface ArrivalMainView extends ArrivalView {
 
     void hideBottomSheet();
 
-    void showBootemSheet();
+    void showBottomSheet();
 
     void showTypeList();
 

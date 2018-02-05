@@ -2,6 +2,7 @@ package com.tigerbus.base;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v13.app.ActivityCompat;
+import android.view.KeyEvent;
 
 import com.tigerbus.TigerApplication;
 
@@ -49,15 +51,6 @@ public abstract class BaseActivity<V extends BaseView, P extends BasePresenter<V
         super.onDestroy();
     }
 
-    @Override
-    public void onBackPressed() {
-        if (getFragmentManager().getBackStackEntryCount() > 0) {
-            getFragmentManager().popBackStack();
-        } else {
-            super.onBackPressed();
-        }
-    }
-
     public void checkPrimission(@NonNull OnPrimissionListener onPrimissionListener) {
         this.onPrimissionListener = onPrimissionListener;
         for (String primission : primissionList) {
@@ -90,8 +83,21 @@ public abstract class BaseActivity<V extends BaseView, P extends BasePresenter<V
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() > 1) {
+            getFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
     protected void nextFragment(@NonNull int viewId, @NonNull Fragment fragment) {
-        runOnUiThread(() -> getFragmentManager().beginTransaction().replace(viewId, fragment).commit());
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_NONE);
+        fragmentTransaction.replace(viewId,fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 
     @Override
@@ -157,14 +163,6 @@ public abstract class BaseActivity<V extends BaseView, P extends BasePresenter<V
         if (listDialog != null)
             if (listDialog.isShowing())
                 listDialog.dismiss();
-    }
-
-    protected void startActivity(@NonNull Class clazz) {
-        startActivity(context, clazz);
-    }
-
-    protected void startActivity(@NonNull Class clazz, @NonNull Bundle bundle) {
-        startActivity(context, clazz, bundle);
     }
 
     protected interface OnPrimissionListener {

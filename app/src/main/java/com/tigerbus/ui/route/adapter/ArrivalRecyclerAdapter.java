@@ -84,6 +84,10 @@ public final class ArrivalRecyclerAdapter
         if (busEstimateTime != null) {
             holder.estimateTime.setText(sec2Min(context, busEstimateTime.getEstimateTime()));
         }
+        BusA2Data busA2Data = busA2DataMap.get(stop.getStopUID());
+        if (busA2Data != null) {
+            holder.estimateTime.setText(busA2Data.getPlateNumb());
+        }
     }
 
     @Override

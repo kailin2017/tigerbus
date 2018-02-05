@@ -17,10 +17,8 @@ import com.tigerbus.base.BaseFragment;
 import com.tigerbus.base.ViewStateRender;
 import com.tigerbus.base.annotation.FragmentView;
 import com.tigerbus.base.annotation.ViewInject;
-
 import com.tigerbus.sqlite.BriteDB;
 import com.tigerbus.sqlite.data.CommonStopType;
-import com.tigerbus.sqlite.data.RouteStop;
 import com.tigerbus.ui.widget.PagerRecyclerAdapter;
 import com.tigerbus.ui.widget.PagerRecyclerObj;
 
@@ -84,7 +82,7 @@ public final class ArrivalMainFragment extends BaseFragment<ArrivalMainView, Arr
     }
 
     @Override
-    public Observable<Object> bindClickSataionAllBus() {
+    public Observable<Object> bindClickStationAllBus() {
         return rxClick(stationAllBusSheetItem);
     }
 
@@ -138,7 +136,7 @@ public final class ArrivalMainFragment extends BaseFragment<ArrivalMainView, Arr
     }
 
     @Override
-    public void showBootemSheet() {
+    public void showBottomSheet() {
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
     }
 
