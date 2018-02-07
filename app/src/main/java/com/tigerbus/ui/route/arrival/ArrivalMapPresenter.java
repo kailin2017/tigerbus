@@ -3,7 +3,6 @@ package com.tigerbus.ui.route.arrival;
 import android.content.Context;
 
 import com.tigerbus.data.bus.BusA1Data;
-import com.tigerbus.data.bus.BusShape;
 import com.tigerbus.data.bus.BusStopOfRoute;
 import com.tigerbus.data.detail.PointType;
 import com.tigerbus.ui.route.adapter.ArrivalMapAdapter;
@@ -16,7 +15,7 @@ import io.reactivex.subjects.PublishSubject;
 
 public final class ArrivalMapPresenter extends ArrivalPresenter<ArrivalMapView> {
 
-    private PublishSubject<ArrayList<BusA1Data>> publishSubject = PublishSubject.create();
+    private PublishSubject<ArrayList<BusA1Data>> busA1DataSubject = PublishSubject.create();
     private ArrayList<ArrivalMapAdapter> arrivalMapAdapters = new ArrayList<>();
     private ArrayList<PointType> pointTypes = new ArrayList<>();
     private Context context;
@@ -31,7 +30,7 @@ public final class ArrivalMapPresenter extends ArrivalPresenter<ArrivalMapView> 
         Observable.fromIterable(busRoute.getSubRoutes())
                 .subscribe(busSubRoute -> {
                     BusStopOfRoute busStopOfRoute = busStopOfRouteMap.get(getKey(busSubRoute));
-                    ArrivalMapAdapter arrivalMapAdapter = new ArrivalMapAdapter(context, busStopOfRoute);
+                    ArrivalMapAdapter arrivalMapAdapter = new ArrivalMapAdapter(context, busSubRoute, busStopOfRoute, busA1DataSubject);
                     mapObjs.add(new MapObj(getTitle(context, busRoute, busSubRoute), arrivalMapAdapter));
                     arrivalMapAdapters.add(arrivalMapAdapter);
                 }, this::throwable, () -> render(ArrivalViewState.Success.create(mapObjs)));
@@ -40,6 +39,7 @@ public final class ArrivalMapPresenter extends ArrivalPresenter<ArrivalMapView> 
     @Override
     public void bindIntent() {
         super.bindIntent();
+        busA1DataSubject.doOnSubscribe(this::addDisposable);
         getView().bindOnTimeData().flatMap(this::loadBusShapeSlipt).subscribe(this::loadBusShapeOnNext);
         getView().bindOnTimeData().flatMap(this::startInterval)
                 .flatMap(this::loadBusA1Datas).subscribe(this::pushBusA1Datas, this::throwable);
@@ -68,7 +68,7 @@ public final class ArrivalMapPresenter extends ArrivalPresenter<ArrivalMapView> 
     }
 
     private void pushBusA1Datas(ArrayList<BusA1Data> busA1Datas) {
-        publishSubject.onNext(busA1Datas);
+        busA1DataSubject.onNext(busA1Datas);
     }
 
 }

@@ -25,17 +25,8 @@ public interface RemindStopInterface {
         String query1 = RemindStop.QUERY1;
         String query2 = String.format(RemindStop.QUERY2, week.getWeek(), BriteApi.BOOLEAN_TRUE);
         return Observable
-                .zip(
-                        briteDatabase.createQuery(RemindStop.QUERY_TABLES, query1).mapToList(RemindStop::mapper),
-                        briteDatabase.createQuery(RemindStop.QUERY_TABLES, query2).mapToList(RemindStop::mapper),
-                        (remindStops1, remindStops2) -> {
-                            ArrayList<RemindStop> remindStops = new ArrayList<>();
-                            remindStops.addAll(remindStops1);
-                            remindStops.addAll(remindStops2);
-                            TigerApplication.printLog(TlogType.wtf, TAG, TigerApplication.object2String(remindStops));
-                            return remindStops;
-                        }
-                )
+                .merge(briteDatabase.createQuery(RemindStop.QUERY_TABLES, query1).mapToList(RemindStop::mapper),
+                        briteDatabase.createQuery(RemindStop.QUERY_TABLES, query2).mapToList(RemindStop::mapper))
                 .subscribe(this::initRemindStopResult, this::initRemindStopError);
     }
 
