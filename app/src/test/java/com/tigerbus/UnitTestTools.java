@@ -23,9 +23,6 @@ public final class UnitTestTools {
     private final static String TAG = UnitTestTools.class.getSimpleName();
     private static Handler handler;
 
-    /**
-     * 非同步替換為同步
-     */
     public static void async2sync() {
         Function<Scheduler, Scheduler> function = s -> Schedulers.trampoline();
         RxAndroidPlugins.reset();

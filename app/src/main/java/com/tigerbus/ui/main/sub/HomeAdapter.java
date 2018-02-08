@@ -58,7 +58,9 @@ public final class HomeAdapter
         holder.itemLayout.setTag(commodStopQueryResult.commonStop());
         holder.routeName.setText(getRouteNameString(commodStopQueryResult.commonStop()));
         holder.stopName.setText(commodStopQueryResult.commonStop().routeStop().stop().getStopName().getZh_tw());
-        holder.estimateTime.setText(sec2Min(context, commodStopQueryResult.busEstimateTime().getEstimateTime()));
+        MinResult minResult = sec2Min(context, commodStopQueryResult.busEstimateTime().getEstimateTime());
+        holder.estimateTime.setText(minResult.string());
+        holder.estimateTime.setBackgroundColor(minResult.color());
     }
 
     private String getRouteNameString(CommonStop commonStop) {

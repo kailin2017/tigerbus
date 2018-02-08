@@ -21,7 +21,7 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 27)
-public final class CityBusServiceTest {
+public final class CityBusServiceTest implements CityBusInterface{
 
     private final static String CITY = "Taipei", ROUTENAME = "235", ROUTEUID = "TPE10283";
     private final CityBusService serviceSuccess = RetrofitModel.createInstance().create(CityBusService.class);
@@ -51,35 +51,35 @@ public final class CityBusServiceTest {
     public void getBusDisplayStopOfRoute() throws Exception {
         UnitTestTools.rxJavaTest(
                 result -> assertTrue(result.get(0).getRouteName().getZh_tw().equals(ROUTENAME)),
-                serviceSuccess.getBusStopOfRoute(CITY, CityBusService.getRoureUIDQuery(ROUTEUID)));
+                serviceSuccess.getBusStopOfRoute(CITY, getRoureUIDQuery(ROUTEUID)));
     }
 
     @Test
     public void getBusN1EstimateTime() throws Exception {
         UnitTestTools.rxJavaTest(
                 result -> assertTrue(result.get(0).getRouteName().getZh_tw().equals(ROUTENAME)),
-                serviceSuccess.getBusEstimateTime(CITY, CityBusService.getRoureUIDQuery(ROUTEUID)));
+                serviceSuccess.getBusEstimateTime(CITY, getRoureUIDQuery(ROUTEUID)));
     }
 
     @Test
     public void getShape() throws Exception {
         UnitTestTools.rxJavaTest(
                 result -> assertTrue(result.get(0).getRouteName().getZh_tw().equals(ROUTENAME)),
-                serviceSuccess.getShape(CITY, CityBusService.getRoureUIDQuery(ROUTEUID)));
+                serviceSuccess.getShape(CITY, getRoureUIDQuery(ROUTEUID)));
     }
 
     @Test
     public void getBusA1Data() throws Exception {
         UnitTestTools.rxJavaTest(
                 result -> assertTrue(result.get(0).getRouteName().getZh_tw().equals(ROUTENAME)),
-                serviceSuccess.getBusA1Data(CITY, CityBusService.getRoureUIDQuery(ROUTEUID)));
+                serviceSuccess.getBusA1Data(CITY, getRoureUIDQuery(ROUTEUID)));
     }
 
     @Test
     public void getBusA2Data() throws Exception {
         UnitTestTools.rxJavaTest(
                 result -> assertTrue(result.get(0).getRouteName().getZh_tw().equals(ROUTENAME)),
-                serviceSuccess.getBusA1Data(CITY, CityBusService.getRoureUIDQuery(ROUTEUID)));
+                serviceSuccess.getBusA1Data(CITY, getRoureUIDQuery(ROUTEUID)));
     }
 
 }

@@ -1,6 +1,7 @@
 package com.tigerbus.ui.route.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -50,12 +51,14 @@ public final class ArrivalRecyclerAdapter
 
     private void initData(BusA2DataListAutoValue busA2DataListAutoValue) {
         // 不可使用rxJava 否則會有notifyDataSetChanged失效問題
+        busEstimateTimeMap.clear();
         for (BusEstimateTime busEstimateTime : busA2DataListAutoValue.busEstimateTimes()) {
             if (busEstimateTime.getDirection().equalsIgnoreCase(busStopOfRoute.getDirection()) &&
                     (busEstimateTime.getSubRouteUID() != null ? busEstimateTime.getSubRouteUID().equalsIgnoreCase(busStopOfRoute.getSubRouteUID()) : true)) {
                 busEstimateTimeMap.put(busEstimateTime.getStopUID(), busEstimateTime);
             }
         }
+        busA2DataMap.clear();
         for (BusA2Data busA2Data : busA2DataListAutoValue.busA2Datas()) {
             if (busA2Data.getDirection().equalsIgnoreCase(busStopOfRoute.getDirection()) &&
                     (busA2Data.getSubRouteUID() != null ? busA2Data.getSubRouteUID().equalsIgnoreCase(busStopOfRoute.getSubRouteUID()) : true)) {
@@ -82,11 +85,14 @@ public final class ArrivalRecyclerAdapter
         holder.stopName.setText(stop.getStopName().getZh_tw());
         BusEstimateTime busEstimateTime = busEstimateTimeMap.get(stop.getStopUID());
         if (busEstimateTime != null) {
-            holder.estimateTime.setText(sec2Min(context, busEstimateTime.getEstimateTime()));
+            MinResult minResult = sec2Min(context, busEstimateTime.getEstimateTime());
+            holder.estimateTime.setText(minResult.string());
+            holder.estimateTime.setBackgroundColor(minResult.color());
         }
         BusA2Data busA2Data = busA2DataMap.get(stop.getStopUID());
         if (busA2Data != null) {
             holder.estimateTime.setText(busA2Data.getPlateNumb());
+            holder.estimateTime.setBackgroundColor(0xFFFF4081);
         }
     }
 

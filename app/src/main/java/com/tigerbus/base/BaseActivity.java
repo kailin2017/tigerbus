@@ -88,7 +88,7 @@ public abstract class BaseActivity<V extends BaseView, P extends BasePresenter<V
         if (getFragmentManager().getBackStackEntryCount() > 1) {
             getFragmentManager().popBackStack();
         } else {
-            super.onBackPressed();
+            finish();
         }
     }
 

@@ -26,6 +26,7 @@
             android:layout_height="wrap_content"
             android:text="尚未發車"
             android:textSize="@dimen/text20sp"
+            android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
