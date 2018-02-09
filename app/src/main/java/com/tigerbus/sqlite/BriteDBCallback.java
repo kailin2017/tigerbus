@@ -5,6 +5,7 @@ import android.arch.persistence.db.SupportSQLiteOpenHelper;
 
 import com.tigerbus.sqlite.data.CommonStop;
 import com.tigerbus.sqlite.data.CommonStopType;
+import com.tigerbus.sqlite.data.LocalBusData;
 import com.tigerbus.sqlite.data.RemindStop;
 import com.tigerbus.sqlite.data.RouteStop;
 import com.tigerbus.sqlite.data.WeekStatus;
@@ -58,6 +59,12 @@ final class BriteDBCallback extends SupportSQLiteOpenHelper.Callback {
             + RemindStop.ROUTESTOP + TEXT_NOT_NULL + COMMA
             + RemindStop.RUNWEEK + TEXT_NOT_NULL + ")";
 
+    private static final String CREATE_LOCAL_BUS_DATA_TABLE = CREATE_TABLE + LocalBusData.TABLE + "("
+            + LocalBusData.ID + INTEGER_NOT_NULL + PRIMARY_KEY + AUTOINCREMENT + COMMA
+            + LocalBusData.CITYNAME + TEXT_NOT_NULL + COMMA
+            + LocalBusData.VERSIONID + INTEGER_NOT_NULL + COMMA
+            + LocalBusData.BUSROURES + TEXT_NOT_NULL + ")";
+
     BriteDBCallback() {
         super(VERSION);
     }
@@ -69,6 +76,7 @@ final class BriteDBCallback extends SupportSQLiteOpenHelper.Callback {
         db.execSQL(CREATE_ROUTE_STOP_TABLE);
         db.execSQL(CREATE_WEEK_STATUS_TABLE);
         db.execSQL(CREATE_REMIND_STOP_TABLE);
+        db.execSQL(CREATE_LOCAL_BUS_DATA_TABLE);
         db.insert(CommonStopType.TABLE, CONFLICT_FAIL,
                 new CommonStopType.SqlBuilder().type("全部").build());
         db.insert(CommonStopType.TABLE, CONFLICT_FAIL,

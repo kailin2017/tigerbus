@@ -6,6 +6,7 @@ import com.tigerbus.TigerApplication;
 
 public interface BriteApi {
     String SELECT_FROM = "SELECT * FROM ";
+    String SELECT_FROM_S = "SELECT * FROM %s";
     String INNER_JOIN = " INNER JOIN ";
     String AND = " AND ";
     String OR = " OR ";
