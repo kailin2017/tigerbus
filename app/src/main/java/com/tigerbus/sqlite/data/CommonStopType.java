@@ -13,7 +13,6 @@ public abstract class CommonStopType implements Comparable<CommonStopType>, Parc
     public static final String TABLE = "common_type";
     public static final String ID = TABLE + "_id";
     public static final String TYPENAME = "typename";
-    public static final String QUERY = BriteApi.SELECT_FROM + TABLE;
 
     public static final CommonStopType mapper(Cursor cursor) {
         int id = BriteApi.getInt(cursor, ID);
@@ -23,6 +22,10 @@ public abstract class CommonStopType implements Comparable<CommonStopType>, Parc
 
     public static final CommonStopType create(@NonNull int id, @NonNull String type) {
         return new AutoValue_CommonStopType(id, type);
+    }
+
+    public static final String getQueryString() {
+        return String.format(BriteApi.SELECT_FROM_S, TABLE);
     }
 
     public abstract int id();

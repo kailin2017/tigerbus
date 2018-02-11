@@ -1,5 +1,6 @@
 package com.tigerbus.ui.route.arrival;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -19,6 +20,8 @@ import com.tigerbus.base.annotation.FragmentView;
 import com.tigerbus.base.annotation.ViewInject;
 import com.tigerbus.sqlite.BriteDB;
 import com.tigerbus.sqlite.data.CommonStopType;
+import com.tigerbus.sqlite.data.RouteStop;
+import com.tigerbus.ui.route.RouteInterface;
 import com.tigerbus.ui.widget.PagerRecyclerAdapter;
 import com.tigerbus.ui.widget.PagerRecyclerObj;
 
@@ -36,6 +39,7 @@ public final class ArrivalMainFragment extends BaseFragment<ArrivalMainView, Arr
     private PublishSubject<Integer> typelistSubject = PublishSubject.create();
     private PublishSubject<Boolean> bindOnTimeSubject = PublishSubject.create();
     private BottomSheetBehavior bottomSheetBehavior;
+    private RouteInterface routeInterface;
 
     @ViewInject(R.id.tablayout)
     private TabLayout tabLayout;
@@ -122,6 +126,11 @@ public final class ArrivalMainFragment extends BaseFragment<ArrivalMainView, Arr
         showListAlert(item.toArray(new String[]{}), this::typeListOnSelection);
     }
 
+    @Override
+    public void goArrivalMap(RouteStop routeStop) {
+        routeInterface.goArrivalMap(routeStop);
+    }
+
     private void typeListOnSelection(DialogInterface dialogInterface, int i) {
         typelistSubject.onNext(i + 1);
         dialogInterface.dismiss();
@@ -138,6 +147,12 @@ public final class ArrivalMainFragment extends BaseFragment<ArrivalMainView, Arr
     @Override
     public void showBottomSheet() {
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        routeInterface = (RouteInterface) context;
     }
 
     @Override

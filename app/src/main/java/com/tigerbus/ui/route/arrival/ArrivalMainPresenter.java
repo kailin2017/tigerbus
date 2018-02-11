@@ -100,6 +100,7 @@ public final class ArrivalMainPresenter extends ArrivalPresenter<ArrivalMainView
 
     private void bindClickStationLocation(Object o) {
         getView().hideBottomSheet();
+
     }
 
     private void bindClickStationView(Object o) {

@@ -18,7 +18,7 @@ public final class SearchRoutePresenter extends BasePresenter<SearchRouteView> {
 
     @Override
     public void bindIntent() {
-        Observable<String> stringObservable = getView().bindSearch();
+        Observable<String> stringObservable = getView().bindInit().flatMap(b-> getView().bindSearch());
         stringObservable
                 .doOnSubscribe(defaultDisposableConsumer)
                 .flatMap(this::flatMap1)

@@ -30,7 +30,7 @@ public final class ArrivalMapPresenter extends ArrivalPresenter<ArrivalMapView> 
         Observable.fromIterable(busRoute.getSubRoutes())
                 .subscribe(busSubRoute -> {
                     BusStopOfRoute busStopOfRoute = busStopOfRouteMap.get(getKey(busSubRoute));
-                    ArrivalMapAdapter arrivalMapAdapter = new ArrivalMapAdapter(context, busSubRoute, busStopOfRoute, busA1DataSubject);
+                    ArrivalMapAdapter arrivalMapAdapter = new ArrivalMapAdapter(routeStop,context, busSubRoute, busStopOfRoute, busA1DataSubject);
                     mapObjs.add(new MapObj(getTitle(context, busRoute, busSubRoute), arrivalMapAdapter));
                     arrivalMapAdapters.add(arrivalMapAdapter);
                 }, this::throwable, () -> render(ArrivalViewState.Success.create(mapObjs)));

@@ -2,8 +2,6 @@ package com.tigerbus.connection;
 
 import android.webkit.CookieManager;
 
-import com.tigerbus.TigerApplication;
-
 import java.io.IOException;
 
 import okhttp3.Interceptor;

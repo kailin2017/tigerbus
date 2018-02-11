@@ -18,8 +18,6 @@ import java.util.ArrayList;
 import java.util.WeakHashMap;
 
 import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
 public final class MainPresenter extends BasePresenter<MainView> implements CityBusInterface, CityConfigInterface {
 
@@ -36,7 +34,6 @@ public final class MainPresenter extends BasePresenter<MainView> implements City
         observable
                 .doOnSubscribe(this::renderDisposable)
                 .observeOn(threadMain())
-                .filter(this::filter1)
                 .flatMap(this::faltMap1)
                 .flatMap(this::faltMap2)
                 .flatMap(this::faltMap3)
@@ -46,24 +43,20 @@ public final class MainPresenter extends BasePresenter<MainView> implements City
                 .subscribe(this::onNext, this::throwable, this::onComplete);
     }
 
-    private boolean filter1(boolean b){
-        return b;
-    }
-
-    private boolean filter2(City city){
+    private boolean filter2(City city) {
         return !city.getZh_tw().isEmpty();
     }
 
-    private Observable<ArrayList<City>> faltMap1(boolean b){
+    private Observable<ArrayList<City>> faltMap1(boolean b) {
         // 取得城市列表
         return defaultService.getCitys().subscribeOn(threadIO());
     }
 
-    private Observable<City> faltMap2 (ArrayList<City> citys){
+    private Observable<City> faltMap2(ArrayList<City> citys) {
         return Observable.fromIterable(citys).subscribeOn(threadIO());
     }
 
-    private Observable<Bundle> faltMap3(City city){
+    private Observable<Bundle> faltMap3(City city) {
         // 取得版本資訊並與城市資訊封裝
         Observable<Bundle> busVersionObserable = Observable.zip(
                 cityBusService.getBusVersion(city.getEn()), Observable.just(city),
@@ -76,7 +69,7 @@ public final class MainPresenter extends BasePresenter<MainView> implements City
         return busVersionObserable.subscribeOn(threadIO());
     }
 
-    private Observable<City> faltMap4(Bundle bundle){
+    private Observable<City> faltMap4(Bundle bundle) {
         BusVersion busVersion = bundle.getParcelable(KEY_BUS_VERSION);
         City city = bundle.getParcelable(KEY_CITY);
         String keyVersion = KEY_BUS_VERSION + city.getEn();
@@ -92,7 +85,7 @@ public final class MainPresenter extends BasePresenter<MainView> implements City
         return Observable.just(city).subscribeOn(threadIO());
     }
 
-    private Observable<Bundle> faltMap5(City city){
+    private Observable<Bundle> faltMap5(City city) {
         // 取得城市公車路線資料,並與城市資訊封裝
         Observable<Bundle> busRoutesObservable = Observable.zip(
                 cityBusService.getBusRoute(city.getEn()), Observable.just(city),
@@ -105,7 +98,7 @@ public final class MainPresenter extends BasePresenter<MainView> implements City
         return busRoutesObservable.subscribeOn(threadIO());
     }
 
-    private void onNext(Bundle bundle){
+    private void onNext(Bundle bundle) {
         ArrayList<BusRoute> busVersion = bundle.getParcelableArrayList(KEY_BUS_ROUTE);
         City city = bundle.getParcelable(KEY_CITY);
         String keyRoute = KEY_BUS_ROUTE + city.getEn();
@@ -116,7 +109,7 @@ public final class MainPresenter extends BasePresenter<MainView> implements City
         weakHashMap.put(city.getEn(), busVersion);
     }
 
-    private void onComplete(){
+    private void onComplete() {
         ArrayList<BusRoute> busRoutes = new ArrayList<>();
         for (ArrayList<BusRoute> bus : weakHashMap.values())
             busRoutes.addAll(bus);

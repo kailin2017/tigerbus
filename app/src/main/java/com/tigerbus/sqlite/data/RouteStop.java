@@ -15,6 +15,7 @@ import com.tigerbus.sqlite.BriteApi;
 @AutoValue
 public abstract class RouteStop implements Parcelable {
 
+    public static final String TAG = RouteStop.class.getSimpleName();
     public static final String TABLE = "route_stop";
     public static final String ID = TABLE + "_id";
     public static final String STOP = "stop";

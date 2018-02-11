@@ -3,7 +3,6 @@ package com.tigerbus.ui.route;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.view.GravityCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 
@@ -13,21 +12,18 @@ import com.tigerbus.base.ViewStateRender;
 import com.tigerbus.base.annotation.ActivityView;
 import com.tigerbus.base.annotation.ViewInject;
 import com.tigerbus.data.CityBusInterface;
-import com.tigerbus.data.CityBusService;
-import com.tigerbus.data.bus.BusEstimateTime;
 import com.tigerbus.data.bus.BusRoute;
+import com.tigerbus.sqlite.data.RouteStop;
 import com.tigerbus.ui.route.arrival.ArrivalInfoFragment;
 import com.tigerbus.ui.route.arrival.ArrivalMainFragment;
 import com.tigerbus.ui.route.arrival.ArrivalMapFragment;
-
-import java.util.ArrayList;
 
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
 
 @ActivityView(layout = R.layout.route_activity)
 public final class RouteActivity extends BaseActivity<RouteView, RoutePresenter>
-        implements RouteView<ViewStateRender>, ViewStateRender<Bundle> {
+        implements RouteView<ViewStateRender>, ViewStateRender<Bundle>, RouteInterface {
 
     private final static int routeViewId = R.id.routeview;
     private final PublishSubject<BusRoute> bindBusRouteSubject = PublishSubject.create();
@@ -122,7 +118,21 @@ public final class RouteActivity extends BaseActivity<RouteView, RoutePresenter>
     }
 
     private void goArrivalMap() {
-        ArrivalMapFragment arrivalMapFragment = ArrivalMapFragment.newInstance(initResut);
+        goArrivalMap(initResut);
+    }
+
+    private void goArrivalMap(Bundle bundle) {
+        ArrivalMapFragment arrivalMapFragment = ArrivalMapFragment.newInstance(bundle);
         nextFragment(routeViewId, arrivalMapFragment);
     }
+
+    @Override
+    public void goArrivalMap(RouteStop routeStop) {
+        Bundle bundle = new Bundle();
+        bundle.putAll(initResut);
+        bundle.putParcelable(RouteStop.TAG, routeStop);
+        goArrivalMap(bundle);
+    }
+
+
 }

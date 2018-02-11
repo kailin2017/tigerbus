@@ -16,6 +16,9 @@ import com.tigerbus.base.ViewStateRender;
 import com.tigerbus.base.annotation.ActivityView;
 import com.tigerbus.base.annotation.ViewInject;
 import com.tigerbus.service.RemindService;
+import com.tigerbus.ui.main.memento.CareTaker;
+import com.tigerbus.ui.main.memento.Memento;
+import com.tigerbus.ui.main.memento.Originator;
 import com.tigerbus.ui.main.sub.HomeFragment;
 import com.tigerbus.ui.main.sub.RemindFragment;
 import com.tigerbus.ui.main.sub.SearchRouteFragment;
@@ -28,14 +31,15 @@ public final class MainActivity extends BaseActivity<MainView, MainPresenter>
 
     private final static String TAG = MainActivity.class.getSimpleName();
     private final static int MAINVIEWID = R.id.mainview;
+    private final CareTaker careTaker = new CareTaker();
     @ViewInject(R.id.toolbar)
     private Toolbar toolbar;
     @ViewInject(R.id.drawer_layout)
     private DrawerLayout drawer;
     @ViewInject(R.id.drawer_nav_view)
-    private NavigationView navigationView;
+    private NavigationView leftNavView;
     @ViewInject(R.id.bottom_nav_view)
-    private BottomNavigationView bottomNavigationView;
+    private BottomNavigationView bottomNavView;
 
     @NonNull
     @Override
@@ -57,10 +61,10 @@ public final class MainActivity extends BaseActivity<MainView, MainPresenter>
         toggle.syncState();
         drawer.addDrawerListener(toggle);
 
-        navigationView.setNavigationItemSelectedListener(this::onNavigationItemSelected);
-        bottomNavigationView.setOnNavigationItemSelectedListener(this::onNavigationItemSelected);
-
+        leftNavView.setNavigationItemSelectedListener(this::onLeftNavSelection);
+        bottomNavView.setOnNavigationItemSelectedListener(this::onBottomNavSelection);
         goHome();
+        careTaker.add(new Originator(R.id.home).save());
     }
 
     private void initService() {
@@ -96,15 +100,16 @@ public final class MainActivity extends BaseActivity<MainView, MainPresenter>
     public void onBackPressed() {
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else if (getFragmentManager().getBackStackEntryCount() > 0) {
-            getFragmentManager().popBackStack();
         } else {
             renderFinish();
+            Memento backMemento = careTaker.popLast();
+            if (backMemento != null)
+                bottomNavView.setSelectedItemId(backMemento.getItemId());
             super.onBackPressed();
         }
     }
 
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onLeftNavSelection(MenuItem item) {
         drawer.closeDrawer(GravityCompat.START);
         switch (item.getItemId()) {
             case R.id.nav_camera:
@@ -119,6 +124,14 @@ public final class MainActivity extends BaseActivity<MainView, MainPresenter>
                 break;
             case R.id.nav_send:
                 break;
+        }
+        return true;
+    }
+
+    public boolean onBottomNavSelection(MenuItem item) {
+        int itemId = item.getItemId();
+        careTaker.add(new Originator(itemId).save());
+        switch (itemId) {
             case R.id.home:
                 goHome();
                 break;

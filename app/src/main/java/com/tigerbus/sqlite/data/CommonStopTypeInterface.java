@@ -14,7 +14,7 @@ public interface CommonStopTypeInterface {
 
     default Disposable initCommodStopTypes(BriteDatabase briteDatabase) {
         return briteDatabase
-                .createQuery(CommonStopType.TABLE, CommonStopType.QUERY)
+                .createQuery(CommonStopType.TABLE, CommonStopType.getQueryString())
                 .mapToList(CommonStopType::mapper)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

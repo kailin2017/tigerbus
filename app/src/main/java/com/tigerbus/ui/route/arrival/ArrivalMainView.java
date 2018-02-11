@@ -2,6 +2,8 @@ package com.tigerbus.ui.route.arrival;
 
 import android.view.MotionEvent;
 
+import com.tigerbus.sqlite.data.RouteStop;
+
 import io.reactivex.Observable;
 
 public interface ArrivalMainView extends ArrivalView {
@@ -25,5 +27,7 @@ public interface ArrivalMainView extends ArrivalView {
     void showBottomSheet();
 
     void showTypeList();
+
+    void goArrivalMap(RouteStop routeStop);
 
 }

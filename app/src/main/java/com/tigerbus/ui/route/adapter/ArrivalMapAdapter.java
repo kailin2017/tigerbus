@@ -24,6 +24,7 @@ import com.tigerbus.data.bus.BusShape;
 import com.tigerbus.data.bus.BusStopOfRoute;
 import com.tigerbus.data.bus.BusSubRoute;
 import com.tigerbus.data.detail.PointType;
+import com.tigerbus.sqlite.data.RouteStop;
 
 import java.util.ArrayList;
 
@@ -39,6 +40,7 @@ public final class ArrivalMapAdapter implements OnMapReadyCallback {
     private static final String TAG = ArrivalMapAdapter.class.getSimpleName();
     private Bitmap stationIcon;
     private Bitmap busIcon;
+    private int lineColor;
     private BusSubRoute busSubRoute;
     private BusStopOfRoute busStopOfRoute;
     private ArrayList<PointType> pointTypes = new ArrayList<>();
@@ -46,15 +48,17 @@ public final class ArrivalMapAdapter implements OnMapReadyCallback {
     private MapFragment mapFragment;
 
     public ArrivalMapAdapter(
+            RouteStop routeStop,
             @NonNull Context context,
             @NonNull BusSubRoute busSubRoute,
             @NonNull BusStopOfRoute busStopOfRoute,
             @NonNull PublishSubject<ArrayList<BusA1Data>> busA1DataSubject) {
+        this.lineColor = context.getColor(R.color.colorAccent);
         this.stationIcon = drawableToBitmap(context.getDrawable(R.drawable.ic_place));
         this.busIcon = drawableToBitmap(context.getDrawable(R.drawable.ic_bus));
         this.busSubRoute = busSubRoute;
         this.busStopOfRoute = busStopOfRoute;
-        this.initMapFragment();
+        this.initMapFragment(routeStop);
         busA1DataSubject.filter(busA1Data -> googleMap != null)
                 .subscribe(busA1Data -> {
                     googleMap.clear();
@@ -64,8 +68,9 @@ public final class ArrivalMapAdapter implements OnMapReadyCallback {
                 });
     }
 
-    private void initMapFragment() {
-        PointType stopPosition = busStopOfRoute.getStops().get(0).getStopPosition();
+    private void initMapFragment(RouteStop routeStop) {
+        PointType stopPosition = routeStop == null ?
+                busStopOfRoute.getStops().get(0).getStopPosition() : routeStop.stop().getStopPosition();
         CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(getLatLng(stopPosition.getPositionLat(), stopPosition.getPositionLon())).zoom(15).build();
         GoogleMapOptions googleMapOptions = new GoogleMapOptions();
@@ -81,6 +86,7 @@ public final class ArrivalMapAdapter implements OnMapReadyCallback {
 
     private void initBusShape() {
         final PolylineOptions polylineOptions = new PolylineOptions();
+        polylineOptions.color(lineColor);
         Observable.fromIterable(pointTypes)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

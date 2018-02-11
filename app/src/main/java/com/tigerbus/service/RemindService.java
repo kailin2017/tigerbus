@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.PowerManager;
 
 import com.squareup.sqlbrite3.BriteDatabase;
 import com.tigerbus.BuildConfig;
@@ -29,10 +30,11 @@ import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
-public final class RemindService extends Service implements CityBusInterface,RemindStopInterface {
+public final class RemindService extends Service implements CityBusInterface, RemindStopInterface {
 
     private final static String TAG = RemindService.class.getSimpleName();
     private final RemindBinder remindBinder = new RemindBinder();
+    private PowerManager.WakeLock wakeLock;
     private SoftReference<List<RemindStop>> remindsReference;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private BriteDatabase briteDatabase;
@@ -45,6 +47,10 @@ public final class RemindService extends Service implements CityBusInterface,Rem
     @Override
     public void onCreate() {
         super.onCreate();
+        PowerManager powerManager = (PowerManager) this.getSystemService(Context.POWER_SERVICE);
+        wakeLock = powerManager.newWakeLock(
+                PowerManager.PARTIAL_WAKE_LOCK | PowerManager.ON_AFTER_RELEASE, "");
+        wakeLock.acquire();
         briteDatabase = BriteDB.getInstance(getApplication());
         compositeDisposable.add(initRemindStopRun(briteDatabase));
         initBind();
@@ -53,6 +59,7 @@ public final class RemindService extends Service implements CityBusInterface,Rem
     @Override
     public void onDestroy() {
         super.onDestroy();
+        wakeLock.release();
         compositeDisposable.dispose();
     }
 

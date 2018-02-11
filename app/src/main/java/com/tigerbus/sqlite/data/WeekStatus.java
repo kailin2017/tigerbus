@@ -21,7 +21,6 @@ public abstract class WeekStatus implements Parcelable, BriteApi {
     public static final String THU = "thu";
     public static final String FRI = "fri";
     public static final String SAT = "sat";
-    public static final String QUERY = BriteApi.SELECT_FROM + TABLE;
 
     public static final WeekStatus mapper(Cursor cursor) {
         String id = BriteApi.getString(cursor, ID);
@@ -43,6 +42,10 @@ public abstract class WeekStatus implements Parcelable, BriteApi {
             @NonNull String id, @NonNull boolean sun, @NonNull boolean mon, @NonNull boolean tue,
             @NonNull boolean wed, @NonNull boolean thu, @NonNull boolean fri, @NonNull boolean sat) {
         return new AutoValue_WeekStatus(id, sun, mon, tue, wed, thu, fri, sat);
+    }
+
+    public static final String getQueryString() {
+        return String.format(BriteApi.SELECT_FROM_S, TABLE);
     }
 
     public abstract String id();

@@ -65,19 +65,10 @@ public abstract class MvpFragment<V extends MvpView, P extends MvpPresenter<V>>
         return (V) this;
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        onAttachs(activity);
-    }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        onAttachs(context);
-    }
-
-    public void onAttachs(Context context) {
         this.context = context;
         fragmentView = getClass().getAnnotation(FragmentView.class);
         if (fragmentView != null) {

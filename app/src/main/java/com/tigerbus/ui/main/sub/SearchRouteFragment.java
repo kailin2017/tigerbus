@@ -26,6 +26,7 @@ import io.reactivex.subjects.PublishSubject;
 public final class SearchRouteFragment extends BaseFragment<SearchRouteView, SearchRoutePresenter>
         implements SearchRouteView<ViewStateRender>, ViewStateRender<ArrayList<BusRoute>> {
 
+    private PublishSubject<Boolean> bindInitSubject = PublishSubject.create();
     private PublishSubject<String> searchSubject = PublishSubject.create();
     private SearchRouteAdapter searchRouteAdapter = new SearchRouteAdapter();
 
@@ -50,6 +51,7 @@ public final class SearchRouteFragment extends BaseFragment<SearchRouteView, Sea
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(searchRouteAdapter);
+        searchView.onActionViewExpanded();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -70,6 +72,7 @@ public final class SearchRouteFragment extends BaseFragment<SearchRouteView, Sea
     @Override
     public void onStart() {
         super.onStart();
+        bindInitSubject.onNext(true);
         searchRouteAdapter.getPublishSubject().doOnSubscribe(presenter::addDisposable).subscribe(this::adapterClickOnNext);
     }
 
@@ -77,6 +80,11 @@ public final class SearchRouteFragment extends BaseFragment<SearchRouteView, Sea
         Bundle bundle = new Bundle();
         bundle.putParcelable(CityBusInterface.BUS_ROUTE, busRoute);
         startActivity(getActivity(), RouteActivity.class, bundle);
+    }
+
+    @Override
+    public Observable<Boolean> bindInit() {
+        return bindInitSubject;
     }
 
     @Override

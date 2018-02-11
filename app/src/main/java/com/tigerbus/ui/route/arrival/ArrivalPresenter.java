@@ -13,6 +13,7 @@ import com.tigerbus.data.bus.BusRouteInterface;
 import com.tigerbus.data.bus.BusShape;
 import com.tigerbus.data.bus.BusStopOfRoute;
 import com.tigerbus.data.bus.BusSubRoute;
+import com.tigerbus.sqlite.data.RouteStop;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,6 +25,7 @@ public abstract class ArrivalPresenter<V extends ArrivalView> extends BasePresen
 
     protected String cityNameEn, routeUID;
     protected BusRoute busRoute;
+    protected RouteStop routeStop;
     protected ArrayList<BusShape> busShapes;
     protected HashMap<String, BusStopOfRoute> busStopOfRouteMap = new HashMap<>();
 
@@ -46,6 +48,7 @@ public abstract class ArrivalPresenter<V extends ArrivalView> extends BasePresen
         cityNameEn = busRoute.getCityName().getEn();
         routeUID = getRoureUIDQuery(busRoute.getRouteUID());
 
+        routeStop = defaultBundle.getParcelable(RouteStop.TAG);
         busShapes = defaultBundle.getParcelableArrayList(BUS_SHAPE);
         ArrayList<BusStopOfRoute> busStopOfRoutesTemp = defaultBundle.getParcelableArrayList(BUS_STOP_OF_ROUTE);
         ArrayList<BusStopOfRoute> busStopOfRoutes = filterBusRoute(busStopOfRoutesTemp, busRoute);
