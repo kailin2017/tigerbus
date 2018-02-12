@@ -64,7 +64,7 @@ final class BriteDBCallback extends SupportSQLiteOpenHelper.Callback {
 
     @Override
     public void onCreate(SupportSQLiteDatabase db) {
-        db.execSQL(CREATE_COMMOD_STOP_TYPE_TABLE);
+        db.execSQL(getCreateCommodStopTypeTable());
         db.execSQL(CREATE_COMMOD_STOPS_TABLE);
         db.execSQL(CREATE_ROUTE_STOP_TABLE);
         db.execSQL(CREATE_WEEK_STATUS_TABLE);
@@ -80,6 +80,28 @@ final class BriteDBCallback extends SupportSQLiteOpenHelper.Callback {
         db.insert(CommonStopType.TABLE, CONFLICT_FAIL,
                 new CommonStopType.SqlBuilder().type("七桃").build());
     }
+
+    private String getCreateTableString() {
+        return "CREATE TABLE %s ( %s )";
+    }
+
+    private String getCreateCommodStopTypeTable() {
+        StringBuffer stringBuffer = new StringBuffer();
+        stringBuffer.append(CommonStop.ID);
+        stringBuffer.append(TEXT_NOT_NULL);
+        stringBuffer.append(PRIMARY_KEY);
+        stringBuffer.append(COMMA);
+
+        stringBuffer.append(CommonStop.ROUTESTOP);
+        stringBuffer.append(TEXT_NOT_NULL);
+        stringBuffer.append(COMMA);
+
+        stringBuffer.append(CommonStop.TYPE);
+        stringBuffer.append(TEXT_NOT_NULL);
+
+        return String.format(getCreateTableString(), CommonStop.TABLE, stringBuffer.toString());
+    }
+
 
     @Override
     public void onUpgrade(SupportSQLiteDatabase db, int oldVersion, int newVersion) {

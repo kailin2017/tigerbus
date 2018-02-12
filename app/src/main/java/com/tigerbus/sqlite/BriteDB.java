@@ -13,19 +13,21 @@ public final class BriteDB {
 
     private static BriteDatabase briteDatabase;
 
-    public synchronized static BriteDatabase getInstance(Application application) {
-        synchronized (BriteDatabase.class) {
-            if (briteDatabase == null) {
-                createInstance(application);
+    public static BriteDatabase getInstance(Application application) {
+        if (briteDatabase == null) {
+            synchronized (BriteDatabase.class) {
+                if (briteDatabase == null) {
+                    createInstance(application);
+                }
             }
-            return briteDatabase;
         }
+        return briteDatabase;
     }
 
-    private static void createInstance(Application application){
+    private static void createInstance(Application application) {
         SupportSQLiteOpenHelper.Configuration configuration =
                 SupportSQLiteOpenHelper.Configuration.builder(application)
-                .name(BuildConfig.LocalDBName).callback(new BriteDBCallback()).build();
+                        .name(BuildConfig.LocalDBName).callback(new BriteDBCallback()).build();
         SupportSQLiteOpenHelper helper = new FrameworkSQLiteOpenHelperFactory().create(configuration);
 
         briteDatabase = BriteSQL.getInstance().wrapDatabaseHelper(helper, Schedulers.io());

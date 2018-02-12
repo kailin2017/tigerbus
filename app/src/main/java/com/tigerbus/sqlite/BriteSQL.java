@@ -9,13 +9,15 @@ public final class BriteSQL {
     private static final String TAG = BriteSQL.class.getSimpleName();
     private static SqlBrite sqlBrite;
 
-    public synchronized static SqlBrite getInstance() {
-        synchronized (SqlBrite.class) {
-            if (sqlBrite == null) {
-                createInstance();
+    public static SqlBrite getInstance() {
+        if (sqlBrite == null) {
+            synchronized (SqlBrite.class) {
+                if (sqlBrite == null) {
+                    createInstance();
+                }
             }
-            return sqlBrite;
         }
+        return sqlBrite;
     }
 
     private static void createInstance() {

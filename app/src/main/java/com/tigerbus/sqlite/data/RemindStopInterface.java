@@ -1,5 +1,7 @@
 package com.tigerbus.sqlite.data;
 
+import android.provider.BaseColumns;
+
 import com.squareup.sqlbrite3.BriteDatabase;
 import com.tigerbus.TigerApplication;
 import com.tigerbus.base.log.TlogType;

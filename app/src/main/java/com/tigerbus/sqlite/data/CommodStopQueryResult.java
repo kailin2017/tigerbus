@@ -5,6 +5,8 @@ import android.os.Parcelable;
 import com.google.auto.value.AutoValue;
 import com.tigerbus.data.bus.BusEstimateTime;
 
+import java.net.HttpCookie;
+
 @AutoValue
 public abstract class CommodStopQueryResult implements Parcelable {
 

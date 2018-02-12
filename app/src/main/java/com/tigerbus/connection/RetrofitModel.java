@@ -30,17 +30,17 @@ public final class RetrofitModel {
 
     // 靜態內部類別單例模式
     public static void createInstance(String serviceHost) {
-        synchronized (Retrofit.class) {
-            retrofit = createRetrofit(serviceHost);
-        }
+        retrofit = createRetrofit(serviceHost);
     }
 
     public static Retrofit getInstance() {
-        synchronized (Retrofit.class) {
-            if(retrofit == null)
-                createInstance(null);
-            return retrofit;
+        if (retrofit == null) {
+            synchronized (Retrofit.class) {
+                if (retrofit == null)
+                    createInstance(null);
+            }
         }
+        return retrofit;
     }
 
     private static Retrofit createRetrofit(String serviceHost) {
@@ -50,7 +50,7 @@ public final class RetrofitModel {
                 .addInterceptor(new HanderInterceptor(serviceHost))
                 .addNetworkInterceptor(chain -> chain.proceed(chain.request()))
                 .retryOnConnectionFailure(true)
-                .readTimeout(30,TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
                 .connectTimeout(30, TimeUnit.SECONDS)
                 .build();
         return new Retrofit.Builder()
