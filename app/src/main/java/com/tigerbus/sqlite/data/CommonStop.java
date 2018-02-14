@@ -30,7 +30,7 @@ public abstract class CommonStop implements Parcelable {
             + BriteApi.INNER_JOIN + RouteStop.TABLE
             + " ON " + RouteStop.TABLE + BriteApi.DOT + RouteStop.ID + " = " + CommonStop.TABLE + "." + CommonStop.ROUTESTOP
             + BriteApi.INNER_JOIN + CommonStopType.TABLE
-            + " ON " + CommonStopType.TABLE + BriteApi.DOT + CommonStopType.ID + " = " + CommonStop.TABLE + "." + CommonStop.TYPE;
+            + " ON " + CommonStopType.ID + " = " +CommonStop.TYPE;
 
     public static final CommonStop mapper(Cursor cursor) {
         String id = BriteApi.getString(cursor, ID);

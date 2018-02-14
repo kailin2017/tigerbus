@@ -1,12 +1,11 @@
 package com.tigerbus.sqlite.table;
 
+import android.arch.persistence.db.SupportSQLiteDatabase;
+
 import com.tigerbus.sqlite.data.WeekStatus;
 
-/**
- * Created by sinopac on 2018/2/13.
- */
 
-public final class CreateWeekStatusTable extends CreateTableString {
+public final class CreateWeekStatusTable extends CreateTableObj {
 
     @Override
     protected String getTableString() {
@@ -47,8 +46,12 @@ public final class CreateWeekStatusTable extends CreateTableString {
 
         stringBuffer.append(WeekStatus.SAT);
         stringBuffer.append(INTEGER_DEFAULT_0);
-        stringBuffer.append(COMMA);
 
         return stringBuffer.toString();
+    }
+
+    @Override
+    public void initDefaultData(SupportSQLiteDatabase database) {
+
     }
 }

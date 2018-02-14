@@ -1,6 +1,11 @@
 package com.tigerbus.sqlite.table;
 
-abstract class CreateTableString {
+import android.arch.persistence.db.SupportSQLiteDatabase;
+
+import com.tigerbus.TigerApplication;
+import com.tigerbus.base.log.TlogType;
+
+public abstract class CreateTableObj {
 
     protected final static String COMMA = ",";
     protected final static String CREATE_TABLE = "CREATE TABLE ";
@@ -13,10 +18,15 @@ abstract class CreateTableString {
     protected final static String BIGINT_DEFAULT_0 = " BIGINT DEFAULT 0 ";
 
     public String getCreateTableString() {
-        return String.format("CREATE TABLE %s ( %s )", getTableString(), getColumnString());
+        String createString = String.format("CREATE TABLE %s ( %s )", getTableString(), getColumnString());
+        TigerApplication.printLog(TlogType.debug, CreateTableObj.class.getSimpleName(), createString);
+        return createString;
     }
+
+    public abstract void initDefaultData(SupportSQLiteDatabase database);
 
     protected abstract String getTableString();
 
     protected abstract String getColumnString();
+
 }

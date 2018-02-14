@@ -1,8 +1,10 @@
 package com.tigerbus.sqlite.table;
 
+import android.arch.persistence.db.SupportSQLiteDatabase;
+
 import com.tigerbus.sqlite.data.RemindStop;
 
-public final class CreateRemindStopTable extends CreateTableString {
+public final class CreateRemindStopTable extends CreateTableObj {
 
     @Override
     protected String getTableString() {
@@ -41,8 +43,13 @@ public final class CreateRemindStopTable extends CreateTableString {
         stringBuffer.append(TEXT_NOT_NULL);
         stringBuffer.append(COMMA);
 
-        stringBuffer.append(RemindStop.ROUTESTOP);
+        stringBuffer.append(RemindStop.RUNWEEK);
         stringBuffer.append(TEXT_NOT_NULL);
         return stringBuffer.toString();
+    }
+
+    @Override
+    public void initDefaultData(SupportSQLiteDatabase database) {
+
     }
 }

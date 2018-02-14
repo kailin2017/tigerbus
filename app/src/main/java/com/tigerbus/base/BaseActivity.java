@@ -96,8 +96,8 @@ public abstract class BaseActivity<V extends BaseView, P extends BasePresenter<V
     }
 
     protected void nextFragment(@NonNull int viewId, @NonNull Fragment fragment) {
-        inputMethodManager.hideSoftInputFromWindow(
-                getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+//        inputMethodManager.hideSoftInputFromWindow(
+//                getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_NONE);
         fragmentTransaction.replace(viewId, fragment);

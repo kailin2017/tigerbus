@@ -1,8 +1,10 @@
 package com.tigerbus.sqlite.table;
 
+import android.arch.persistence.db.SupportSQLiteDatabase;
+
 import com.tigerbus.sqlite.data.CommonStop;
 
-public final class CreateCommonStopTable extends CreateTableString {
+public final class CreateCommonStopTable extends CreateTableObj {
 
     @Override
     protected String getTableString() {
@@ -24,5 +26,10 @@ public final class CreateCommonStopTable extends CreateTableString {
         stringBuffer.append(CommonStop.TYPE);
         stringBuffer.append(TEXT_NOT_NULL);
         return stringBuffer.toString();
+    }
+
+    @Override
+    public void initDefaultData(SupportSQLiteDatabase database) {
+
     }
 }

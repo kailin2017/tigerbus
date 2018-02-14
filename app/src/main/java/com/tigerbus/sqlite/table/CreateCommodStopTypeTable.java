@@ -1,9 +1,12 @@
 package com.tigerbus.sqlite.table;
 
-import com.tigerbus.sqlite.data.CommonStop;
+import android.arch.persistence.db.SupportSQLiteDatabase;
+
 import com.tigerbus.sqlite.data.CommonStopType;
 
-public final class CreateCommodStopTypeTable extends CreateTableString {
+import static android.database.sqlite.SQLiteDatabase.CONFLICT_FAIL;
+
+public final class CreateCommodStopTypeTable extends CreateTableObj {
     @Override
     protected String getTableString() {
         return CommonStopType.TABLE;
@@ -12,17 +15,26 @@ public final class CreateCommodStopTypeTable extends CreateTableString {
     @Override
     protected String getColumnString() {
         StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append(CommonStop.ID);
+        stringBuffer.append(CommonStopType.ID);
         stringBuffer.append(TEXT_NOT_NULL);
         stringBuffer.append(PRIMARY_KEY);
         stringBuffer.append(COMMA);
 
-        stringBuffer.append(CommonStop.ROUTESTOP);
+        stringBuffer.append(CommonStopType.TYPENAME);
         stringBuffer.append(TEXT_NOT_NULL);
-        stringBuffer.append(COMMA);
 
-        stringBuffer.append(CommonStop.TYPE);
-        stringBuffer.append(TEXT_NOT_NULL);
         return stringBuffer.toString();
+    }
+
+    @Override
+    public void initDefaultData(SupportSQLiteDatabase database) {
+//        insertData(database,new String[]{"全部","出門","回家","工作","七桃"});
+    }
+
+    private void insertData(SupportSQLiteDatabase database ,String strings[]){
+        for(String s : strings){
+            database.insert(CommonStopType.TABLE, CONFLICT_FAIL,
+                    new CommonStopType.SqlBuilder().type(s).build());
+        }
     }
 }

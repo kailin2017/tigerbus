@@ -1,24 +1,20 @@
 package com.tigerbus.sqlite.table;
 
-/**
- * Created by sinopac on 2018/2/13.
- */
-
 public enum CreateTableEnum {
-    createCommonStopType(new CreateCommodStopTypeTable().getCreateTableString()),
-    createCommonStop(new CreateCommonStopTable().getCreateTableString()),
-    createRouteStop(new CreateRouteStopTable().getCreateTableString()),
-    createWeekStatus(new CreateWeekStatusTable().getCreateTableString()),
-    createRemindStop(new CreateRemindStopTable().getCreateTableString());
+    createCommonStopType(new CreateCommodStopTypeTable()),
+    createCommonStop(new CreateCommonStopTable()),
+    createRouteStop(new CreateRouteStopTable()),
+    createWeekStatus(new CreateWeekStatusTable()),
+    createRemindStop(new CreateRemindStopTable());
 
-    private String createTableString;
+    private CreateTableObj createTableObj;
 
-    CreateTableEnum(String createTableString) {
-        this.createTableString = createTableString;
+    CreateTableEnum(CreateTableObj createTableObj) {
+        this.createTableObj = createTableObj;
     }
 
-    public String getCreateTableString() {
-        return this.createTableString;
+    public CreateTableObj getCreateTableObj() {
+        return this.createTableObj;
     }
 
 }

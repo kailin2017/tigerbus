@@ -3,12 +3,10 @@ package com.tigerbus.sqlite;
 import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.db.SupportSQLiteOpenHelper;
 
-import com.tigerbus.sqlite.data.CommonStopType;
 import com.tigerbus.sqlite.table.CreateTableEnum;
+import com.tigerbus.sqlite.table.CreateTableObj;
 
-import static android.database.sqlite.SQLiteDatabase.CONFLICT_FAIL;
-
-final class BriteDBCallback extends SupportSQLiteOpenHelper.Callback implements DBString {
+final class BriteDBCallback extends SupportSQLiteOpenHelper.Callback {
     private static final int VERSION = 1;
 
     BriteDBCallback() {
@@ -16,20 +14,12 @@ final class BriteDBCallback extends SupportSQLiteOpenHelper.Callback implements 
     }
 
     @Override
-    public void onCreate(SupportSQLiteDatabase db) {
-        for(CreateTableEnum createTableEnum : CreateTableEnum.values()){
-            db.execSQL(createTableEnum.getCreateTableString());
+    public void onCreate(SupportSQLiteDatabase database) {
+        for (CreateTableEnum createTableEnum : CreateTableEnum.values()) {
+            CreateTableObj createTableObj = createTableEnum.getCreateTableObj();
+            database.execSQL(createTableObj.getCreateTableString());
+            createTableObj.initDefaultData(database);
         }
-        db.insert(CommonStopType.TABLE, CONFLICT_FAIL,
-                new CommonStopType.SqlBuilder().type("全部").build());
-        db.insert(CommonStopType.TABLE, CONFLICT_FAIL,
-                new CommonStopType.SqlBuilder().type("出門").build());
-        db.insert(CommonStopType.TABLE, CONFLICT_FAIL,
-                new CommonStopType.SqlBuilder().type("回家").build());
-        db.insert(CommonStopType.TABLE, CONFLICT_FAIL,
-                new CommonStopType.SqlBuilder().type("工作").build());
-        db.insert(CommonStopType.TABLE, CONFLICT_FAIL,
-                new CommonStopType.SqlBuilder().type("七桃").build());
     }
 
 

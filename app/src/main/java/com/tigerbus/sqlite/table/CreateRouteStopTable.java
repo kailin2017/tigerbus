@@ -1,8 +1,10 @@
 package com.tigerbus.sqlite.table;
 
+import android.arch.persistence.db.SupportSQLiteDatabase;
+
 import com.tigerbus.sqlite.data.RouteStop;
 
-public final class CreateRouteStopTable extends CreateTableString {
+public final class CreateRouteStopTable extends CreateTableObj {
 
     @Override
     protected String getTableString() {
@@ -28,5 +30,10 @@ public final class CreateRouteStopTable extends CreateTableString {
         stringBuffer.append(RouteStop.ROUTESUB);
         stringBuffer.append(TEXT_NOT_NULL);
         return stringBuffer.toString();
+    }
+
+    @Override
+    public void initDefaultData(SupportSQLiteDatabase database) {
+
     }
 }
