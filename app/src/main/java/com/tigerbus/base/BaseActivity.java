@@ -34,10 +34,10 @@ public abstract class BaseActivity<V extends BaseView, P extends BasePresenter<V
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         application = (TigerApplication) getApplication();
         context = this;
         inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        super.onCreate(savedInstanceState);
     }
 
     @Override

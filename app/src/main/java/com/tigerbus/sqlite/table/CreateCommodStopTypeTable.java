@@ -28,11 +28,11 @@ public final class CreateCommodStopTypeTable extends CreateTableObj {
 
     @Override
     public void initDefaultData(SupportSQLiteDatabase database) {
-//        insertData(database,new String[]{"全部","出門","回家","工作","七桃"});
+        insertData(database, new String[]{"全部", "出門", "回家", "工作", "七桃"});
     }
 
-    private void insertData(SupportSQLiteDatabase database ,String strings[]){
-        for(String s : strings){
+    private void insertData(SupportSQLiteDatabase database, String strings[]) {
+        for (String s : strings) {
             database.insert(CommonStopType.TABLE, CONFLICT_FAIL,
                     new CommonStopType.SqlBuilder().type(s).build());
         }
