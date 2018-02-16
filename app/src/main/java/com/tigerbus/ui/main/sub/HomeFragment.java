@@ -78,12 +78,12 @@ public final class HomeFragment extends BaseFragment<HomeView, HomePresenter>
 
     @Override
     public void renderLoading() {
-        showProgress();
+        showProgressDialog(context);
     }
 
     @Override
     public void renderFinish() {
-        dimessProgress();
+        dimessProgressDialog();
     }
 
     @Override

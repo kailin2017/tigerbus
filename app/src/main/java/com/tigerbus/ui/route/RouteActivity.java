@@ -8,6 +8,7 @@ import android.view.Menu;
 
 import com.tigerbus.R;
 import com.tigerbus.base.BaseActivity;
+import com.tigerbus.base.OnPrimissionListener;
 import com.tigerbus.base.ViewStateRender;
 import com.tigerbus.base.annotation.ActivityView;
 import com.tigerbus.base.annotation.ViewInject;

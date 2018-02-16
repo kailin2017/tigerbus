@@ -9,7 +9,7 @@ import android.support.annotation.NonNull;
 
 import static android.content.Context.BIND_AUTO_CREATE;
 
-public interface BaseUIInterface extends Dialog.Progress, Dialog.Message, Dialog.ListAlert {
+public interface BaseUIInterface {
 
     default void startActivity(@NonNull Context context, @NonNull Class clazz) {
         context.startActivity(new Intent(context, clazz));

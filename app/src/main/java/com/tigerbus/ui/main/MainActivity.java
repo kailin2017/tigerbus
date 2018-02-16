@@ -147,7 +147,7 @@ public final class MainActivity extends BaseActivity<MainView, MainPresenter>
 
     @Override
     public void renderLoading() {
-        showProgress();
+        showProgressDialog(context);
     }
 
     @Override
@@ -156,6 +156,6 @@ public final class MainActivity extends BaseActivity<MainView, MainPresenter>
 
     @Override
     public void renderFinish() {
-        dimessProgress();
+        dimessProgressDialog();
     }
 }

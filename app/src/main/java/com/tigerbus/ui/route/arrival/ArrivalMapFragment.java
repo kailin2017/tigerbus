@@ -58,7 +58,7 @@ public final class ArrivalMapFragment extends BaseFragment<ArrivalMapView, Arriv
 
     @Override
     public void renderLoading() {
-        showProgress();
+        showProgressDialog(context);
     }
 
     @Override
@@ -69,7 +69,7 @@ public final class ArrivalMapFragment extends BaseFragment<ArrivalMapView, Arriv
 
     @Override
     public void renderFinish() {
-        dimessProgress();
+        dimessProgressDialog();
     }
 
 }

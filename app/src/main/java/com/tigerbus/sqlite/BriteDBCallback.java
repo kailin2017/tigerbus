@@ -16,9 +16,18 @@
 //    @Override
 //    public void onCreate(SupportSQLiteDatabase database) {
 //        for (CreateTableEnum createTableEnum : CreateTableEnum.values()) {
-//            CreateTableObj createTableObj = createTableEnum.getCreateTableObj();
-//            database.execSQL(createTableObj.getCreateTableString());
-//            createTableObj.initDefaultData(database);
+//            try {
+//                Class clazz = Class.forName(createTableEnum.getCreateTableObj());
+//                CreateTableObj createTableObj = (CreateTableObj) clazz.newInstance();
+//                database.execSQL(createTableObj.getCreateTableString());
+//                createTableObj.initDefaultData(database);
+//            } catch (ClassNotFoundException e) {
+//                e.printStackTrace();
+//            } catch (IllegalAccessException e) {
+//                e.printStackTrace();
+//            } catch (InstantiationException e) {
+//                e.printStackTrace();
+//            }
 //        }
 //    }
 //

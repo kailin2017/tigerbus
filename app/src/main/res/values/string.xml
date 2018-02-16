@@ -16,6 +16,7 @@
     <string name="sheetitem_station_view">站牌地圖街景</string>
 
     <string name="dialog_ok">確定</string>
+    <string name="dialog_ok1">好</string>
     <string name="dialog_cancel">取消</string>
     <string name="dialog_add">新增</string>
 

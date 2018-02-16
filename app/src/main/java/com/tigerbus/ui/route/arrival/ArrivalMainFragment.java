@@ -123,7 +123,7 @@ public final class ArrivalMainFragment extends BaseFragment<ArrivalMainView, Arr
             item.add(commodStopTypeList.get(i).type());
         }
         item.add(getString(R.string.dialog_add));
-        showListAlert(item.toArray(new String[]{}), this::typeListOnSelection);
+        showListDialog(context, item.toArray(new String[]{}), this::typeListOnSelection);
     }
 
     @Override
@@ -185,7 +185,7 @@ public final class ArrivalMainFragment extends BaseFragment<ArrivalMainView, Arr
 
     @Override
     public void renderLoading() {
-        showProgress();
+        showProgressDialog(context);
     }
 
     @Override
@@ -196,7 +196,7 @@ public final class ArrivalMainFragment extends BaseFragment<ArrivalMainView, Arr
 
     @Override
     public void renderFinish() {
-        dimessProgress();
+        dimessProgressDialog();
     }
 
 
