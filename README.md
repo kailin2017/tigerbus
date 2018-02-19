@@ -1,3 +1,3 @@
 # tigerbus
+以MVI+Retrofit2+RxJava2+SqlBrite3實現公車動態查詢
 
-以MVI+Retrofit2+RxJava2實現公車動態查詢
