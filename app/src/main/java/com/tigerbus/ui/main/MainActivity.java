@@ -11,10 +11,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.tigerbus.R;
-import com.tigerbus.base.BaseActivity;
-import com.tigerbus.base.ViewStateRender;
-import com.tigerbus.base.annotation.ActivityView;
-import com.tigerbus.base.annotation.ViewInject;
+import com.tigerbus.app.BaseActivity;
+import com.tigerbus.app.ViewStateRender;
+import com.tigerbus.app.annotation.ActivityView;
+import com.tigerbus.app.annotation.ViewInject;
 import com.tigerbus.service.RemindService;
 import com.tigerbus.ui.main.memento.CareTaker;
 import com.tigerbus.ui.main.memento.Memento;

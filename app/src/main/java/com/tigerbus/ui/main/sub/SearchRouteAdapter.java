@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.tigerbus.R;
 import com.tigerbus.TigerApplication;
-import com.tigerbus.base.log.TlogType;
+import com.tigerbus.app.log.TlogType;
 import com.tigerbus.data.bus.BusRoute;
 
 import java.util.ArrayList;

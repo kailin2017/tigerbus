@@ -30,7 +30,7 @@
                 android:gravity="left|center"
                 android:clickable="true"
                 android:background="@color/transparent"
-                android:drawableLeft="@drawable/ic_audiotrack_light"/>
+                android:drawableLeft="@drawable/ic_remind_3f51b5"/>
 
             <TextView
                 android:id="@+id/sheetitem_station_save"
@@ -42,19 +42,7 @@
                 android:gravity="left|center"
                 android:clickable="true"
                 android:background="@color/transparent"
-                android:drawableLeft="@drawable/ic_audiotrack_light"/>
-
-            <TextView
-                android:id="@+id/sheetitem_station_bus"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/ui8dp"
-                android:text="@string/sheetitem_station_bus"
-                android:textSize="@dimen/text18sp"
-                android:gravity="left|center"
-                android:clickable="true"
-                android:background="@color/transparent"
-                android:drawableLeft="@drawable/ic_audiotrack_light"/>
+                android:drawableLeft="@drawable/ic_bus_3f51b5"/>
 
             <TextView
                 android:id="@+id/sheetitem_station_lcaotion"
@@ -66,7 +54,7 @@
                 android:gravity="left|center"
                 android:clickable="true"
                 android:background="@color/transparent"
-                android:drawableLeft="@drawable/ic_audiotrack_light"/>
+                android:drawableLeft="@drawable/ic_map_3f51b5"/>
 
             <TextView
                 android:id="@+id/sheetitem_station_view"
@@ -78,7 +66,7 @@
                 android:gravity="left|center"
                 android:clickable="true"
                 android:background="@color/transparent"
-                android:drawableLeft="@drawable/ic_audiotrack_light"/>
+                android:drawableLeft="@drawable/ic_map_3f51b5"/>
 
 
         </LinearLayout>

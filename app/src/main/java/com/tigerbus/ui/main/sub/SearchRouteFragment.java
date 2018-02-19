@@ -10,10 +10,10 @@ import android.support.v7.widget.SearchView;
 import android.widget.EditText;
 
 import com.tigerbus.R;
-import com.tigerbus.base.BaseFragment;
-import com.tigerbus.base.ViewStateRender;
-import com.tigerbus.base.annotation.FragmentView;
-import com.tigerbus.base.annotation.ViewInject;
+import com.tigerbus.app.BaseFragment;
+import com.tigerbus.app.ViewStateRender;
+import com.tigerbus.app.annotation.FragmentView;
+import com.tigerbus.app.annotation.ViewInject;
 import com.tigerbus.data.CityBusInterface;
 import com.tigerbus.data.bus.BusRoute;
 import com.tigerbus.ui.route.RouteActivity;

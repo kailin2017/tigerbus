@@ -14,10 +14,10 @@ import android.widget.TextView;
 
 import com.tigerbus.R;
 import com.tigerbus.TigerApplication;
-import com.tigerbus.base.BaseFragment;
-import com.tigerbus.base.ViewStateRender;
-import com.tigerbus.base.annotation.FragmentView;
-import com.tigerbus.base.annotation.ViewInject;
+import com.tigerbus.app.BaseFragment;
+import com.tigerbus.app.ViewStateRender;
+import com.tigerbus.app.annotation.FragmentView;
+import com.tigerbus.app.annotation.ViewInject;
 import com.tigerbus.sqlite.BriteDB;
 import com.tigerbus.sqlite.data.CommonStopType;
 import com.tigerbus.sqlite.data.RouteStop;
@@ -52,8 +52,6 @@ public final class ArrivalMainFragment extends BaseFragment<ArrivalMainView, Arr
     private TextView remidSheetItem;
     @ViewInject(R.id.sheetitem_station_save)
     private TextView stationSaveSheetItem;
-    @ViewInject(R.id.sheetitem_station_bus)
-    private TextView stationAllBusSheetItem;
     @ViewInject(R.id.sheetitem_station_lcaotion)
     private TextView stasionLocationSheetItem;
     @ViewInject(R.id.sheetitem_station_view)
@@ -86,11 +84,6 @@ public final class ArrivalMainFragment extends BaseFragment<ArrivalMainView, Arr
     }
 
     @Override
-    public Observable<Object> bindClickStationAllBus() {
-        return rxClick(stationAllBusSheetItem);
-    }
-
-    @Override
     public Observable<Object> bindClickStationLocation() {
         return rxClick(stasionLocationSheetItem);
     }
@@ -117,13 +110,17 @@ public final class ArrivalMainFragment extends BaseFragment<ArrivalMainView, Arr
 
     @Override
     public void showTypeList() {
-        HashMap<Integer, CommonStopType> commodStopTypeList = TigerApplication.getCommodStopTypes();
+        HashMap<Integer, CommonStopType> commodStopTypeList = application.getCommodStopTypes();
         List<String> item = new ArrayList<>();
         for (int i : commodStopTypeList.keySet()) {
             item.add(commodStopTypeList.get(i).type());
         }
         item.add(getString(R.string.dialog_add));
         showListDialog(context, item.toArray(new String[]{}), this::typeListOnSelection);
+    }
+
+    public void showAddType(){
+        showEditTextDialog(context,"",presenter::insertCommmonStopType);
     }
 
     @Override
@@ -135,7 +132,6 @@ public final class ArrivalMainFragment extends BaseFragment<ArrivalMainView, Arr
         typelistSubject.onNext(i + 1);
         dialogInterface.dismiss();
     }
-
 
     @Override
     public void hideBottomSheet() {
@@ -198,6 +194,5 @@ public final class ArrivalMainFragment extends BaseFragment<ArrivalMainView, Arr
     public void renderFinish() {
         dimessProgressDialog();
     }
-
 
 }

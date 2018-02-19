@@ -1,7 +1,7 @@
 package com.tigerbus.ui.main.sub;
 
-import com.tigerbus.base.BaseView;
-import com.tigerbus.base.ViewStateRender;
+import com.tigerbus.app.BaseView;
+import com.tigerbus.app.ViewStateRender;
 
 import io.reactivex.Observable;
 

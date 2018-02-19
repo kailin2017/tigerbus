@@ -1,13 +1,8 @@
 package com.tigerbus.sqlite.data;
 
-import android.provider.BaseColumns;
-
 import com.squareup.sqlbrite3.BriteDatabase;
-import com.tigerbus.TigerApplication;
-import com.tigerbus.base.log.TlogType;
 import com.tigerbus.sqlite.BriteApi;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;

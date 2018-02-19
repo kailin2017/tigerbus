@@ -1,6 +1,6 @@
 package com.tigerbus.ui.main.sub;
 
-import com.tigerbus.base.ViewState;
+import com.tigerbus.app.ViewState;
 
 /**
  * Created by Kailin on 2018/1/21.

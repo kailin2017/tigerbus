@@ -7,11 +7,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 
 import com.tigerbus.R;
-import com.tigerbus.base.BaseActivity;
-import com.tigerbus.base.OnPrimissionListener;
-import com.tigerbus.base.ViewStateRender;
-import com.tigerbus.base.annotation.ActivityView;
-import com.tigerbus.base.annotation.ViewInject;
+import com.tigerbus.app.BaseActivity;
+import com.tigerbus.app.OnPrimissionListener;
+import com.tigerbus.app.ViewStateRender;
+import com.tigerbus.app.annotation.ActivityView;
+import com.tigerbus.app.annotation.ViewInject;
 import com.tigerbus.data.CityBusInterface;
 import com.tigerbus.data.bus.BusRoute;
 import com.tigerbus.sqlite.data.RouteStop;

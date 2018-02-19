@@ -1,7 +1,7 @@
 package com.tigerbus.ui.route;
 
-import com.tigerbus.base.BaseView;
-import com.tigerbus.base.ViewStateRender;
+import com.tigerbus.app.BaseView;
+import com.tigerbus.app.ViewStateRender;
 import com.tigerbus.data.bus.BusRoute;
 import com.tigerbus.data.bus.BusRouteInterface;
 

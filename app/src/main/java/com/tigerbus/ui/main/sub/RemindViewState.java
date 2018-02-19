@@ -1,6 +1,6 @@
 package com.tigerbus.ui.main.sub;
 
-import com.tigerbus.base.ViewState;
+import com.tigerbus.app.ViewState;
 
 public interface RemindViewState extends ViewState {
 }

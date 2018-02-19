@@ -65,7 +65,6 @@ public final class ArrivalMainPresenter extends ArrivalPresenter<ArrivalMainView
 
         getView().bindClickRemind().doOnSubscribe(this::addDisposable).subscribe(this::bindClickRemind);
         getView().bindClickStationSave().doOnSubscribe(this::addDisposable).subscribe(this::bindClickStationSave);
-        getView().bindClickStationAllBus().doOnSubscribe(this::addDisposable).subscribe(this::bindClickSataionAllBus);
         getView().bindClickStationLocation().doOnSubscribe(this::addDisposable).subscribe(this::bindClickStationLocation);
         getView().bindClickStationView().doOnSubscribe(this::addDisposable).subscribe(this::bindClickStationView);
         getView().bindTouchPager().doOnSubscribe(this::addDisposable).subscribe(this::bindTouchPager);
@@ -94,11 +93,8 @@ public final class ArrivalMainPresenter extends ArrivalPresenter<ArrivalMainView
         getView().hideBottomSheet();
     }
 
-    private void bindClickSataionAllBus(Object o) {
-        getView().hideBottomSheet();
-    }
-
     private void bindClickStationLocation(Object o) {
+        getView().goArrivalMap(routeStop);
         getView().hideBottomSheet();
 
     }
@@ -114,12 +110,11 @@ public final class ArrivalMainPresenter extends ArrivalPresenter<ArrivalMainView
     private void bindTypeList(int i) {
         CommonStopType commonStopType = TigerApplication.getCommodStopTypes().get(i);
         if (commonStopType == null) {
-
+            getView().showAddType();
         } else {
             insertCommonStop(commonStopType);
         }
     }
-
 
     private void insert(String tableName, ContentValues contentValues) {
         briteDatabase.insert(tableName, SQLiteDatabase.CONFLICT_FAIL, contentValues);
@@ -132,9 +127,10 @@ public final class ArrivalMainPresenter extends ArrivalPresenter<ArrivalMainView
         insert(CommonStop.TABLE, contentValues);
     }
 
-    private void insertCommmonStopType(String typename) {
+    public void insertCommmonStopType(String typename) {
         ContentValues contentValues = new CommonStopType.SqlBuilder().type(typename).build();
         insert(CommonStopType.TABLE, contentValues);
+        insertCommonStop(TigerApplication.getCommodStopTypes().get(TigerApplication.getCommodStopTypes().size()));
     }
 
     private void insertRouteStop() {

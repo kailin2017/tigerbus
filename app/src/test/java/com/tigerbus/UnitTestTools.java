@@ -1,6 +1,6 @@
 package com.tigerbus;
 
-import com.tigerbus.base.BaseActivity;
+import com.tigerbus.app.BaseActivity;
 
 import android.content.Intent;
 import android.os.Handler;
@@ -12,7 +12,6 @@ import org.robolectric.Shadows;
 import io.reactivex.Observable;
 import io.reactivex.Scheduler;
 import io.reactivex.android.plugins.RxAndroidPlugins;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.plugins.RxJavaPlugins;

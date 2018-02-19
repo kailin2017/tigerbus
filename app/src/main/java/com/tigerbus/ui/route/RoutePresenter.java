@@ -2,24 +2,13 @@ package com.tigerbus.ui.route;
 
 import android.os.Bundle;
 
-import com.tigerbus.BuildConfig;
-import com.tigerbus.base.BasePresenter;
-import com.tigerbus.connection.RetrofitModel;
+import com.tigerbus.app.BasePresenter;
 import com.tigerbus.data.CityBusInterface;
-import com.tigerbus.data.CityBusService;
-import com.tigerbus.data.autovalue.BusA1DataListAutoValue;
-import com.tigerbus.data.autovalue.BusA2DataListAutoValue;
-import com.tigerbus.data.bus.BusA2Data;
-import com.tigerbus.data.bus.BusEstimateTime;
 import com.tigerbus.data.bus.BusRoute;
-
-import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subjects.PublishSubject;
 
 public final class RoutePresenter extends BasePresenter<RouteView> implements CityBusInterface {
 

@@ -2,7 +2,6 @@ package com.tigerbus.ui.route.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
@@ -18,9 +17,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.tigerbus.R;
 import com.tigerbus.TigerApplication;
-import com.tigerbus.base.log.TlogType;
+import com.tigerbus.app.log.TlogType;
 import com.tigerbus.data.bus.BusA1Data;
-import com.tigerbus.data.bus.BusShape;
 import com.tigerbus.data.bus.BusStopOfRoute;
 import com.tigerbus.data.bus.BusSubRoute;
 import com.tigerbus.data.detail.PointType;
@@ -31,7 +29,6 @@ import java.util.ArrayList;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
-import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.PublishSubject;
 

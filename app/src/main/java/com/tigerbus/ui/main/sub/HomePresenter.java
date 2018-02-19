@@ -5,7 +5,7 @@ import android.os.Bundle;
 import com.squareup.sqlbrite3.BriteDatabase;
 import com.tigerbus.BuildConfig;
 import com.tigerbus.TigerApplication;
-import com.tigerbus.base.BasePresenter;
+import com.tigerbus.app.BasePresenter;
 import com.tigerbus.data.CityBusInterface;
 import com.tigerbus.data.autovalue.HomePresenterAutoValue;
 import com.tigerbus.data.bus.BusEstimateTime;

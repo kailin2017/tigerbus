@@ -5,8 +5,7 @@ import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
 import com.tigerbus.TigerApplication;
-import com.tigerbus.base.log.TlogType;
-import com.tigerbus.ui.route.arrival.ArrivalView;
+import com.tigerbus.app.log.TlogType;
 
 import java.util.ArrayList;
 import java.util.Arrays;

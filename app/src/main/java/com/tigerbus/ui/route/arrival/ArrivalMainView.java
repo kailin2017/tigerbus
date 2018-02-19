@@ -12,8 +12,6 @@ public interface ArrivalMainView extends ArrivalView {
 
     Observable<Object> bindClickStationSave();
 
-    Observable<Object> bindClickStationAllBus();
-
     Observable<Object> bindClickStationLocation();
 
     Observable<Object> bindClickStationView();
@@ -27,6 +25,8 @@ public interface ArrivalMainView extends ArrivalView {
     void showBottomSheet();
 
     void showTypeList();
+
+    void showAddType();
 
     void goArrivalMap(RouteStop routeStop);
 

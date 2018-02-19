@@ -1,4 +1,4 @@
-package com.tigerbus.base;
+package com.tigerbus.app;
 
 
 import android.app.AlertDialog;
@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 
 import java.util.HashMap;
 
-interface TigerDialog {
+public interface TigerDialog {
 
     String PROGRESSDIALOG = "PROGRESSDIALOG";
     String MESSAGEDIALOG = "MESSAGEDIALOG";
@@ -20,18 +20,15 @@ interface TigerDialog {
     HashMap<String, AlertDialog> dialogMap = new HashMap<>();
     DialogInterface.OnClickListener defaultListener = (dimess, i) -> dimess.dismiss();
 
-    default void initProgressDialog(Context context) {
-        ProgressDialog progressDialog = new ProgressDialog(context);
-        progressDialog.setCancelable(false);
-        dialogMap.put(PROGRESSDIALOG, progressDialog);
-    }
-
     default void showProgressDialog(Context context) {
-        if (dialogMap.containsKey(PROGRESSDIALOG)) {
-            initProgressDialog(context);
+        if (!dialogMap.containsKey(PROGRESSDIALOG)) {
+            ProgressDialog progressDialog = new ProgressDialog(context);
+            progressDialog.setCancelable(false);
+            dialogMap.put(PROGRESSDIALOG, progressDialog);
         }
         ProgressDialog progressDialog = (ProgressDialog) dialogMap.get(PROGRESSDIALOG);
-        progressDialog.show();
+        if (!progressDialog.isShowing())
+            progressDialog.show();
     }
 
     default void dimessProgressDialog() {
@@ -52,10 +49,10 @@ interface TigerDialog {
         builder.setCancelable(false);
         builder.setMessage(message);
         if (listener == null) {
-            builder.setPositiveButton(context.getText(R.string.dialog_ok1), defaultListener);
+            builder.setPositiveButton(context.getText(com.tigerbus.R.string.dialog_ok1), defaultListener);
         } else {
-            builder.setPositiveButton(context.getText(R.string.dialog_ok1), listener);
-            builder.setNegativeButton(context.getText(R.string.dialog_cancel), defaultListener);
+            builder.setPositiveButton(context.getText(com.tigerbus.R.string.dialog_ok1), listener);
+            builder.setNegativeButton(context.getText(com.tigerbus.R.string.dialog_add), defaultListener);
         }
         AlertDialog messageDialog = builder.show();
         dialogMap.put(MESSAGEDIALOG, messageDialog);
@@ -73,44 +70,53 @@ interface TigerDialog {
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setCancelable(false);
-        builder.setNegativeButton(context.getText(R.string.dialog_cancel), defaultListener);
-        builder.setItems(items,listener);
+        builder.setNegativeButton(context.getText(com.tigerbus.R.string.dialog_cancel), defaultListener);
+        builder.setItems(items, listener);
         AlertDialog listDialog = builder.show();
         dialogMap.put(LISTDIALOG, listDialog);
     }
 
-    default void dimessListDialog(){
+    default void dimessListDialog() {
         dimessDialog(dialogMap.get(LISTDIALOG));
     }
 
-    default void showEditTextDialog(Context context, String title, DialogInterface.OnClickListener listener){
-        if (dialogMap.containsKey(EDITTEXTDIALOG)) {
+    default void showEditTextDialog(Context context, String title, EditTextDialogAddListener listener) {
+        if (!dialogMap.containsKey(EDITTEXTDIALOG)) {
             AlertDialog listDialog = dialogMap.get(LISTDIALOG);
             if (listDialog.isShowing())
                 listDialog.dismiss();
         }
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle(title);
-        builder.setPositiveButton(context.getText(R.string.dialog_ok1), listener);
-        builder.setNegativeButton(context.getText(R.string.dialog_cancel), defaultListener);
-
         EditText input = new EditText(context);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
         input.setLayoutParams(layoutParams);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setView(input);
+        builder.setTitle(title);
+        builder.setNegativeButton(context.getText(com.tigerbus.R.string.dialog_cancel), defaultListener);
+        builder.setPositiveButton(context.getText(com.tigerbus.R.string.dialog_ok1), (d,i)->{
+            d.dismiss();
+            listener.onAdd(input.getText().toString());
+        });
 
         AlertDialog editTextDialog = builder.show();
         dialogMap.put(EDITTEXTDIALOG, editTextDialog);
     }
 
-    default void dimessEditTextDialog(){
+    default void dimessEditTextDialog() {
         dimessDialog(dialogMap.get(EDITTEXTDIALOG));
     }
 
     default void dimessDialog(AlertDialog alertDialog) {
         if (alertDialog != null)
-            if (!alertDialog.isShowing())
+            if (alertDialog.isShowing())
                 alertDialog.dismiss();
+    }
+
+    @FunctionalInterface
+    interface EditTextDialogAddListener{
+
+        void onAdd(String string);
     }
 }

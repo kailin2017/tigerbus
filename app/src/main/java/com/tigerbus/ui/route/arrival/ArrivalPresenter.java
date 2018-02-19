@@ -6,7 +6,7 @@ import android.support.annotation.NonNull;
 
 import com.tigerbus.BuildConfig;
 import com.tigerbus.R;
-import com.tigerbus.base.BasePresenter;
+import com.tigerbus.app.BasePresenter;
 import com.tigerbus.data.CityBusInterface;
 import com.tigerbus.data.bus.BusRoute;
 import com.tigerbus.data.bus.BusRouteInterface;

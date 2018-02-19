@@ -1,4 +1,4 @@
-package com.tigerbus.base;
+package com.tigerbus.app;
 
 import android.content.Context;
 
@@ -18,11 +18,16 @@ public abstract class BaseFragment<V extends BaseView, P extends BasePresenter<V
     }
 
     @Override
-    public void onDestroy() {
+    public void onDestroyView() {
         if (presenter != null){
             presenter.clearDisposable();
             presenter.clearUiDisposable();
         }
+        super.onDestroyView();
+    }
+
+    @Override
+    public void onDestroy() {
         super.onDestroy();
     }
 }

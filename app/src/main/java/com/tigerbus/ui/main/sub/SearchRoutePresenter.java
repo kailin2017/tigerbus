@@ -1,7 +1,7 @@
 package com.tigerbus.ui.main.sub;
 
 import com.tigerbus.TigerApplication;
-import com.tigerbus.base.BasePresenter;
+import com.tigerbus.app.BasePresenter;
 import com.tigerbus.data.bus.BusRoute;
 
 import java.util.ArrayList;

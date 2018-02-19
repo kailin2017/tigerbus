@@ -5,10 +5,10 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 
 import com.tigerbus.R;
-import com.tigerbus.base.BaseFragment;
-import com.tigerbus.base.ViewStateRender;
-import com.tigerbus.base.annotation.FragmentView;
-import com.tigerbus.base.annotation.ViewInject;
+import com.tigerbus.app.BaseFragment;
+import com.tigerbus.app.ViewStateRender;
+import com.tigerbus.app.annotation.FragmentView;
+import com.tigerbus.app.annotation.ViewInject;
 import com.tigerbus.data.CityBusInterface;
 import com.tigerbus.sqlite.BriteDB;
 import com.tigerbus.sqlite.data.RemindStop;

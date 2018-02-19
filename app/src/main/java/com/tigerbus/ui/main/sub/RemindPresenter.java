@@ -1,7 +1,7 @@
 package com.tigerbus.ui.main.sub;
 
 import com.squareup.sqlbrite3.BriteDatabase;
-import com.tigerbus.base.BasePresenter;
+import com.tigerbus.app.BasePresenter;
 import com.tigerbus.sqlite.data.RemindStop;
 import com.tigerbus.sqlite.data.RemindStopInterface;
 

@@ -4,8 +4,8 @@ import android.app.Application;
 import android.content.Context;
 
 import com.google.gson.Gson;
-import com.tigerbus.base.log.Tlog;
-import com.tigerbus.base.log.TlogType;
+import com.tigerbus.app.log.Tlog;
+import com.tigerbus.app.log.TlogType;
 import com.tigerbus.data.bus.BusRoute;
 import com.tigerbus.notification.NotificationChannelType;
 import com.tigerbus.notification.NotificationChannelUtil;
@@ -84,11 +84,11 @@ public final class TigerApplication extends Application {
         return tigerPreferences.getEncrypt(key);
     }
 
-    public static synchronized HashMap<Integer, CommonStopType> getCommodStopTypes() {
+    public static HashMap<Integer, CommonStopType> getCommodStopTypes() {
         return coomdStopType.get();
     }
 
-    public static synchronized void setCommodStopTypes(List<CommonStopType> commonStopTypes) {
+    public static void setCommodStopTypes(List<CommonStopType> commonStopTypes) {
         HashMap<Integer, CommonStopType> hashMap = new HashMap<>();
         for (CommonStopType commonStopType : commonStopTypes)
             hashMap.put(commonStopType.id(), commonStopType);

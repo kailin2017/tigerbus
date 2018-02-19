@@ -1,4 +1,4 @@
-package com.tigerbus.base;
+package com.tigerbus.app;
 
 public interface OnPrimissionListener {
     void onSuccess();

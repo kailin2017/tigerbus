@@ -1,4 +1,4 @@
-package com.tigerbus.base;
+package com.tigerbus.app;
 
 import com.google.auto.value.AutoValue;
 

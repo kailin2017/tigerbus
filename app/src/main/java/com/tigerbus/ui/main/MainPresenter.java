@@ -3,7 +3,7 @@ package com.tigerbus.ui.main;
 import android.os.Bundle;
 
 import com.tigerbus.TigerApplication;
-import com.tigerbus.base.BasePresenter;
+import com.tigerbus.app.BasePresenter;
 import com.tigerbus.connection.RetrofitModel;
 import com.tigerbus.data.CityBusInterface;
 import com.tigerbus.data.CityBusService;
