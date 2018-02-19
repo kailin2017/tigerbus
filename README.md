@@ -3,4 +3,4 @@
 
 
 
-![image](https://github.com/kailin2017/tigerbus/blob/master/device-2018-02-18-111345.gif)
+![image](https://github.com/kailin2017/tigerbus/blob/master/demo.gif)
