@@ -6,7 +6,7 @@
 
 # 基於以下OpenSource項目實現
 OkHttp3</br>
-Retrofit2
-RxJava2
-RxBinding3
-SqlBrite3
+Retrofit2</br>
+RxJava2</br>
+RxBinding3</br>
+SqlBrite3</br>
