@@ -10,3 +10,7 @@ Retrofit2</br>
 RxJava2</br>
 RxBinding3</br>
 SqlBrite3</br>
+
+
+# APK下載
+[APK下載試玩](https://github.com//kailin2017/tigerbus/raw/master/app-release.apk "APK下載試玩")
