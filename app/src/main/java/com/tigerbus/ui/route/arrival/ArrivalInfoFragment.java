@@ -6,9 +6,9 @@ import android.widget.TextView;
 
 import com.tigerbus.R;
 import com.tigerbus.app.BaseFragment;
-import com.tigerbus.app.MvpPresenter;
-import com.tigerbus.app.annotation.FragmentView;
-import com.tigerbus.app.annotation.ViewInject;
+import com.tigermvp.MvpPresenter;
+import com.tigermvp.annotation.FragmentView;
+import com.tigermvp.annotation.ViewInject;
 import com.tigerbus.data.bus.BusRoute;
 
 @FragmentView(mvp = false, layout = R.layout.route_info_fragment)

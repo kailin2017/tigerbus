@@ -5,8 +5,8 @@ import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyProperties;
 import android.util.Base64;
 
-import com.tigerbus.app.log.Tlog;
-import com.tigerbus.app.log.TlogType;
+import com.tigermvp.log.Tlog;
+import com.tigermvp.log.TlogType;
 
 import java.security.KeyStore;
 import java.util.HashSet;

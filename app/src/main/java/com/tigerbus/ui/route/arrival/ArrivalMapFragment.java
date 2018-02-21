@@ -8,8 +8,8 @@ import android.support.v4.view.ViewPager;
 import com.tigerbus.R;
 import com.tigerbus.app.BaseFragment;
 import com.tigerbus.app.ViewStateRender;
-import com.tigerbus.app.annotation.FragmentView;
-import com.tigerbus.app.annotation.ViewInject;
+import com.tigermvp.annotation.FragmentView;
+import com.tigermvp.annotation.ViewInject;
 import com.tigerbus.ui.route.adapter.ArrivalPagerMapAdapter;
 import com.tigerbus.ui.route.adapter.MapObj;
 

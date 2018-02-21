@@ -11,6 +11,7 @@ import android.support.v13.app.ActivityCompat;
 import android.view.inputmethod.InputMethodManager;
 
 import com.tigerbus.TigerApplication;
+import com.tigermvp.MvpActivity;
 
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;

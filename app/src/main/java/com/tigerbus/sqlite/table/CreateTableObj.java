@@ -3,7 +3,7 @@ package com.tigerbus.sqlite.table;
 import android.arch.persistence.db.SupportSQLiteDatabase;
 
 import com.tigerbus.TigerApplication;
-import com.tigerbus.app.log.TlogType;
+import com.tigermvp.log.TlogType;
 
 public abstract class CreateTableObj {
 

@@ -1,7 +1,7 @@
 package com.tigerbus.app;
 
 import com.tigerbus.TigerApplication;
-import com.tigerbus.app.log.TlogType;
+import com.tigermvp.log.TlogType;
 
 public interface ViewStateRender<T> {
     default void renderLoading(){}

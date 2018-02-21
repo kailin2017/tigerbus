@@ -2,7 +2,7 @@ package com.tigerbus.sqlite;
 
 import com.squareup.sqlbrite3.SqlBrite;
 import com.tigerbus.TigerApplication;
-import com.tigerbus.app.log.TlogType;
+import com.tigermvp.log.TlogType;
 
 public final class BriteSQL {
 

@@ -4,6 +4,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.jakewharton.rxbinding2.view.RxView;
+import com.tigermvp.MvpView;
 
 import io.reactivex.Observable;
 

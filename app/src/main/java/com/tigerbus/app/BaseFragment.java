@@ -3,6 +3,7 @@ package com.tigerbus.app;
 import android.content.Context;
 
 import com.tigerbus.TigerApplication;
+import com.tigermvp.MvpFragment;
 
 public abstract class BaseFragment<V extends BaseView, P extends BasePresenter<V>>
         extends MvpFragment<V, P> implements BaseUIInterface, TigerDialog {

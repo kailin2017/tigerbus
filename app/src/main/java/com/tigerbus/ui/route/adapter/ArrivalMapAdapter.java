@@ -17,7 +17,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.tigerbus.R;
 import com.tigerbus.TigerApplication;
-import com.tigerbus.app.log.TlogType;
+import com.tigermvp.log.TlogType;
 import com.tigerbus.data.bus.BusA1Data;
 import com.tigerbus.data.bus.BusStopOfRoute;
 import com.tigerbus.data.bus.BusSubRoute;

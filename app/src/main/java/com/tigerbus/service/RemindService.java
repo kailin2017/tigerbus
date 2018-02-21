@@ -14,7 +14,7 @@ import com.squareup.sqlbrite3.BriteDatabase;
 import com.tigerbus.BuildConfig;
 import com.tigerbus.R;
 import com.tigerbus.TigerApplication;
-import com.tigerbus.app.log.TlogType;
+import com.tigermvp.log.TlogType;
 import com.tigerbus.data.CityBusInterface;
 import com.tigerbus.data.bus.BusEstimateTime;
 import com.tigerbus.notification.NotificationChannelType;

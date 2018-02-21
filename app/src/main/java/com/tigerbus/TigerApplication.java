@@ -4,13 +4,13 @@ import android.app.Application;
 import android.content.Context;
 
 import com.google.gson.Gson;
-import com.tigerbus.app.log.Tlog;
-import com.tigerbus.app.log.TlogType;
 import com.tigerbus.data.bus.BusRoute;
 import com.tigerbus.notification.NotificationChannelType;
 import com.tigerbus.notification.NotificationChannelUtil;
 import com.tigerbus.sqlite.data.CommonStopType;
 import com.tigerbus.util.TigerPreferences;
+import com.tigermvp.log.Tlog;
+import com.tigermvp.log.TlogType;
 
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;

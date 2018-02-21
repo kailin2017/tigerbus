@@ -7,7 +7,7 @@ import android.support.v13.app.FragmentStatePagerAdapter;
 
 
 import com.tigerbus.TigerApplication;
-import com.tigerbus.app.log.TlogType;
+import com.tigermvp.log.TlogType;
 
 import java.util.ArrayList;
 
