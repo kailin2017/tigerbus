@@ -18,14 +18,15 @@ public final class SearchRoutePresenter extends BasePresenter<SearchRouteView> {
 
     @Override
     public void bindIntent() {
-        Observable<String> stringObservable = getView().bindInit().flatMap(b-> getView().bindSearch());
+        Observable<String> stringObservable = getView().bindInit().flatMap(b -> getView().bindSearch());
         stringObservable
                 .doOnSubscribe(defaultDisposableConsumer)
                 .flatMap(this::flatMap1)
                 .subscribe(busRoute -> searchResult.add(busRoute), this::throwable);
+        getView().bindSelectFilter();
     }
 
-    private Observable<BusRoute> flatMap1(String searchRoute){
+    private Observable<BusRoute> flatMap1(String searchRoute) {
         return Observable.fromIterable(searchData)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -34,7 +35,7 @@ public final class SearchRoutePresenter extends BasePresenter<SearchRouteView> {
                     return searchSocre(routeName, searchRoute) > 0 && searchResult.size() <= 40;
                 })
                 .doOnSubscribe(disposable -> searchResult.clear())
-                .doOnComplete(()->{
+                .doOnComplete(() -> {
                     Collections.sort(searchResult);
                     StringBuffer log = new StringBuffer();
                     log.append("searchDataSize:" + searchData.size());

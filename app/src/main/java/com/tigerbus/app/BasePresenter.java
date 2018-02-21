@@ -21,6 +21,10 @@ public abstract class BasePresenter<V extends BaseView> extends MvpPresenterImpl
         render(ViewState.Loading.create());
     }
 
+    public void addDisposable(@NonNull Disposable disposable) {
+        addDisposable(new Disposable[]{disposable});
+    }
+
     public void addDisposable(@NonNull Disposable... disposable) {
         for (Disposable d : disposable)
             disposables.add(d);

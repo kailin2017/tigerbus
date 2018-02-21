@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.tigerbus.R;
 import com.tigerbus.app.BaseFragment;
@@ -36,6 +37,8 @@ public final class SearchRouteFragment extends BaseFragment<SearchRouteView, Sea
     private RecyclerView recyclerView;
     @ViewInject(R.id.searchview)
     private SearchView searchView;
+    @ViewInject(R.id.searchfilter)
+    private ImageView searchFilter;
 
     public static SearchRouteFragment newInstance() {
         SearchRouteFragment fragment = new SearchRouteFragment();
@@ -97,6 +100,11 @@ public final class SearchRouteFragment extends BaseFragment<SearchRouteView, Sea
     @Override
     public Observable<String> bindSearch() {
         return searchSubject;
+    }
+
+    @Override
+    public Observable<Object> bindSelectFilter() {
+        return rxClick(searchFilter);
     }
 
     @Override

@@ -24,7 +24,7 @@ public final class TigerApplication extends Application {
     private final static String TAG = TigerApplication.class.getName();
     private static Context context;
     private static TigerPreferences tigerPreferences;
-    private static SoftReference<ArrayList<BusRoute>> busRouteData;
+    private static SoftReference<ArrayList<BusRoute>> busRouteData, busRouteDataBacuUp;
     private static SoftReference<HashMap<Integer, CommonStopType>> coomdStopType;
     private static Gson gson = new Gson();
 
@@ -33,11 +33,17 @@ public final class TigerApplication extends Application {
     }
 
     public static ArrayList<BusRoute> getBusRouteData() {
-        return busRouteData.get();
+        ArrayList<BusRoute> busRoutes = busRouteData.get();
+        if (busRoutes == null) {
+            busRoutes = busRouteDataBacuUp.get();
+            busRouteData = new SoftReference<>(busRoutes);
+        }
+        return busRoutes;
     }
 
     public static void setBusRouteData(ArrayList<BusRoute> busRouteData) {
         TigerApplication.busRouteData = new SoftReference<>(busRouteData);
+        TigerApplication.busRouteDataBacuUp = new SoftReference<>(busRouteData);
     }
 
     public static void putInt(String key, int value) {

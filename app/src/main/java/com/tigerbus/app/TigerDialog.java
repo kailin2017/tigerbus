@@ -8,13 +8,16 @@ import android.content.DialogInterface;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public interface TigerDialog {
 
     String PROGRESSDIALOG = "PROGRESSDIALOG";
     String MESSAGEDIALOG = "MESSAGEDIALOG";
     String LISTDIALOG = "LISTDIALOG";
+    String MULTICHOICEDIALOG = "MULTICHOICEDIALOG";
     String EDITTEXTDIALOG = "EDITTEXTDIALOG";
 
     HashMap<String, AlertDialog> dialogMap = new HashMap<>();
@@ -62,6 +65,37 @@ public interface TigerDialog {
         dimessDialog(dialogMap.get(MESSAGEDIALOG));
     }
 
+    default void showMultiChoiceItems(Context context, CharSequence[] items, MultiChoiceDialogListener listener) {
+        if (dialogMap.containsKey(MULTICHOICEDIALOG)) {
+            AlertDialog listDialog = dialogMap.get(MULTICHOICEDIALOG);
+            if (listDialog.isShowing())
+                listDialog.dismiss();
+        }
+        ArrayList<Integer> selectionItems = new ArrayList<>();
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setCancelable(false);
+        builder.setMultiChoiceItems(items, null, (dialog, indexSelect, isChicked) -> {
+            if (isChicked) {
+                selectionItems.add(indexSelect);
+            } else {
+                if (selectionItems.contains(indexSelect))
+                    selectionItems.remove(indexSelect);
+            }
+        });
+        builder.setNegativeButton(context.getText(com.tigerbus.R.string.dialog_cancel), defaultListener);
+        builder.setPositiveButton(context.getText(com.tigerbus.R.string.dialog_ok1), (d, i) -> {
+            ArrayList<CharSequence> results = new ArrayList<>();
+            for (int integer : selectionItems) {
+                results.add(items[integer]);
+            }
+            listener.onChoice(results);
+        });
+    }
+
+    default void dimessMultiChoiceItems() {
+        dimessDialog(dialogMap.get(MULTICHOICEDIALOG));
+    }
+
     default void showListDialog(Context context, CharSequence[] items, DialogInterface.OnClickListener listener) {
         if (dialogMap.containsKey(LISTDIALOG)) {
             AlertDialog listDialog = dialogMap.get(LISTDIALOG);
@@ -95,7 +129,7 @@ public interface TigerDialog {
         builder.setView(input);
         builder.setTitle(title);
         builder.setNegativeButton(context.getText(com.tigerbus.R.string.dialog_cancel), defaultListener);
-        builder.setPositiveButton(context.getText(com.tigerbus.R.string.dialog_ok1), (d,i)->{
+        builder.setPositiveButton(context.getText(com.tigerbus.R.string.dialog_ok1), (d, i) -> {
             d.dismiss();
             listener.onAdd(input.getText().toString());
         });
@@ -115,8 +149,14 @@ public interface TigerDialog {
     }
 
     @FunctionalInterface
-    interface EditTextDialogAddListener{
+    interface EditTextDialogAddListener {
 
         void onAdd(String string);
+    }
+
+    @FunctionalInterface
+    interface MultiChoiceDialogListener {
+
+        void onChoice(ArrayList<CharSequence> selectionItems);
     }
 }
