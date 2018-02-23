@@ -15,21 +15,38 @@ public final class SearchRoutePresenter extends BasePresenter<SearchRouteView> {
 
     private final ArrayList<BusRoute> searchData = TigerApplication.getBusRouteData();
     private final ArrayList<BusRoute> searchResult = new ArrayList<>();
+    private final ArrayList<CharSequence> filterItems = new ArrayList<>();
 
     @Override
     public void bindIntent() {
+        getView().bindSelectFilter().subscribe(this::bindSelectFilter);
         Observable<String> stringObservable = getView().bindInit().flatMap(b -> getView().bindSearch());
         stringObservable
                 .doOnSubscribe(defaultDisposableConsumer)
-                .flatMap(this::flatMap1)
+                .flatMap(this::searchRoute)
                 .subscribe(busRoute -> searchResult.add(busRoute), this::throwable);
-        getView().bindSelectFilter();
     }
 
-    private Observable<BusRoute> flatMap1(String searchRoute) {
+
+    public void getFilterItems(ArrayList<String> selectionItems){
+        filterItems.clear();
+        filterItems.addAll(selectionItems);
+    }
+
+    private void bindSelectFilter(Object o){
+        getView().showMultiChoiceItems();
+    }
+
+    private Observable<BusRoute> searchRoute(String searchRoute) {
         return Observable.fromIterable(searchData)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .filter(busRoute -> {
+                    if(filterItems.size()>0)
+                        return filterItems.contains(busRoute.getCityName().getZh_tw());
+                    else
+                        return true;
+                })
                 .filter(busRoute -> {
                     String routeName = busRoute.getRouteName().getZh_tw();
                     return searchSocre(routeName, searchRoute) > 0 && searchResult.size() <= 40;

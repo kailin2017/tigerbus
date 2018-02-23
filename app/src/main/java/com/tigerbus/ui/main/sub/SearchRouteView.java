@@ -12,4 +12,6 @@ public interface SearchRouteView<VR extends ViewStateRender> extends BaseView<VR
     Observable<String> bindSearch();
 
     Observable<Object> bindSelectFilter();
+
+    void showMultiChoiceItems();
 }

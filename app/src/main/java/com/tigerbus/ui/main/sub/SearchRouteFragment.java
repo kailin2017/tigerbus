@@ -8,17 +8,20 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.ImageButton;
 
 import com.tigerbus.R;
+import com.tigerbus.TigerApplication;
 import com.tigerbus.app.BaseFragment;
 import com.tigerbus.app.ViewStateRender;
-import com.tigermvp.annotation.FragmentView;
-import com.tigermvp.annotation.ViewInject;
 import com.tigerbus.data.CityBusInterface;
 import com.tigerbus.data.bus.BusRoute;
+import com.tigerbus.data.detail.City;
 import com.tigerbus.ui.route.RouteActivity;
 import com.tigerbus.util.DiffListCallBack;
+import com.tigermvp.annotation.FragmentView;
+import com.tigermvp.annotation.ViewInject;
+import com.tigermvp.log.TlogType;
 
 import java.util.ArrayList;
 
@@ -38,7 +41,7 @@ public final class SearchRouteFragment extends BaseFragment<SearchRouteView, Sea
     @ViewInject(R.id.searchview)
     private SearchView searchView;
     @ViewInject(R.id.searchfilter)
-    private ImageView searchFilter;
+    private ImageButton searchFilter;
 
     public static SearchRouteFragment newInstance() {
         SearchRouteFragment fragment = new SearchRouteFragment();
@@ -105,6 +108,15 @@ public final class SearchRouteFragment extends BaseFragment<SearchRouteView, Sea
     @Override
     public Observable<Object> bindSelectFilter() {
         return rxClick(searchFilter);
+    }
+
+    @Override
+    public void showMultiChoiceItems() {
+        ArrayList<String> arrayList = new ArrayList<>();
+        for(City city : application.getCityData()){
+            arrayList.add(city.getZh_tw());
+        }
+        showMultiChoiceItems(context, arrayList.toArray(new String[]{}), presenter::getFilterItems);
     }
 
     @Override

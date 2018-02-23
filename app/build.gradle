@@ -28,14 +28,14 @@ android {
         sourceCompatibility rootProject.javaVersion
         targetCompatibility rootProject.javaVersion
     }
-    signingConfigs {
-        config {
-            keyAlias 'key0'
-            keyPassword '963852'
-            storePassword '963852'
-            storeFile file('../../tiger.jks')
-        }
-    }
+//    signingConfigs {
+//        config {
+//            keyAlias 'key0'
+//            keyPassword '963852'
+//            storePassword '963852'
+//            storeFile file('../../tiger.jks')
+//        }
+//    }
 //    productFlavors {
 //        Taiwan {}
 //        Taipei {}
@@ -46,16 +46,16 @@ android {
 //    }
     buildTypes {
         release {
-            minifyEnabled true
-            shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.config
+//            minifyEnabled true
+//            shrinkResources true
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//            signingConfig signingConfigs.config
         }
         debug {
-            minifyEnabled true
-            shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.config
+//            minifyEnabled true
+//            shrinkResources true
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//            signingConfig signingConfigs.config
         }
     }
     externalNativeBuild {

@@ -53,6 +53,7 @@ public final class MainPresenter extends BasePresenter<MainView> implements City
     }
 
     private Observable<City> faltMap2(ArrayList<City> citys) {
+        TigerApplication.setCityData(citys);
         return Observable.fromIterable(citys).subscribeOn(threadIO());
     }
 

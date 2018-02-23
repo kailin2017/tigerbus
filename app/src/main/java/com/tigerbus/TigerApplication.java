@@ -5,6 +5,7 @@ import android.content.Context;
 
 import com.google.gson.Gson;
 import com.tigerbus.data.bus.BusRoute;
+import com.tigerbus.data.detail.City;
 import com.tigerbus.notification.NotificationChannelType;
 import com.tigerbus.notification.NotificationChannelUtil;
 import com.tigerbus.sqlite.data.CommonStopType;
@@ -26,7 +27,12 @@ public final class TigerApplication extends Application {
     private static TigerPreferences tigerPreferences;
     private static SoftReference<ArrayList<BusRoute>> busRouteData, busRouteDataBacuUp;
     private static SoftReference<HashMap<Integer, CommonStopType>> coomdStopType;
+    private static SoftReference<ArrayList<City>> cityData;
     private static Gson gson = new Gson();
+
+    public static void printLog(TlogType tlogType, String tag, Object o) {
+        Tlog.printLog(tlogType, tag, object2String(o));
+    }
 
     public static void printLog(TlogType tlogType, String tag, String message) {
         Tlog.printLog(tlogType, tag, message);
@@ -44,6 +50,14 @@ public final class TigerApplication extends Application {
     public static void setBusRouteData(ArrayList<BusRoute> busRouteData) {
         TigerApplication.busRouteData = new SoftReference<>(busRouteData);
         TigerApplication.busRouteDataBacuUp = new SoftReference<>(busRouteData);
+    }
+
+    public static ArrayList<City> getCityData() {
+        return cityData.get();
+    }
+
+    public static void setCityData(ArrayList<City> citys) {
+        cityData = new SoftReference<>(citys);
     }
 
     public static void putInt(String key, int value) {

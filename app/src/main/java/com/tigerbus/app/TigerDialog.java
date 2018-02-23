@@ -71,25 +71,21 @@ public interface TigerDialog {
             if (listDialog.isShowing())
                 listDialog.dismiss();
         }
-        ArrayList<Integer> selectionItems = new ArrayList<>();
+        ArrayList<String> selectionItems = new ArrayList<>();
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setCancelable(false);
         builder.setMultiChoiceItems(items, null, (dialog, indexSelect, isChicked) -> {
             if (isChicked) {
-                selectionItems.add(indexSelect);
+                selectionItems.add((String) items[indexSelect]);
             } else {
-                if (selectionItems.contains(indexSelect))
-                    selectionItems.remove(indexSelect);
+                if (selectionItems.contains(items[indexSelect]))
+                    selectionItems.remove(items[indexSelect]);
             }
         });
         builder.setNegativeButton(context.getText(com.tigerbus.R.string.dialog_cancel), defaultListener);
-        builder.setPositiveButton(context.getText(com.tigerbus.R.string.dialog_ok1), (d, i) -> {
-            ArrayList<CharSequence> results = new ArrayList<>();
-            for (int integer : selectionItems) {
-                results.add(items[integer]);
-            }
-            listener.onChoice(results);
-        });
+        builder.setPositiveButton(context.getText(com.tigerbus.R.string.dialog_ok1), (d, i) -> listener.onChoice(selectionItems));
+        AlertDialog multiChoiceDialog = builder.show();
+        dialogMap.put(MULTICHOICEDIALOG, multiChoiceDialog);
     }
 
     default void dimessMultiChoiceItems() {
@@ -157,6 +153,6 @@ public interface TigerDialog {
     @FunctionalInterface
     interface MultiChoiceDialogListener {
 
-        void onChoice(ArrayList<CharSequence> selectionItems);
+        void onChoice(ArrayList<String> selectionItems);
     }
 }
